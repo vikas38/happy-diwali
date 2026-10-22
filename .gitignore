@@ -173,3 +173,6 @@ Thumbs.db
 .vitest/
 *.tmp
 *.temp
+
+/test-results/
+/playwright-report/

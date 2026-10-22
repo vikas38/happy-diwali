@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react'
+import { drawAdult } from '../render/characters/Adult.js'
+import React, { useEffect, useRef, useState } from 'react'
 import { characterStart } from '../render/layers/Courtyard.js'
 import { Renderer } from '../render/Renderer.js'
 import { Background, LAYOUT } from '../render/layers/Background.js'
@@ -14,14 +15,35 @@ import { getSoundEngine } from '../audio/SoundEngine.js'
  * Exposes the engine instances via a callback so the parent (GameController)
  * can drive characters, particles, FX, and audio.
  */
-export default function CanvasStage({ onReady, onClick }) {
+export default function CanvasStage({ onReady, onClick, reducedMotion, paused, onFailure }) {
   const canvasRef = useRef(null)
+  const engines = useRef(null)
+  const [failed, setFailed] = useState(false)
+  useEffect(() => {
+    if (!engines.current) return
+    const { renderer, particles, jellySquash, background } = engines.current
+    background.reducedMotion = reducedMotion
+    renderer._reducedMotion = reducedMotion
+    particles.reducedMotion = reducedMotion
+    if (reducedMotion) particles.flashes = []
+    jellySquash.reducedMotion = reducedMotion
+    jellySquash.reset()
+  }, [reducedMotion])
+  useEffect(() => {
+    const sync = () => { const r = engines.current?.renderer; if (!r) return; if (paused || document.hidden) r.stop(); else r.start() }
+    sync(); document.addEventListener('visibilitychange', sync)
+    return () => document.removeEventListener('visibilitychange', sync)
+  }, [paused])
 
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const renderer = new Renderer(canvas)
+    let renderer
+    try { renderer = new Renderer(canvas) } catch { setFailed(true); onFailure?.(); return }
+    const loseContext = e => { e.preventDefault(); renderer.stop(); getSoundEngine().stopMusic(); getSoundEngine().stopCrackerAudio(); setFailed(true); onFailure?.() }
+    canvas.addEventListener('contextlost', loseContext)
+    renderer.onError = () => { setFailed(true); onFailure?.() }
     const background = new Background()
     renderer.addLayer(background)
 
@@ -42,6 +64,7 @@ export default function CanvasStage({ onReady, onClick }) {
         pip.y += (chhotu.y+12-pip.y)*Math.min(1,dt*5)
       }
     } })
+    renderer.addLayer({ draw(ctx,w,h,t) { if (background.gameState === 'COUNTDOWN_3_2_1') drawAdult(ctx,w,h,background.currentCracker) } })
     renderer.addLayer(chhotu)
     renderer.addLayer(pip)
     renderer.addLayer(particles)
@@ -60,12 +83,17 @@ export default function CanvasStage({ onReady, onClick }) {
     const _origResize = renderer._resize.bind(renderer)
     renderer._resize = function () {
       _origResize()
-      if (!chhotu.walkActive) {
+      if (!chhotu.walkActive && !['COUNTDOWN_3_2_1','CRACKER_SHOW_ACTIVE','CALM_CORNER_OVERLAY'].includes(background.gameState)) {
         chhotu.setPosition(this.width * LAYOUT.chhotuStartX, this.height * LAYOUT.chhotuStartY)
         pip.setPosition(this.width * LAYOUT.pipStartX, this.height * LAYOUT.pipStartY)
       }
     }
 
+    renderer._reducedMotion = reducedMotion
+    particles.reducedMotion = reducedMotion
+    jellySquash.reducedMotion = reducedMotion
+    background.reducedMotion = reducedMotion
+    engines.current = { renderer, particles, jellySquash, background }
     renderer.start()
 
     if (onReady) {
@@ -73,15 +101,18 @@ export default function CanvasStage({ onReady, onClick }) {
     }
 
     return () => {
+      canvas.removeEventListener('contextlost', loseContext)
+      engines.current = null
       renderer.dispose()
       jellySquash.reset()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  if (failed) return <div className="recovery-card" role="alert"><h2>The courtyard needs a little rest.</h2><p>Your browser could not draw the scene. You can return to the festival or reload to try again.</p><button onClick={()=>window.location.reload()}>Try again</button></div>
   return (
     <div className="game-canvas-wrap" onClick={onClick}>
-      <canvas ref={canvasRef} className="game-canvas" />
+      <canvas ref={canvasRef} className="game-canvas" aria-label="Animated Diwali courtyard. Use the buttons to choose and start a pretend firework." role="img" />
     </div>
   )
 }

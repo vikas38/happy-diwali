@@ -1,3 +1,4 @@
+import { FLASH_INTERVAL_MS } from '../safety/limits.js'
 // ===================================================================
 // Particle Engine — Object-pooled, 60fps, additive neon glow
 // ===================================================================
@@ -10,6 +11,8 @@ const POOL_SIZE = 800
 
 export class Particles {
   constructor() {
+    this.reducedMotion = false
+    this._lastFlash = -Infinity
     this.pool = new Array(POOL_SIZE)
     for (let i = 0; i < POOL_SIZE; i++) {
       this.pool[i] = this._createParticle()
@@ -198,22 +201,19 @@ export class Particles {
 
     // Smooth glowing trail with incandescent core
     if (p.trail && p.trail.length > 1) {
-      ctx.strokeStyle = ctx.fillStyle
-      ctx.lineWidth = Math.max(1, p.size * 0.75)
       ctx.lineCap = 'round'
-      ctx.beginPath()
-      ctx.moveTo(p.trail[0].x, p.trail[0].y)
+      const alpha = Math.max(0, Math.min(1, p.alpha))
       for (let i = 1; i < p.trail.length; i++) {
+        const heat = i / (p.trail.length - 1)
+        ctx.globalAlpha = alpha * heat * heat * .8
+        ctx.strokeStyle = `hsl(${p.hue - (1-heat)*12}, ${p.sat}%, ${Math.max(35,p.light-(1-heat)*30-p.age*8)}%)`
+        ctx.lineWidth = Math.max(.25, p.size * heat * .8)
+        ctx.beginPath()
+        ctx.moveTo(p.trail[i-1].x, p.trail[i-1].y)
         ctx.lineTo(p.trail[i].x, p.trail[i].y)
-      }
-      ctx.stroke()
-
-      // White-hot inner core line for glow trails
-      if (p.glow) {
-        ctx.strokeStyle = '#FFFDF5'
-        ctx.lineWidth = Math.max(0.6, p.size * 0.3)
         ctx.stroke()
       }
+      ctx.globalAlpha = alpha
     }
 
     switch (p.shape) {
@@ -322,6 +322,11 @@ export class Particles {
    * Deactivate all particles.
    */
   flash(x, y, radius = 120, hue = 38, duration = .35) {
+    const now = performance.now()
+    if (this.reducedMotion || now - this._lastFlash < FLASH_INTERVAL_MS) return
+    this._lastFlash = now
+    radius = Math.min(radius, 100)
+    duration = Math.min(duration, .25)
     this.flashes.push({x, y, radius, hue, duration, life:duration})
     if (this.flashes.length > 20) this.flashes.shift()
   }

@@ -23,12 +23,12 @@ export default function SafetySplash({ onStart }) {
           className="btn btn--primary btn--bounce safety-splash__btn"
           onClick={onStart}
           autoFocus
-          aria-label="I Promise! Let's Play!"
+          aria-label="Step into the courtyard"
         >
           Step into the courtyard →
         </button>
         <p className="safety-splash__subtext">
-          Meet Chhotu & Pip. Six fireworks. A whole evening of wonder.
+          Pretend fireworks only. Chhotu and Pip watch while a grown-up handles the fuse.
         </p>
       </div>
     </div>

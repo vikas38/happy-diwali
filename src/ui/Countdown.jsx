@@ -22,6 +22,7 @@ export default function Countdown({ countdownNumber }) {
 
   return (
     <div className="countdown-overlay" aria-live="assertive" aria-label={`Countdown: ${countdownNumber}`}>
+      <span className="sr-only">Countdown: {countdownNumber}</span>
       <div
         key={animKey}
         className={`countdown-number${isGlow ? ' countdown-number--glow' : ''} countdown-number--pop`}

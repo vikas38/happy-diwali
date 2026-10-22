@@ -1,3 +1,4 @@
+import { limiterCurve } from '../safety/limits.js'
 // ===================================================================
 // SoundEngine — Web Audio API DSP & Fear-Reduction Engine
 // ===================================================================
@@ -72,7 +73,7 @@ export class SoundEngine {
       this._supported = false
       return
     }
-    this.ctx = new Ctx()
+    try { this.ctx = new Ctx() } catch { this._supported = false; return }
     this._supported = true
 
     // Build the chain: intensityGain -> intensityFilter -> masterGain -> compressor -> destination
@@ -109,9 +110,13 @@ export class SoundEngine {
     this.intensityFilter.connect(this.masterGain)
     this.masterGain.connect(this.compressor)
     // Compressor -> destination
-    this.compressor.connect(this.ctx.destination)
+    this.outputLimiter = this.ctx.createWaveShaper()
+    this.outputLimiter.curve = limiterCurve()
+    this.outputLimiter.oversample = 'none'
+    this.compressor.connect(this.outputLimiter)
+    this.outputLimiter.connect(this.ctx.destination)
     // Compressor -> analyser (tap for level reading)
-    this.compressor.connect(this.analyser)
+    this.outputLimiter.connect(this.analyser)
 
     // Pre-generate noise buffers for reuse
     this._generateNoiseBuffers()
@@ -126,7 +131,7 @@ export class SoundEngine {
     if (!this.ctx) this.init()
     if (!this._supported) return
     if (this.ctx.state === 'suspended') {
-      await this.ctx.resume()
+      try { await this.ctx.resume() } catch { /* Retry through the visible sound button. */ }
     }
   }
 

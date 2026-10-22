@@ -241,7 +241,7 @@ export class ChhotuChamp {
     ctx.restore()
 
     // Select sprite pose based on state
-    let spriteKey = 'IDLE'
+    let spriteKey = 'COVER_EARS'
     if (this.armState === ARM_STATES.COVER_EARS_SMILE) {
       spriteKey = 'COVER_EARS'
     } else if (this.armState === ARM_STATES.VICTORY_JUMP) {

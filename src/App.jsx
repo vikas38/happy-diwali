@@ -1,3 +1,5 @@
+import { useDialogFocus } from './accessibility/useDialogFocus.js'
+import { meaningfulResize } from './safety/limits.js'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { GameStoreProvider, useGameStore } from './store/gameStore.jsx'
 import CanvasStage from './ui/CanvasStage.jsx'
@@ -19,7 +21,7 @@ import FestivalHome from './ui/FestivalHome.jsx'
 // ===================================================================
 // Inner app — uses game store context
 // ===================================================================
-function GameApp({ onBack }) {
+function GameApp({ onBack, reducedMotion, onToggleMotion }) {
   const store = useGameStore()
   const { state: saveState } = store
 
@@ -37,6 +39,9 @@ function GameApp({ onBack }) {
 
   const [fsmSnapshot, setFsmSnapshot] = useState(() => gc.getSnapshot())
   const [showStickerBook, setShowStickerBook] = useState(false)
+  useDialogFocus(fsmSnapshot.state + showStickerBook)
+  const [audioState, setAudioState] = useState('')
+  const [canvasFailed, setCanvasFailed] = useState(false)
   const enginesRef = useRef(null)
   const readyCooldownRef = useRef(0)
 
@@ -94,12 +99,22 @@ function GameApp({ onBack }) {
     const pauseWhenHidden = () => {
       if (document.hidden && gc.state !== STATES.SAFETY_SPLASH) gc.enterCalmCorner()
     }
+    let size = { width: window.innerWidth, height: window.innerHeight }
+    let resizeTimer
     const pauseOnResize = () => {
-      if ([STATES.STEPPING_BACK_SAFE_ROUTINE, STATES.COUNTDOWN_3_2_1, STATES.CRACKER_SHOW_ACTIVE].includes(gc.state)) gc.enterCalmCorner()
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => {
+        const next = { width: window.innerWidth, height: window.innerHeight }
+        if (meaningfulResize(size, next)) {
+          if ([STATES.STEPPING_BACK_SAFE_ROUTINE, STATES.COUNTDOWN_3_2_1, STATES.CRACKER_SHOW_ACTIVE].includes(gc.state)) gc.enterCalmCorner()
+          size = next
+        }
+      }, 200)
     }
     document.addEventListener('visibilitychange', pauseWhenHidden)
     window.addEventListener('resize', pauseOnResize)
     return () => {
+      clearTimeout(resizeTimer)
       document.removeEventListener('visibilitychange', pauseWhenHidden)
       window.removeEventListener('resize', pauseOnResize)
     }
@@ -123,6 +138,7 @@ function GameApp({ onBack }) {
 
   const handleStart = useCallback(() => {
     gc.startGame()
+    setTimeout(() => setAudioState(getSoundEngine().ctx?.state === 'running' ? '' : 'Sound is paused. Play silently or enable it.'), 250)
   }, [gc])
 
   const handleSelectCracker = useCallback((index) => {
@@ -136,7 +152,7 @@ function GameApp({ onBack }) {
   const handleTapCracker = useCallback((e) => {
     if (fsmSnapshot.state !== STATES.READY_ON_STREET) return
     // Cooldown guard: prevent accidental click from "Put on Street" modal
-    if (Date.now() < readyCooldownRef.current) return
+    if (e?.target?.tagName?.toLowerCase() === 'canvas' && Date.now() < readyCooldownRef.current) return
     if (e && e.target) {
       const tag = e.target.tagName.toLowerCase()
       if (tag === 'input' || tag === 'label') return
@@ -183,11 +199,14 @@ function GameApp({ onBack }) {
     fsmState === STATES.REWARD_CELEBRATION
   const isLastCracker = selectedCracker === 5
 
+  if (canvasFailed) return <main className="recovery-card" role="alert"><h1>The courtyard needs a little rest.</h1><p>Your browser could not draw the scene. Your saved progress is unchanged.</p><button className="sun-button" onClick={onBack}>Back to festival</button></main>
   return (
-    <div className="play-shell">
+    <div className={`play-shell ${reducedMotion ? "motion-paused" : ""}`}>
       {/* Top Navigation Bar with Back button & settings */}
       <HUD
         onBack={onBack}
+        reducedMotion={reducedMotion}
+        onToggleMotion={onToggleMotion}
         showSettings={showHUD}
         masterVolume={saveState.masterVolume}
         intensity={saveState.intensity}
@@ -198,6 +217,7 @@ function GameApp({ onBack }) {
         onCalmCorner={handleCalmCorner}
       />
 
+      {audioState && <div className="audio-status" role="status">{audioState}<button onClick={async () => { const sound = getSoundEngine(); await sound.resume(); setAudioState(sound.ctx?.state === 'running' ? '' : 'Sound is unavailable. You can still play silently.')}}>Enable sound</button></div>}
       <div className="game-stage" data-state={fsmState}>
         {showHUD && (
           <div className="scene-caption" aria-live="polite">
@@ -213,7 +233,7 @@ function GameApp({ onBack }) {
                 : fsmState === STATES.READY_ON_STREET
                 ? 'Your spark is ready. Let’s bring it to life.'
                 : fsmState === STATES.STEPPING_BACK_SAFE_ROUTINE
-                ? 'Fuse lit. Stepping back together…'
+                ? 'Chhotu and Pip move to their watching spot.'
                 : fsmState === STATES.CRACKER_SHOW_ACTIVE
                 ? 'Stay a little. Watch the last embers fall.'
                 : fsmState === STATES.REWARD_CELEBRATION
@@ -224,7 +244,7 @@ function GameApp({ onBack }) {
         )}
 
         {/* Canvas layer — always rendered */}
-        <CanvasStage onReady={handleEnginesReady} onClick={handleTapCracker} />
+        <CanvasStage onReady={handleEnginesReady} onClick={handleTapCracker} reducedMotion={reducedMotion} paused={fsmState === STATES.CALM_CORNER_OVERLAY} onFailure={() => { if (enginesRef.current) gc.enterCalmCorner(); getSoundEngine().stopMusic(); getSoundEngine().stopCalmPad(); setCanvasFailed(true) }} />
 
         {/* Cracker carousel — shown in idle / ready / reward */}
         {showCarousel && (
@@ -241,12 +261,12 @@ function GameApp({ onBack }) {
             <button
               className="btn btn--primary btn--bounce ready-street-btn"
               onClick={handleTapCracker}
-              aria-label="Light with Sparkler!"
+              aria-label="Ask the grown-up to start"
             >
-              <span aria-hidden="true">✦</span> Light the fuse <span aria-hidden="true">→</span>
+              <span aria-hidden="true">✦</span> Ask a grown-up <span aria-hidden="true">→</span>
             </button>
             <p className="ready-street-hint">
-              One tap to light. Chhotu will step back.
+              Chhotu and Pip watch from a distance. A grown-up handles the pretend fuse.
             </p>
           </div>
         )}
@@ -300,6 +320,8 @@ function GameApp({ onBack }) {
 // ===================================================================
 export default function App() {
   const [playing, setPlaying] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || false)
+  useEffect(() => { const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)'); const sync = e => setReducedMotion(e.matches); mq?.addEventListener('change', sync); return () => mq?.removeEventListener('change', sync) }, [])
 
   const handleBackToFestival = useCallback(() => {
     const sound = getSoundEngine()
@@ -313,9 +335,9 @@ export default function App() {
   return (
     <GameStoreProvider>
       {playing ? (
-        <GameApp onBack={handleBackToFestival} />
+        <GameApp onBack={handleBackToFestival} reducedMotion={reducedMotion} onToggleMotion={()=>setReducedMotion(v=>!v)} />
       ) : (
-        <FestivalHome onPlay={() => setPlaying(true)} />
+        <FestivalHome onPlay={() => setPlaying(true)} motion={!reducedMotion} setMotion={value=>setReducedMotion(v=>!(typeof value === 'function' ? value(!v) : value))} />
       )}
     </GameStoreProvider>
   )

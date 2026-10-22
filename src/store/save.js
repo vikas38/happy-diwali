@@ -92,9 +92,9 @@ export function validateSave(raw) {
  * @returns {object} a valid save state
  */
 export function loadSave(storage) {
-  const store = storage || (typeof localStorage !== 'undefined' ? localStorage : null)
-  if (!store) return createDefaultSave()
   try {
+    const store = storage || globalThis.localStorage
+    if (!store) return createDefaultSave()
     const raw = store.getItem(SAVE_KEY)
     if (!raw) return createDefaultSave()
     const parsed = JSON.parse(raw)
@@ -112,9 +112,9 @@ export function loadSave(storage) {
  * @param {Storage} [storage] - injectable storage (defaults to localStorage)
  */
 export function writeSave(state, storage) {
-  const store = storage || (typeof localStorage !== 'undefined' ? localStorage : null)
-  if (!store) return
   try {
+    const store = storage || globalThis.localStorage
+    if (!store) return
     const clean = validateSave(state)
     store.setItem(SAVE_KEY, JSON.stringify(clean))
   } catch (e) {
@@ -127,9 +127,9 @@ export function writeSave(state, storage) {
  * @param {Storage} [storage]
  */
 export function clearSave(storage) {
-  const store = storage || (typeof localStorage !== 'undefined' ? localStorage : null)
-  if (!store) return
   try {
+    const store = storage || globalThis.localStorage
+    if (!store) return
     store.removeItem(SAVE_KEY)
   } catch (e) {
     // ignore

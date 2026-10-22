@@ -38,9 +38,9 @@ export default function IntroCard({ cracker, onPutOnStreet }) {
           className="btn btn--primary"
           onClick={onPutOnStreet}
           autoFocus
-          aria-label={`Put ${cracker.name} on the street!`}
+          aria-label={`Watch ${cracker.name}`}
         >
-          Put on Street 🎆
+          Watch this firework →
         </button>
       </div>
     </div>

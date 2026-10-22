@@ -11,6 +11,7 @@ export class Renderer {
   constructor(canvas) {
     this.canvas = canvas
     this.ctx = canvas.getContext('2d', { alpha: false })
+    if (!this.ctx) throw new Error('Canvas is unavailable')
     this.dpr = 1
     this.width = 0
     this.height = 0
@@ -39,7 +40,7 @@ export class Renderer {
     const parent = this.canvas.parentElement
     if (!parent) return
     const rect = parent.getBoundingClientRect()
-    this.dpr = Math.min(window.devicePixelRatio || 1, 3)
+    this.dpr = Math.min(window.devicePixelRatio || 1, 2)
     // Validate dimensions to avoid 0-size canvas
     const w = Math.max(1, Math.round(rect.width))
     const h = Math.max(1, Math.round(rect.height))
@@ -86,8 +87,14 @@ export class Renderer {
     dt = Math.min(dt, MAX_DT)
     this.time += dt
 
-    this.update(dt)
-    this.draw()
+    try {
+      this.update(dt)
+      this.draw()
+    } catch (error) {
+      this.stop()
+      this.onError?.(error)
+      return
+    }
 
     this._rafId = requestAnimationFrame(this._loop)
   }

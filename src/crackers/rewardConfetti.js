@@ -1,4 +1,5 @@
 export function fireRewardConfetti(particles, w, h) {
+  if (particles.reducedMotion) return
   const colors = [45, 0, 120, 320, 180, 60, 280]
   for (let side = 0; side < 2; side++) {
     const cx = side === 0 ? w * 0.1 : w * 0.9

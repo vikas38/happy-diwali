@@ -2,6 +2,8 @@ import React from 'react'
 
 export default function HUD({
   onBack,
+  reducedMotion,
+  onToggleMotion,
   showSettings = true,
   masterVolume,
   intensity,
@@ -30,7 +32,7 @@ export default function HUD({
       </div>
 
       {showSettings && (
-        <div className="game-settings">
+        <div className="game-settings"><button className="motion-control" aria-pressed={reducedMotion} onClick={onToggleMotion}>Gentle visuals {reducedMotion ? 'on' : 'off'}</button>
           <label className="game-volume">
             <span aria-hidden="true">◖))</span>
             <input

@@ -761,3 +761,25 @@
     transition: none !important;
   }
 }
+
+/* Jewel-bright foil and fine sparks keep each firework legible at tray size. */
+.cracker-art{filter:drop-shadow(0 3px 5px #0005)}
+.cracker-twinkle{transform-box:fill-box;transform-origin:center;animation:cracker-shimmer 3.4s ease-in-out infinite;filter:drop-shadow(0 0 2px #ffce79)}
+.cracker-halo{opacity:.75;transition:opacity .3s}
+.firework-choice:not(:disabled):hover .cracker-halo,.firework-choice.selected .cracker-halo{opacity:1}
+.firework-choice.selected{background:radial-gradient(ellipse at 50% 30%,#efbb4930,transparent 75%),#e2c68a13;border-color:#e8bd798a;box-shadow:inset 0 1px #ffe5b226,0 0 18px #ffbd5710}
+.firework-choice:not(:disabled):hover{border-color:#e8bd7955;background:#d7ba7d1e}
+.firework-choice:disabled .cracker-art{filter:saturate(.65);opacity:.58}
+.firework-choice:disabled .cracker-glitter{opacity:.3}
+.firework-choice:disabled .cracker-twinkle{animation:none}
+@keyframes cracker-shimmer{0%,100%{opacity:.3;transform:scale(.6) rotate(-12deg)}50%{opacity:1;transform:scale(1.12) rotate(12deg)}}
+@media(prefers-reduced-motion:reduce){.cracker-twinkle{animation:none}}
+.spark-art>.cracker-art{width:160px;height:160px;filter:drop-shadow(0 0 5px #ffc87530)}
+.breathing-diya{width:65px;height:56px}
+.cracker-glitter .cracker-twinkle{animation-name:real-ember;filter:none}
+@keyframes real-ember{0%,100%{opacity:.35}50%{opacity:1}}
+
+/* Comfortable touch targets and visible status controls. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.game-navbar button,.game-navbar input{min-height:44px;min-width:44px}.game-navbar{height:auto;min-height:60px;padding:6px 16px}.game-settings{flex-wrap:wrap;justify-content:flex-end}.motion-control,.audio-status button{border:1px solid #ac956b66;border-radius:8px;background:#27313b;color:#f4e4c6;padding:6px 10px;font-size:11px}.audio-status{background:#eee5d7;color:#44374c;padding:8px 16px;font-size:12px;display:flex;gap:15px;align-items:center;justify-content:center}.audio-status button{min-height:44px}.recovery-card{padding:32px;margin:30px auto;max-width:550px;background:#fcf8ef;color:#403346;border-radius:16px;text-align:center}.recovery-card p{margin:20px 0}.motion-paused *,.motion-paused *::before,.motion-paused *::after{animation:none!important;transition:none!important}.firework-choice small{color:#b5bdc7}.choice-number{color:#a8b4c0}.dock-heading small{color:#b5bdc7}.ready-street-hint{max-width:340px}.game-stage .ready-street-banner{top:180px}
+@media(max-width:760px){.game-navbar{flex-wrap:wrap;gap:2px}.game-settings{gap:5px}.game-sound-modes button{padding:5px}.motion-control{font-size:10px}}

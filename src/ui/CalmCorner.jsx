@@ -1,3 +1,4 @@
+import Diya from './Diya.jsx'
 import React, { useEffect, useRef } from 'react'
 
 // ===================================================================
@@ -51,15 +52,7 @@ function BreathingCircle() {
     <div className="breathing-guide" aria-live="polite">
       <div className="breathing-circle-wrap">
         <div className="breathing-circle" ref={circleRef} aria-hidden="true">
-          <svg className="breathing-diya" viewBox="0 0 80 70" width="50" height="44" aria-hidden="true">
-            <path className="breathing-flame" d="M40 8 C33 22, 28 32, 40 46 C52 32, 47 22, 40 8 Z" fill="#ffbc53" />
-            <path className="breathing-flame-inner" d="M40 16 C36 25, 34 32, 40 42 C46 32, 44 25, 40 16 Z" fill="#fff5d0" />
-            <path d="M10 44 Q40 68 70 44 Z" fill="#bf5e48" />
-            <ellipse cx="40" cy="44" rx="30" ry="8" fill="#ed9a60" />
-            <ellipse cx="40" cy="43.5" rx="24" ry="5" fill="#763c48" />
-            <path d="M14 47 Q40 63 66 47" stroke="#ffcf86" strokeWidth="2" fill="none" />
-            <circle cx="40" cy="43.5" r="2" fill="#fff2b7" />
-          </svg>
+          <Diya className="breathing-diya"/>
         </div>
       </div>
       <p className="breathing-text" ref={textRef}>Breathe in slowly… ☾</p>

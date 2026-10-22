@@ -376,3 +376,14 @@ describe('GameController — show cancellation', () => {
     vi.useRealTimers()
   })
 })
+
+describe('Adult ignition regression',()=>{
+  it('keeps the child out of the lighting pose before countdown',()=>{
+    const gc=new GameController(),engines=makeMockEngines();gc.init(engines);gc.startGame();gc.selectCracker(0);gc.putOnStreet();gc.tapCracker()
+    expect(gc.state).toBe(STATES.STEPPING_BACK_SAFE_ROUTINE)
+    expect(engines.chhotu.setArmState).not.toHaveBeenCalledWith(ARM_STATES.LIGHTING_REACH)
+    engines.chhotu._walkCb()
+    expect(gc.state).toBe(STATES.COUNTDOWN_3_2_1)
+    gc.dispose()
+  })
+})

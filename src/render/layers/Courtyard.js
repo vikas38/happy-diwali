@@ -10,7 +10,7 @@ export function effectOrigin(index, w, h) {
 const TAU = Math.PI * 2
 function ellipse(c,x,y,rx,ry,color){c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,TAU);c.fill()}
 function halo(c,x,y,r,color){const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,color);g.addColorStop(1,'transparent');c.fillStyle=g;c.fillRect(x-r,y-r,r*2,r*2)}
-function arch(c,x,y,w,h,color){c.fillStyle=color;c.beginPath();c.moveTo(x,y+h);c.lineTo(x,y+w/2);c.arc(x+w/2,y+w/2,w/2,Math.PI,0);c.lineTo(x+w,y+h);c.closePath();c.fill()}
+function arch(c,x,y,w,h,color){w=Math.max(2,w);c.fillStyle=color;c.beginPath();c.moveTo(x,y+h);c.lineTo(x,y+w/2);c.arc(x+w/2,y+w/2,w/2,Math.PI,0);c.lineTo(x+w,y+h);c.closePath();c.fill()}
 function lamp(c,x,y,s,t){c.save();c.translate(x,y);c.scale(s,s);halo(c,0,-5,40,'#ffb74925');ellipse(c,0,0,9,3,'#d28a54');c.fillStyle='#8f4b36';c.beginPath();c.arc(0,0,9,0,Math.PI);c.fill();c.fillStyle='#ffd87c';c.beginPath();c.moveTo(-3,-2);c.bezierCurveTo(-8,-10,Math.sin(t*3)*3,-12,0,-19);c.bezierCurveTo(6,-11,6,-6,3,-2);c.fill();ellipse(c,0,-5,2,4,'#fff3c8');c.restore()}
 export function drawCourtyard(c,w,h,t,state) {
   const ground=h*.60

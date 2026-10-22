@@ -395,19 +395,7 @@ export class Background {
         const easeExpand = 1 - Math.pow(1 - t, 3) // easeOutCubic
         const fade = Math.pow(1 - t, 1.4)
 
-        // Sky illumination flash at moment of burst (first 0.15s)
-        if (burstAge < 0.15) {
-          const flashAlpha = 0.28 * (1 - burstAge / 0.15)
-          const flashRad = 35 + burstAge * 150
-          const flashGrad = ctx.createRadialGradient(bx, by, 0, bx, by, flashRad)
-          flashGrad.addColorStop(0, `rgba(255, 240, 200, ${flashAlpha})`)
-          flashGrad.addColorStop(1, 'rgba(255, 240, 200, 0)')
-          ctx.fillStyle = flashGrad
-          ctx.beginPath()
-          ctx.arc(bx, by, flashRad, 0, Math.PI * 2)
-          ctx.fill()
-        }
-
+        // Ambient bursts use particles without an additional flash overlay.
         // Render bursting particles
         for (const p of burst.particles) {
           const dist = easeExpand * p.speed
@@ -475,7 +463,7 @@ export class Background {
 
   draw(ctx, w, h, time) {
     drawCourtyard(ctx, w, h, time, this.gameState)
-    this._drawAmbientBursts(ctx, w, h, time)
+    if (!this.reducedMotion) this._drawAmbientBursts(ctx, w, h, time)
     this._drawCrackerOnLaunchpad(ctx, w, h, time)
     if (this.light > 0) {
       ctx.fillStyle = `rgba(255,187,100,${this.light*.25})`
@@ -494,7 +482,7 @@ export class Background {
 
     const cx = w * LAYOUT.launchX
     const cy = h * LAYOUT.launchY - 6
-    const isBurning = this.gameState === 'STEPPING_BACK_SAFE_ROUTINE' || this.gameState === 'COUNTDOWN_3_2_1'
+    const isBurning = this.gameState === 'COUNTDOWN_3_2_1'
     const isReady = this.gameState === 'READY_ON_STREET'
 
     ctx.save()
@@ -734,6 +722,7 @@ export class Background {
   }
 
   _drawFuseSparks(ctx, fx, fy, time) {
+    if (this.reducedMotion) time = 0
     ctx.save()
     ctx.globalCompositeOperation = 'lighter'
 

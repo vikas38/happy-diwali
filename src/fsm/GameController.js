@@ -194,12 +194,12 @@ export class GameController {
    */
   startGame() {
     const { sound } = this._engines
-    sound.init()
+    try { sound.init() } catch { this._setState(STATES.IDLE); return }
     sound.resume().then(() => {
       if (this._disposed || this.state === STATES.CALM_CORNER_OVERLAY) return
       this._applyAudioSettings()
       sound.startMusic()
-    })
+    }).catch(() => {})
     this._setState(STATES.IDLE)
   }
 
@@ -260,26 +260,23 @@ export class GameController {
     const from = this._chhotuStartPoint()
     const to = this._safeZonePoint()
 
-    // 1. Chhotu reaches forward with his sparkler to light the cracker fuse
+    // The child moves away before the adult handles the pretend fuse.
     chhotu.setFacing(1)
-    chhotu.setArmState(ARM_STATES.LIGHTING_REACH)
+    chhotu.setArmState(ARM_STATES.COVER_EARS_SMILE)
 
-    // Sizzling ignition sound
-    if (sound && sound.supported) {
-      this._stopFuse = playFireworkSound(sound, 'fuse', 4.4)
-    }
 
     // Set state BEFORE starting the walk so the callback (which fires
     // synchronously in tests) can legally transition to COUNTDOWN.
     this._setState(STATES.STEPPING_BACK_SAFE_ROUTINE)
 
-    // 2. Chhotu turns to keep an eye on the burning fuse and walks backward to the Safe Zone
+    // Walk to the watching spot while the fuse remains unlit.
     chhotu.setFacing(1)
-    chhotu._walkDelay = .65
+    chhotu._walkDelay = 0
     chhotu.walkTo(from.x, from.y, to.x, to.y, WALK_DURATION, () => {
       // Once safely at the safe zone, cover ears and start countdown
       chhotu.setArmState(ARM_STATES.COVER_EARS_SMILE)
       pip.setMood(PIP_MOODS.HIDE)
+      pip.setPosition(Math.max(28,to.x-55),to.y+12)
       this._startCountdown()
     })
 
@@ -288,6 +285,8 @@ export class GameController {
   }
 
   _startCountdown() {
+    const { sound } = this._engines
+    if (sound?.supported) this._stopFuse = playFireworkSound(sound, 'fuse', 3.2)
     this._setState(STATES.COUNTDOWN_3_2_1, { countdownNumber: COUNTDOWN_BEATS[0] })
     this._playCountdownChime(0)
 
@@ -490,7 +489,7 @@ export class GameController {
         break
       case STATES.CRACKER_SHOW_ACTIVE:
         // Restart the cracker show from the beginning
-        this._startCrackerShow()
+        this._startCountdown()
         break
       case STATES.READY_ON_STREET:
         this._gotoReady(this.selectedCracker)

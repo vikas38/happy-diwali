@@ -27,6 +27,7 @@ export class Background {
   constructor() {
     this.stars = []
     this.distantFireworks = []
+    this.ambientBursts = []
     this.buildings = []
     this.distantBuildings = []
     this.fairyLights = []
@@ -276,11 +277,199 @@ export class Background {
     ]
   }
 
+  /* ── Ambient distant sky burst fireworks ──────────────────────────── */
+
+  _spawnAmbientBurst(time, delay = 0) {
+    const PALETTES = [
+      ['#FFD700', '#FFA000', '#FFF59D', '#FF8F00'], // Golden Sparkle / Kamuro
+      ['#FF1744', '#FF5252', '#FF8A80', '#FF4081'], // Festive Crimson / Rose
+      ['#00E676', '#69F0AE', '#00F5D4', '#1DE9B6'], // Emerald Glow
+      ['#D500F9', '#E040FB', '#7C4DFF', '#B388FF'], // Royal Violet / Purple
+      ['#FF6D00', '#FF9100', '#FFD180', '#FF3D00'], // Vibrant Tangerine / Saffron
+      ['#00E5FF', '#18FFFF', '#80D8FF', '#40C4FF'], // Electric Sky Blue
+    ]
+
+    const palette = PALETTES[Math.floor(Math.random() * PALETTES.length)]
+    // Burst across the upper sky area (avoiding direct lower ground stage)
+    const launchX = 0.08 + Math.random() * 0.84
+    const launchY = 0.07 + Math.random() * 0.23
+    const burstType = Math.random() < 0.45 ? 'chrysanthemum' : (Math.random() < 0.5 ? 'willow' : 'ring')
+    const count = burstType === 'willow' ? 24 : (burstType === 'ring' ? 22 : 32)
+    const riseTime = 0.35 + Math.random() * 0.15
+
+    const particles = []
+    for (let i = 0; i < count; i++) {
+      const angle = burstType === 'ring'
+        ? (i / count) * Math.PI * 2
+        : (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.35
+      const speed = burstType === 'willow'
+        ? 24 + Math.random() * 32
+        : (burstType === 'ring' ? 42 + (i % 2) * 6 : 32 + Math.random() * 45)
+      particles.push({
+        angle,
+        speed,
+        color: palette[Math.floor(Math.random() * palette.length)],
+        size: 1.2 + Math.random() * 1.6,
+        alpha: 0.85 + Math.random() * 0.15,
+        twinkleOffset: Math.random() * Math.PI * 2,
+        drag: burstType === 'willow' ? 0.96 : 0.94,
+        gravity: burstType === 'willow' ? 28 : 14,
+      })
+    }
+
+    if (!this.ambientBursts) this.ambientBursts = []
+    this.ambientBursts.push({
+      x: launchX,
+      y: launchY,
+      trailStartY: 0.52 + Math.random() * 0.06,
+      born: time + delay,
+      riseTime,
+      life: riseTime + 1.2 + Math.random() * 0.6,
+      particles,
+      burstType,
+      primaryColor: palette[0],
+    })
+
+    // 30% chance of a staggered double burst (second shot volley)
+    if (delay === 0 && Math.random() < 0.32) {
+      this._spawnAmbientBurst(time, 0.18 + Math.random() * 0.12)
+    }
+  }
+
+  _drawAmbientBursts(ctx, w, h, time) {
+    if (!this.ambientBursts || this.ambientBursts.length === 0) return
+    ctx.save()
+    ctx.globalCompositeOperation = 'lighter'
+
+    for (const burst of this.ambientBursts) {
+      const age = time - burst.born
+      if (age < 0) continue // Future scheduled burst
+
+      const bx = burst.x * w
+      const by = burst.y * h
+
+      // ── Phase 1: Rising streak / comet ──────────────────
+      if (age < burst.riseTime) {
+        const tRise = age / burst.riseTime
+        const easeRise = tRise * (2 - tRise) // easeOutQuad
+        const startY = burst.trailStartY * h
+        const headY = startY + (by - startY) * easeRise
+        const tailY = startY + (by - startY) * Math.max(0, easeRise - 0.18)
+
+        // Streak tail
+        ctx.strokeStyle = 'rgba(255, 214, 140, 0.75)'
+        ctx.lineWidth = 1.6
+        ctx.beginPath()
+        ctx.moveTo(bx, tailY)
+        ctx.lineTo(bx, headY)
+        ctx.stroke()
+
+        // Glowing head
+        ctx.fillStyle = '#FFF8E1'
+        ctx.beginPath()
+        ctx.arc(bx, headY, 2.2, 0, Math.PI * 2)
+        ctx.fill()
+
+        // Tiny sparks trailing the comet
+        for (let i = 0; i < 2; i++) {
+          const sparkY = headY + (i + 1) * 5 + Math.sin(time * 40 + i) * 2
+          const sparkX = bx + (Math.sin(time * 30 + i * 2)) * 2
+          ctx.fillStyle = 'rgba(255, 170, 50, 0.6)'
+          ctx.beginPath()
+          ctx.arc(sparkX, sparkY, 1, 0, Math.PI * 2)
+          ctx.fill()
+        }
+      }
+
+      // ── Phase 2: Shell explosion & particle dispersal ───
+      if (age >= burst.riseTime) {
+        const burstAge = age - burst.riseTime
+        const burstLife = burst.life - burst.riseTime
+        const t = Math.min(1, burstAge / burstLife)
+        const easeExpand = 1 - Math.pow(1 - t, 3) // easeOutCubic
+        const fade = Math.pow(1 - t, 1.4)
+
+        // Sky illumination flash at moment of burst (first 0.15s)
+        if (burstAge < 0.15) {
+          const flashAlpha = 0.28 * (1 - burstAge / 0.15)
+          const flashRad = 35 + burstAge * 150
+          const flashGrad = ctx.createRadialGradient(bx, by, 0, bx, by, flashRad)
+          flashGrad.addColorStop(0, `rgba(255, 240, 200, ${flashAlpha})`)
+          flashGrad.addColorStop(1, 'rgba(255, 240, 200, 0)')
+          ctx.fillStyle = flashGrad
+          ctx.beginPath()
+          ctx.arc(bx, by, flashRad, 0, Math.PI * 2)
+          ctx.fill()
+        }
+
+        // Render bursting particles
+        for (const p of burst.particles) {
+          const dist = easeExpand * p.speed
+          const dragFactor = Math.pow(p.drag, burstAge * 60)
+          const gravityDrop = t * t * p.gravity
+
+          const px = bx + Math.cos(p.angle) * dist * dragFactor
+          const py = by + Math.sin(p.angle) * dist * dragFactor + gravityDrop
+
+          // Sparkle twinkle factor
+          const twinkle = 0.75 + 0.25 * Math.sin(time * 28 + p.twinkleOffset)
+          const pAlpha = p.alpha * fade * twinkle
+          if (pAlpha < 0.02) continue
+
+          const pSize = Math.max(0.6, p.size * (1 - t * 0.45))
+
+          // Particle body
+          ctx.globalAlpha = pAlpha
+          ctx.fillStyle = p.color
+          ctx.beginPath()
+          ctx.arc(px, py, pSize, 0, Math.PI * 2)
+          ctx.fill()
+
+          // Glittering halo around bright embers
+          if (t < 0.5) {
+            ctx.globalAlpha = pAlpha * 0.35
+            ctx.beginPath()
+            ctx.arc(px, py, pSize * 2.2, 0, Math.PI * 2)
+            ctx.fill()
+          }
+
+          // Trailing ember tail for willow effect
+          if (burst.burstType === 'willow' && t < 0.8) {
+            ctx.globalAlpha = pAlpha * 0.25
+            ctx.beginPath()
+            ctx.arc(px - Math.cos(p.angle) * 3, py - 3, pSize * 0.6, 0, Math.PI * 2)
+            ctx.fill()
+          }
+        }
+        ctx.globalAlpha = 1
+      }
+    }
+
+    ctx.restore()
+  }
+
   illuminate(amount) { this.light = Math.max(this.light || 0, amount) }
-  update(dt, time) { this.light = Math.max(0, (this.light || 0) - dt * .8) }
+
+  update(dt, time) {
+    this.light = Math.max(0, (this.light || 0) - dt * .8)
+
+    // Schedule and trigger ambient sky bursts every 1.5 - 3.2 seconds
+    if (!this.ambientBursts) this.ambientBursts = []
+    if (this._nextBurstTime === undefined) {
+      this._nextBurstTime = time + 0.6 // quick first burst on launch
+    }
+    if (time >= this._nextBurstTime) {
+      this._spawnAmbientBurst(time)
+      this._nextBurstTime = time + 1.4 + Math.random() * 2.0
+    }
+
+    // Clean up finished bursts
+    this.ambientBursts = this.ambientBursts.filter(b => (time - b.born) < b.life)
+  }
 
   draw(ctx, w, h, time) {
     drawCourtyard(ctx, w, h, time, this.gameState)
+    this._drawAmbientBursts(ctx, w, h, time)
     this._drawCrackerOnLaunchpad(ctx, w, h, time)
     if (this.light > 0) {
       ctx.fillStyle = `rgba(255,187,100,${this.light*.25})`

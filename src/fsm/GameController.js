@@ -35,7 +35,7 @@ const TRANSITIONS = {
   [STATES.SAFETY_SPLASH]: [STATES.IDLE],
   [STATES.IDLE]: [STATES.CRACKER_INTRO_CARD, STATES.READY_ON_STREET],
   [STATES.CRACKER_INTRO_CARD]: [STATES.READY_ON_STREET],
-  [STATES.READY_ON_STREET]: [STATES.STEPPING_BACK_SAFE_ROUTINE, STATES.CRACKER_INTRO_CARD, STATES.IDLE],
+  [STATES.READY_ON_STREET]: [STATES.STEPPING_BACK_SAFE_ROUTINE, STATES.CRACKER_INTRO_CARD, STATES.READY_ON_STREET, STATES.IDLE],
   [STATES.STEPPING_BACK_SAFE_ROUTINE]: [STATES.COUNTDOWN_3_2_1],
   [STATES.COUNTDOWN_3_2_1]: [STATES.CRACKER_SHOW_ACTIVE],
   [STATES.CRACKER_SHOW_ACTIVE]: [STATES.REWARD_CELEBRATION],
@@ -134,6 +134,9 @@ export class GameController {
     }
     this.state = newState
     this._uiData = uiData
+    if (this._engines?.background) {
+      this._engines.background.setGameState(newState, this.selectedCracker)
+    }
     this._notify()
     return true
   }
@@ -208,6 +211,10 @@ export class GameController {
     if (!this._engines.store.isUnlocked(index)) return
     this.selectedCracker = index
 
+    if (this._engines?.background) {
+      this._engines.background.setGameState(this.state, index)
+    }
+
     const cracker = getCracker(index)
     if (!this._engines.store.hasSeenIntro(index)) {
       this._setState(STATES.CRACKER_INTRO_CARD, { cracker })
@@ -226,6 +233,7 @@ export class GameController {
   }
 
   _gotoReady(index) {
+    this.selectedCracker = index
     const { chhotu, pip } = this._engines
     // Place characters at start positions (near cracker)
     const chhotuPos = this._chhotuStartPoint()

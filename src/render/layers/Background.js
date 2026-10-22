@@ -42,10 +42,16 @@ export class Background {
     this.fuseBurn = 0
   }
 
-  setGameState(state, crackerIndex = 0) {
+  setGameState(state, crackerIndex) {
     this.gameState = state
     if (crackerIndex !== undefined && crackerIndex !== null) {
       this.currentCracker = crackerIndex
+    }
+  }
+
+  setCracker(index) {
+    if (index !== undefined && index !== null) {
+      this.currentCracker = index
     }
   }
 

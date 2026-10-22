@@ -35,23 +35,26 @@
   gap: 14px;
 }
 .back-home {
+  position: static;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: transparent;
-  border: 0;
-  color: #afafa9;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #dcdcd6;
   font-size: 11px;
-  letter-spacing: .5px;
-  padding: 6px 10px;
-  border-radius: 6px;
+  font-weight: 500;
+  letter-spacing: .4px;
+  padding: 6px 12px;
+  border-radius: 20px;
   cursor: pointer;
-  transition: background .15s, color .15s;
+  transition: all .15s ease;
   white-space: nowrap;
 }
 .back-home:hover {
-  background: #ffffff0d;
-  color: #f6ebd7;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
 }
 .game-nav-divider {
   width: 1px;

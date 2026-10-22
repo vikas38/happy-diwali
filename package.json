@@ -1,0 +1,23 @@
+{
+  "name": "chhotu-champ-diwali-glow",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Chhotu Champ's Diwali Glow - a therapeutic HTML5 game to help children overcome fear of firecrackers",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.3.4",
+    "jsdom": "25.0.1",
+    "vitest": "2.1.8"
+  }
+}

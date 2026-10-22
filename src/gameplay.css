@@ -1,0 +1,649 @@
+/* An unobtrusive, warm instrument panel around the moonlit stage. */
+.play-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  background: #090f1b;
+  overflow: hidden;
+}
+.play-shell .game-stage {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  height: auto;
+  min-height: 0;
+  background: #0c1422;
+}
+.game-navbar {
+  height: 48px;
+  background: #0b1320;
+  border-bottom: 1px solid #ffffff12;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  gap: 16px;
+  z-index: 30;
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+.game-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 0;
+  color: #afafa9;
+  font-size: 11px;
+  letter-spacing: .5px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.back-home:hover {
+  background: #ffffff0d;
+  color: #f6ebd7;
+}
+.game-nav-divider {
+  width: 1px;
+  height: 18px;
+  background: #ffffff14;
+}
+.game-stage {
+  --neon-cyan: #edc786;
+  --neon-magenta: #c39776;
+  --neon-gold: #e5bc75;
+  --neon-violet: #c3b4d8;
+  --text-primary: #f6ebd7;
+  --text-secondary: #c5bba8;
+  --text-muted: #8d918e;
+  font-family: 'Segoe UI', sans-serif;
+}
+.game-wordmark {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #e5c897;
+  white-space: nowrap;
+}
+.game-wordmark > span {
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1;
+}
+.game-wordmark small {
+  display: block;
+  font-size: 6.5px;
+  color: #818a98;
+  letter-spacing: 1.5px;
+  margin-top: 2px;
+}
+.game-settings {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.game-volume {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #b9bcb9;
+  font-size: 12px;
+}
+.game-volume input {
+  width: 74px;
+  height: 3px;
+  accent-color: #d4b27e;
+  cursor: pointer;
+}
+.game-sound-modes {
+  display: flex;
+  background: #182230b3;
+  border: 1px solid #ffffff12;
+  border-radius: 30px;
+  padding: 3px;
+  gap: 2px;
+}
+.game-sound-modes button {
+  font: 10px 'Segoe UI', sans-serif;
+  color: #929aa5;
+  border: 0;
+  background: transparent;
+  border-radius: 20px;
+  padding: 6px 11px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.game-sound-modes button[aria-pressed=true] {
+  background: #e7cf9c;
+  color: #342f29;
+}
+.game-collection,
+.game-pause {
+  border: 1px solid #ffffff20;
+  background: #1a2633a1;
+  color: #e7cf9c;
+  border-radius: 30px;
+  padding: 6px 13px;
+  cursor: pointer;
+  font: 11px 'Segoe UI', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: background .15s, border-color .15s;
+}
+.game-pause {
+  color: #d3d6d4;
+}
+.game-collection:hover,
+.game-pause:hover {
+  background: #253547cc;
+  border-color: #ffffff35;
+}
+.scene-caption {
+  position: absolute;
+  top: 22px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 5;
+  pointer-events: none;
+  animation: scene-enter .65s ease both;
+}
+.scene-caption > span {
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: #9b9b91;
+}
+.scene-caption h1 {
+  font: 32px/1.2 Georgia, serif;
+  color: #f2e3c9;
+  margin: 8px 0;
+  letter-spacing: -.4px;
+  font-weight: 400;
+}
+.scene-caption p {
+  font-size: 11px;
+  color: #a6adb3;
+}
+.game-stage[data-state=CRACKER_SHOW_ACTIVE] .scene-caption {
+  opacity: .5;
+  transition: opacity 1s;
+}
+.firework-dock {
+  position: absolute;
+  z-index: 20;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(820px, calc(100% - 48px));
+  padding: 14px 18px 12px;
+  background: linear-gradient(150deg, #17202df5, #111a26f5);
+  border: 1px solid #b5a28330;
+  border-radius: 16px;
+  box-shadow: 0 12px 35px #0005;
+  backdrop-filter: blur(20px);
+}
+.dock-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 3px 10px;
+}
+.dock-heading > span {
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: #b6a68e;
+}
+.dock-heading small {
+  font-size: 8px;
+  color: #6f7b87;
+}
+.firework-tray {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 7px;
+}
+.firework-choice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 3px 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: #ffffff03;
+  color: #e4d6bd;
+  cursor: pointer;
+  transition: background .2s, transform .2s, border-color .2s;
+}
+.firework-choice:not(:disabled):hover {
+  background: #d7ba7d15;
+  transform: translateY(-3px);
+}
+.firework-choice.selected {
+  background: #e2c68a13;
+  border-color: #c5a46b70;
+}
+.firework-choice:disabled {
+  cursor: not-allowed;
+}
+.firework-choice:disabled .cracker-art {
+  filter: saturate(.25);
+  opacity: .4;
+}
+.firework-choice:disabled strong {
+  color: #85909b;
+}
+.firework-choice strong {
+  font-size: 10px;
+  font-weight: 500;
+  margin-top: 2px;
+}
+.firework-choice small {
+  font-size: 6px;
+  color: #84909b;
+  margin-top: 5px;
+}
+.choice-number {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 7px;
+  color: #687582;
+  letter-spacing: 1px;
+}
+.choice-lock {
+  position: absolute;
+  top: 8px;
+  right: 9px;
+  font-size: 11px;
+  color: #85909b;
+}
+.cracker-art {
+  width: 68px;
+  height: 68px;
+  overflow: visible;
+}
+.ready-street-banner {
+  position: absolute;
+  top: 175px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  backdrop-filter: none;
+  gap: 7px;
+  animation: scene-enter .4s ease;
+}
+.ready-street-btn,
+.game-stage .btn--primary {
+  background: linear-gradient(120deg, #f0d69e, #d9b575);
+  color: #362d24;
+  text-shadow: none;
+  box-shadow: 0 3px 20px #0003;
+  border: 1px solid #f5dfb9;
+  border-radius: 8px;
+  font-size: 12px;
+  min-height: 42px;
+  padding: 11px 23px;
+  font-weight: 600;
+  animation: none;
+  cursor: pointer;
+  transition: filter .15s, transform .15s;
+}
+.ready-street-btn:hover,
+.game-stage .btn--primary:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+.ready-street-hint {
+  font-size: 9px;
+  color: #aaaca6;
+  font-weight: 400;
+}
+.game-stage .overlay::before {
+  background: #09111e80;
+  backdrop-filter: blur(3px);
+}
+.game-stage .safety-splash,
+.game-stage .intro-card,
+.game-stage .reward-card,
+.game-stage .sticker-book {
+  background: linear-gradient(145deg, #1b2836f7, #101a28fa);
+  border: 1px solid #b4a17d40;
+  box-shadow: 0 25px 100px #0005;
+  border-radius: 18px;
+  padding: 32px;
+  max-width: 410px;
+  color: #e8ddc8;
+  gap: 18px;
+}
+.game-stage .safety-splash__title,
+.game-stage .intro-card__title,
+.game-stage .reward-card__title {
+  font: 32px/1.2 Georgia, serif;
+  color: #f4e7ce;
+  letter-spacing: -.5px;
+}
+.game-stage .neon {
+  color: #e4c78e;
+  text-shadow: none;
+}
+.game-stage .safety-splash__notice {
+  background: #ffffff05;
+  border: 1px solid #ffffff0d;
+  padding: 16px;
+  font-size: 12px;
+  color: #b4b9bb;
+  line-height: 1.8;
+}
+.game-stage .safety-splash__diya {
+  font-size: 45px;
+  filter: none;
+}
+.game-stage .safety-splash__btn {
+  min-height: 48px;
+  font-size: 13px;
+}
+.game-stage .safety-splash__subtext {
+  font-size: 10px;
+  color: #81909c;
+  line-height: 1.8;
+}
+.game-stage .intro-card__emoji {
+  height: 110px;
+  width: 110px;
+  display: grid;
+  place-items: center;
+  animation: none;
+  filter: none;
+}
+.game-stage .intro-card__emoji .cracker-art {
+  width: 110px;
+  height: 110px;
+}
+.game-stage .intro-card__desc {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #a8b0b6;
+}
+.game-stage .intro-card__audio {
+  font-size: 10px;
+  color: #c2b69d;
+}
+.game-stage .btn--secondary {
+  background: #ffffff08;
+  color: #c8c6bf;
+  border: 1px solid #ffffff20;
+  box-shadow: none;
+  border-radius: 8px;
+  font-size: 12px;
+  min-height: 44px;
+}
+.game-stage .countdown-overlay {
+  align-items: flex-start;
+  padding-top: 205px;
+}
+.game-stage .countdown-number {
+  font: 64px Georgia, serif;
+  color: #f1d69f;
+  text-shadow: 0 0 25px #ecc67c35;
+}
+.game-stage .countdown-number--glow {
+  font-size: 34px;
+  background: none;
+  -webkit-text-fill-color: #f1d69f;
+  filter: none;
+}
+.game-stage .overlay--reward {
+  justify-content: flex-end;
+  padding-bottom: 40px;
+  pointer-events: none;
+}
+.game-stage .overlay--reward::before {
+  background: linear-gradient(transparent 40%, #0a1423b0);
+  backdrop-filter: none;
+}
+.game-stage .reward-card {
+  pointer-events: auto;
+  max-width: 440px;
+  padding: 24px;
+  gap: 12px;
+}
+.game-stage .reward-card__title {
+  font-size: 26px;
+}
+.game-stage .star {
+  font-size: 25px;
+  filter: sepia(.5);
+}
+.game-stage .reward-card__sticker {
+  flex-direction: row;
+  padding: 9px 15px;
+  gap: 16px;
+  background: #e2be7920;
+  border: 1px solid #b9a27730;
+}
+.game-stage .reward-card__sticker-emoji {
+  font-size: 28px;
+  filter: none;
+}
+.game-stage .reward-card__sticker-label {
+  font-size: 10px;
+  text-align: left;
+}
+.game-stage .calm-corner__title {
+  font: 34px Georgia, serif;
+}
+.game-stage .breathing-text {
+  text-shadow: none;
+}
+.game-stage[data-state=REWARD_CELEBRATION] .firework-dock {
+  display: none;
+}
+.game-stage .btn:focus-visible,
+.game-navbar button:focus-visible,
+.game-navbar input:focus-visible,
+.firework-choice:focus-visible {
+  outline: 2px solid #ffe0a5;
+  outline-offset: 4px;
+}
+@keyframes scene-enter {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (max-width: 900px) and (min-width: 701px) {
+  .game-wordmark small {
+    display: none;
+  }
+  .game-settings {
+    gap: 8px;
+  }
+  .game-sound-modes button {
+    padding: 6px 8px;
+    font-size: 9px;
+  }
+  .game-collection,
+  .game-pause {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+}
+
+@media (max-height: 740px) and (min-width: 701px) {
+  .scene-caption {
+    top: 12px;
+  }
+  .scene-caption h1 {
+    font-size: 24px;
+    margin: 6px 0;
+  }
+  .firework-dock {
+    bottom: 9px;
+    padding: 9px 14px;
+  }
+  .cracker-art {
+    width: 50px;
+    height: 50px;
+  }
+  .ready-street-banner {
+    top: 150px;
+    bottom: auto;
+  }
+  .game-stage .countdown-overlay {
+    padding-top: 158px;
+  }
+  .game-stage .overlay--reward {
+    padding-bottom: 15px;
+  }
+}
+
+@media (max-width: 700px) {
+  .game-navbar {
+    padding: 0 10px;
+    gap: 6px;
+    height: 42px;
+  }
+  .game-nav-divider,
+  .game-wordmark {
+    display: none;
+  }
+  .back-home {
+    padding: 5px 8px;
+    font-size: 10px;
+  }
+  .game-settings {
+    gap: 6px;
+  }
+  .game-volume {
+    display: none;
+  }
+  .game-pause {
+    padding: 5px 9px;
+  }
+  .game-pause span {
+    display: none;
+  }
+  .game-collection {
+    padding: 5px 9px;
+    font-size: 10px;
+  }
+  .game-sound-modes {
+    padding: 2px;
+  }
+  .game-sound-modes button {
+    font-size: 8px;
+    padding: 4px 6px;
+  }
+  .scene-caption {
+    top: 14px;
+    padding: 0 16px;
+  }
+  .scene-caption h1 {
+    font-size: 22px;
+  }
+  .scene-caption p {
+    font-size: 10px;
+  }
+  .scene-caption > span {
+    font-size: 6px;
+    letter-spacing: 2px;
+  }
+  .firework-dock {
+    width: calc(100% - 24px);
+    bottom: 12px;
+    padding: 11px 10px;
+  }
+  .firework-tray {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #675b46 transparent;
+    padding-bottom: 5px;
+    scroll-snap-type: x proximity;
+  }
+  .firework-choice {
+    min-width: 78px;
+    scroll-snap-align: center;
+  }
+  .firework-choice small {
+    font-size: 5.5px;
+  }
+  .firework-choice strong {
+    font-size: 9px;
+  }
+  .cracker-art {
+    width: 57px;
+    height: 57px;
+  }
+  .dock-heading > span {
+    font-size: 6px;
+    letter-spacing: 1px;
+  }
+  .dock-heading small {
+    font-size: 6px;
+  }
+  .ready-street-banner {
+    top: 160px;
+    bottom: auto;
+    width: max-content;
+    max-width: 90%;
+    gap: 6px;
+  }
+  .ready-street-btn {
+    font-size: 12px;
+    min-height: 42px;
+  }
+  .game-stage .countdown-overlay {
+    padding-top: 190px;
+  }
+  .game-stage .overlay {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .game-stage .safety-splash,
+  .game-stage .intro-card,
+  .game-stage .reward-card {
+    padding: 24px;
+    max-width: 360px;
+  }
+  .game-stage .overlay--reward {
+    padding-bottom: 25px;
+  }
+  .game-stage .reward-card__actions .btn {
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-stage * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

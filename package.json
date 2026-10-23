@@ -1,9 +1,9 @@
 {
-  "name": "happy-diwali",
+  "name": "little-lights",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Little Lights — a gentle, sensory-friendly virtual Diwali celebration.",
+  "description": "A gentle virtual Diwali celebration. Light diyas, create rangoli, and discover pretend fireworks at your own pace.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

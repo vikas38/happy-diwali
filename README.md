@@ -1,8 +1,8 @@
 # Little Lights — Your Diwali Adventure
 
-A gentle virtual Diwali celebration with diyas, rangoli and six pretend fireworks. This is a game, not a medical tool or real-world firework instruction.
+A gentle virtual Diwali celebration. Light diyas, create rangoli, and discover pretend fireworks at your own pace. This is a game, not a medical tool or real-world firework instruction.
 
-[Play Little Lights](https://happy-diwali-vikas38.vercel.app/)
+[Play Little Lights](https://happy-diwali-alpha-mauve.vercel.app/)
 
 ## Play at your own pace
 
@@ -16,7 +16,7 @@ Real fireworks must only be handled by responsible adults with children at a saf
 
 Progress and sound preferences are stored locally under the legacy key `chhotu_diwali_save_v1` so existing progress is preserved. No accounts, analytics or progress uploads are implemented. Loading the website makes normal requests to its hosting provider. If storage is blocked, play continues in memory.
 
-The site bundles character PNG images and generates canvas/SVG scenery and Web Audio sound. It works without further network requests once its required assets have loaded. It does **not** promise offline reloads: there is no service worker. The manifest provides home-screen metadata, not an offline guarantee.
+The site bundles local character PNG images in `public/assets/characters/` and generates canvas/SVG scenery and Web Audio sound. There are no external network asset downloads; all assets are served directly from `public/` or synthesized procedurally in the browser. It does **not** promise offline reloads: there is no service worker. The manifest provides home-screen metadata, not an offline guarantee.
 
 ## Develop
 
@@ -53,7 +53,7 @@ Localized flash overlays are limited to a 100 CSS-pixel radius and at least 400 
 
 ## Architecture
 
-React UI, a finite-state game controller, Canvas 2D rendering and synthesized Web Audio. Runtime dependencies are React and ReactDOM. Source lives in src/, unit tests in test/, browser checks in e2e/, and the audit response in docs/audit-response.md.
+React UI, a finite-state game controller, Canvas 2D rendering and synthesized Web Audio. Runtime dependencies are React and ReactDOM. Source lives in src/, static assets (icons, manifest, share card, first-paint CSS, and character sprites) in public/, unit tests in test/, browser checks in e2e/, and the audit response in docs/audit-response.md.
 
 ## License status
 

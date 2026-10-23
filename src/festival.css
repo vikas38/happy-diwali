@@ -38,5 +38,18 @@ html,body{overflow:auto;background:#faf8f4;color:#302b3b;user-select:auto}#root{
 
 /* Readable secondary text on warm paper surfaces. */
 .little-note h3,.little-note p,.star-bank,.bottom-grid p,.journey-card small,.calm-card strong,.sidebar-label,.made-with,.eyebrow,.festival-stamp,.festival-footer,.section-heading p,.section-heading>span,.festival-topbar,.topbar-actions button{color:#6d5c50}
+.play-dominant-btn{min-height:56px;padding:16px 36px;font-size:16px;font-weight:700;letter-spacing:.3px;background:linear-gradient(135deg,#ffe4a8 0%,#f5be6c 52%,#e59c38 100%);color:#362211;border:1px solid #ffdfa3;border-radius:14px;box-shadow:0 10px 32px rgba(235,170,70,.4),0 1px 2px rgba(255,255,255,.5) inset;display:inline-flex;align-items:center;justify-content:center;gap:14px;cursor:pointer;transition:transform .2s,box-shadow .2s;width:auto}
+.play-dominant-btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 14px 42px rgba(235,170,70,.55)}
+.play-dominant-btn:active{transform:translateY(0) scale(.98)}
+.play-btn-spark{font-size:20px;color:#9b5a15}
+.grown-ups-btn{position:relative}
+.grown-ups-btn.is-holding{background:#eee4d7}
+.grown-ups-icon-wrap{position:relative;width:24px;height:24px;display:grid;place-items:center}
+.hold-progress-ring{position:absolute;inset:-2px;width:28px;height:28px;transform:rotate(-90deg);pointer-events:none}
+.hold-ring-bg{fill:none;stroke:rgba(180,140,90,.25);stroke-width:2.5}
+.hold-ring-fill{fill:none;stroke:#c8893d;stroke-width:2.5;stroke-linecap:round;transition:stroke-dashoffset .05s linear}
+.grown-ups-hold-hint{font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(180,140,90,.15);color:#8c6a43;margin-left:auto;margin-right:4px;font-weight:600}
+@media(max-width:760px){.play-dominant-btn{width:100%!important;min-height:56px!important;margin-top:20px!important;justify-content:center!important}}
+
 .festival-modal p,.home-stickers small{color:#6c5964}
 .nav-item,.activity-copy small{color:#6c5964}

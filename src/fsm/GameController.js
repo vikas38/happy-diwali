@@ -48,8 +48,8 @@ const COUNTDOWN_INTERVAL = 800 // ms per beat
 const WALK_DURATION = 1.2 // seconds
 
 export class GameController {
-  constructor() {
-    this.state = STATES.SAFETY_SPLASH
+  constructor(initialState = STATES.SAFETY_SPLASH) {
+    this.state = initialState
     this.selectedCracker = null
     this._prevState = null // state before calm corner
     this._prevSelectedCracker = null

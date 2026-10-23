@@ -57,6 +57,10 @@ describe('save.js', () => {
       expect(s.stars).toBe(0)
       expect(s.stickers).toEqual([])
     })
+
+    it('defaults seenHint to false', () => {
+      expect(createDefaultSave().seenHint).toBe(false)
+    })
   })
 
   describe('validateSave', () => {
@@ -103,6 +107,13 @@ describe('save.js', () => {
       expect(validateSave({ stars: -10 }).stars).toBe(0)
       expect(validateSave({ stars: 3.7 }).stars).toBe(3)
     })
+
+    it('tolerates missing or non-boolean seenHint', () => {
+      expect(validateSave({}).seenHint).toBe(false)
+      expect(validateSave({ seenHint: true }).seenHint).toBe(true)
+      expect(validateSave({ seenHint: 'invalid' }).seenHint).toBe(false)
+      expect(validateSave({ seenHint: 1 }).seenHint).toBe(false)
+    })
   })
 
   describe('loadSave / writeSave round-trip', () => {
@@ -118,6 +129,7 @@ describe('save.js', () => {
         masterVolume: 0.85,
         intensity: INTENSITY.NORMAL,
         seenIntros: [0, 1],
+        seenHint: true,
       }
       writeSave(data, storage)
       const loaded = loadSave(storage)
@@ -127,6 +139,7 @@ describe('save.js', () => {
       expect(loaded.masterVolume).toBe(0.85)
       expect(loaded.intensity).toBe(INTENSITY.NORMAL)
       expect(loaded.seenIntros).toEqual([0, 1])
+      expect(loaded.seenHint).toBe(true)
     })
 
     it('falls back to defaults on corrupt JSON', () => {

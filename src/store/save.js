@@ -26,6 +26,7 @@ export function createDefaultSave() {
     masterVolume: 0.7, // 0..1
     intensity: INTENSITY.SOFT,
     seenIntros: [], // cracker indices whose intro card has been shown
+    seenHint: false, // first-run courtyard hint
   }
 }
 
@@ -51,6 +52,7 @@ export function validateSave(raw) {
     masterVolume: raw.masterVolume,
     intensity: raw.intensity,
     seenIntros: Array.isArray(raw.seenIntros) ? raw.seenIntros : defaults.seenIntros,
+    seenHint: typeof raw.seenHint === 'boolean' ? raw.seenHint : defaults.seenHint,
   }
 
   // unlocked: array of cracker indices 0..5, always include 0

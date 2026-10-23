@@ -66,6 +66,13 @@ export function GameStoreProvider({ children }) {
     setState((s) => validateSave({ ...s, stars: s.stars + count }))
   }, [])
 
+  const dismissHint = useCallback(() => {
+    setState((s) => {
+      if (s.seenHint) return s
+      return validateSave({ ...s, seenHint: true })
+    })
+  }, [])
+
   const resetProgress = useCallback(() => {
     const fresh = createDefaultSave()
     setState(fresh)
@@ -100,6 +107,7 @@ export function GameStoreProvider({ children }) {
     markIntroSeen,
     collectSticker,
     addStars,
+    dismissHint,
     resetProgress,
     getState: () => stateRef.current,
   }

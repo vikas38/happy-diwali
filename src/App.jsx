@@ -33,7 +33,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
   // ----------------------------------------------------------------
   const gcRef = useRef(null)
   if (!gcRef.current) {
-    gcRef.current = new GameController()
+    gcRef.current = new GameController(STATES.IDLE)
   }
   const gc = gcRef.current
 
@@ -142,14 +142,17 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
   }, [gc])
 
   const handleSelectCracker = useCallback((index) => {
+    if (!saveState.seenHint) store.dismissHint()
     gc.selectCracker(index)
-  }, [gc])
+  }, [gc, saveState.seenHint, store])
 
   const handlePutOnStreet = useCallback(() => {
+    if (!saveState.seenHint) store.dismissHint()
     gc.putOnStreet()
-  }, [gc])
+  }, [gc, saveState.seenHint, store])
 
   const handleTapCracker = useCallback((e) => {
+    if (!saveState.seenHint) store.dismissHint()
     if (fsmSnapshot.state !== STATES.READY_ON_STREET) return
     // Cooldown guard: prevent accidental click from "Put on Street" modal
     if (e?.target?.tagName?.toLowerCase() === 'canvas' && Date.now() < readyCooldownRef.current) return
@@ -163,7 +166,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
       }
     }
     gc.tapCracker()
-  }, [gc, fsmSnapshot.state])
+  }, [gc, fsmSnapshot.state, saveState.seenHint, store])
 
   const handleLightAgain = useCallback(() => {
     gc.lightAgain()
@@ -219,6 +222,20 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
 
       {audioState && <div className="audio-status" role="status">{audioState}<button onClick={async () => { const sound = getSoundEngine(); await sound.resume(); setAudioState(sound.ctx?.state === 'running' ? '' : 'Sound is unavailable. You can still play silently.')}}>Enable sound</button></div>}
       <div className="game-stage" data-state={fsmState}>
+        {!saveState.seenHint && showHUD && (
+          <aside className="courtyard-hint-banner" role="status" aria-live="polite">
+            <span className="hint-star" aria-hidden="true">✦</span>
+            <span className="hint-text">Choose a sparkle below to begin your celebration.</span>
+            <button
+              type="button"
+              className="hint-close-btn"
+              onClick={() => store.dismissHint()}
+              aria-label="Dismiss hint"
+            >
+              ✕
+            </button>
+          </aside>
+        )}
         {showHUD && (
           <div className="scene-caption" aria-live="polite">
             <span>AN EVENING IN THE COURTYARD</span>
@@ -316,6 +333,33 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
 }
 
 // ===================================================================
+// Festival Home Wrapper — unlocks audio on gesture and wires settings
+// ===================================================================
+function FestivalHomeWrapper({ onPlay, motion, setMotion }) {
+  const store = useGameStore()
+  const handlePlay = useCallback(() => {
+    const sound = getSoundEngine()
+    try {
+      sound.init()
+      sound.resume().then(() => {
+        sound.setIntensity(store.state.intensity || 'SOFT')
+        sound.setMasterVolume(store.state.masterVolume ?? 0.7)
+        sound.startMusic()
+      }).catch(() => {})
+    } catch {}
+    onPlay()
+  }, [store.state.intensity, store.state.masterVolume, onPlay])
+
+  return (
+    <FestivalHome
+      onPlay={handlePlay}
+      motion={motion}
+      setMotion={setMotion}
+    />
+  )
+}
+
+// ===================================================================
 // Root App
 // ===================================================================
 export default function App() {
@@ -337,7 +381,7 @@ export default function App() {
       {playing ? (
         <GameApp onBack={handleBackToFestival} reducedMotion={reducedMotion} onToggleMotion={()=>setReducedMotion(v=>!v)} />
       ) : (
-        <FestivalHome onPlay={() => setPlaying(true)} motion={!reducedMotion} setMotion={value=>setReducedMotion(v=>!(typeof value === 'function' ? value(!v) : value))} />
+        <FestivalHomeWrapper onPlay={() => setPlaying(true)} motion={!reducedMotion} setMotion={value=>setReducedMotion(v=>!(typeof value === 'function' ? value(!v) : value))} />
       )}
     </GameStoreProvider>
   )

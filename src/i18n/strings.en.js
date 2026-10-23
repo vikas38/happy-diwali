@@ -146,8 +146,10 @@ export const STRINGS_EN = {
 
   // Sticker Book
   sticker_book_dialog: 'Sticker Book',
+  sticker_book_dialog_aria: 'Sticker Book',
   sticker_book_title: 'Sticker Book 📖',
   sticker_book_close: 'Close Sticker Book',
+  sticker_book_close_aria: 'Close Sticker Book',
   stickers_collected_count: '{count} / {total} collected',
   sticker_collected_aria: '{name} sticker collected',
   sticker_locked_aria: '{name} sticker locked',

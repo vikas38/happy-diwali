@@ -133,8 +133,10 @@ export class GameController {
     const { sound, store } = this._engines || {}
     if (!sound || !store) return
     const saveState = store.getState ? store.getState() : store.state
-    sound.setIntensity(saveState.intensity)
-    sound.setMasterVolume(saveState.masterVolume)
+    if (!saveState) return
+    const isMuted = Boolean(saveState.muted || saveState.masterVolume === 0)
+    sound.setIntensity?.(saveState.intensity)
+    sound.setMasterVolume?.(isMuted ? 0 : saveState.masterVolume)
   }
 
   // -----------------------------------------------------------------
@@ -416,13 +418,13 @@ export class GameController {
     this._showCompleted = false
 
     const onDone = () => {
-      this._cancelShow = null
       if (
         !this._disposed &&
         this.state === STATES.CRACKER_SHOW_ACTIVE &&
         this._activeShowToken === runToken &&
         !this._showCompleted
       ) {
+        this._cancelShow = null
         this._showCompleted = true
         this._activeShowToken = null
         this._onCrackerShowComplete()
@@ -579,6 +581,8 @@ export class GameController {
       if (targetState === STATES.CALM_CORNER_OVERLAY) {
         sound?.stopMusic?.()
         sound?.startCalmPad?.()
+      } else {
+        sound?.stopCalmPad?.()
       }
 
       // Stop character walks / jumps
@@ -597,16 +601,24 @@ export class GameController {
   }
 
   _resumeFromInterruption(closingState) {
-    if (this.state !== closingState && !INTERRUPTION_STATES.includes(this.state)) return
+    if (this.state !== closingState) return
+
+    const snapshot = this._interruptionSnapshot
+    const returnState = snapshot?.returnState
 
     if (this._engines?.sound) {
       this._engines.sound.stopCalmPad?.()
-      this._engines.sound.startMusic?.()
       this._applyAudioSettings()
+      const saveState = this._engines.store?.getState
+        ? this._engines.store.getState()
+        : this._engines.store?.state
+      const isMuted = Boolean(saveState?.muted || saveState?.masterVolume === 0)
+      if (!isMuted && returnState !== STATES.CRACKER_SHOW_ACTIVE) {
+        this._engines.sound.startMusic?.()
+      }
     }
 
     this._paused = false
-    const snapshot = this._interruptionSnapshot
     this._interruptionSnapshot = null
     const prev = this._prevState
     this._prevState = null
@@ -617,7 +629,7 @@ export class GameController {
       return
     }
 
-    const { returnState, selectedCracker, uiData } = snapshot
+    const { selectedCracker, uiData } = snapshot
     this.selectedCracker = selectedCracker
 
     // Resume contract by interrupted phase
@@ -706,9 +718,24 @@ export class GameController {
   }
 
   setMasterVolume(vol) {
-    const { sound, store } = this._engines
-    store.setMasterVolume(vol)
-    sound.setMasterVolume(vol)
+    const { sound, store } = this._engines || {}
+    store?.setMasterVolume?.(vol)
+    sound?.setMasterVolume?.(vol)
+  }
+
+  toggleMute() {
+    const { sound, store } = this._engines || {}
+    let nextVol
+    if (typeof store?.toggleMute === 'function') {
+      nextVol = store.toggleMute()
+    } else {
+      const saveState = store?.getState ? store.getState() : store?.state
+      const isMuted = Boolean(saveState?.muted || saveState?.masterVolume === 0)
+      nextVol = isMuted ? saveState?.lastNonZeroVolume || 0.7 : 0
+      store?.setMasterVolume?.(nextVol)
+    }
+    sound?.setMasterVolume?.(nextVol)
+    return nextVol
   }
 
   // -----------------------------------------------------------------

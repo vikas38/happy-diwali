@@ -168,13 +168,34 @@ export class SoundEngine {
 
   /**
    * Set the master volume (0..1). Updates live.
+   * Cancels prior ramps to handle rapid toggles smoothly and reaches exact silence on 0.
    * @param {number} vol
    */
   setMasterVolume(vol) {
-    this.masterVolume = Math.min(1, Math.max(0, vol))
-    if (!this.ctx || !this._supported) return
+    this.masterVolume = Math.min(1, Math.max(0, Number(vol) || 0))
+    if (!this.ctx || !this._supported || !this.masterGain) return
     const now = this.ctx.currentTime
-    this.masterGain.gain.setTargetAtTime(this.masterVolume, now, RAMP_TIME)
+    const gainParam = this.masterGain.gain
+    if (gainParam) {
+      if (typeof gainParam.cancelScheduledValues === 'function') {
+        gainParam.cancelScheduledValues(now)
+      }
+      const currentVal = typeof gainParam.value === 'number' ? gainParam.value : this.masterVolume
+      if (typeof gainParam.setValueAtTime === 'function') {
+        gainParam.setValueAtTime(currentVal, now)
+      }
+      if (typeof gainParam.linearRampToValueAtTime === 'function') {
+        gainParam.linearRampToValueAtTime(this.masterVolume, now + RAMP_TIME)
+      } else if (typeof gainParam.setTargetAtTime === 'function') {
+        gainParam.setTargetAtTime(this.masterVolume, now, RAMP_TIME)
+      } else {
+        gainParam.value = this.masterVolume
+      }
+    }
+  }
+
+  get isMuted() {
+    return this.masterVolume === 0
   }
 
   /**

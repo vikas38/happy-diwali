@@ -282,7 +282,7 @@ function GrownUpsNavButton({ onOpen }) {
 }
 
 export default function FestivalHome({ onPlay, motion, setMotion }) {
-  const { state, setMasterVolume, unlockAllCrackers } = useGameStore()
+  const { state, setMasterVolume, toggleMute, unlockAllCrackers } = useGameStore()
   const [modal, setModal] = useState(null)
 
   const [lit, setLit] = useState([])
@@ -367,11 +367,20 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
               <span>{t('motion_toggle_label', { state: motion ? 'on' : 'off' })}</span>
             </button>
             <button
-              onClick={() => setMasterVolume(state.masterVolume ? 0 : 0.35)}
-              aria-label={state.masterVolume ? t('sound_mute_aria') : t('sound_enable_aria')}
+              onClick={toggleMute}
+              aria-pressed={state.masterVolume === 0 || state.muted}
+              aria-label={
+                state.masterVolume === 0 || state.muted
+                  ? t('sound_enable_aria')
+                  : t('sound_mute_aria')
+              }
             >
               <Icon name="sound" size={18} />
-              <span>{t('sound_toggle_label', { state: state.masterVolume ? 'on' : 'off' })}</span>
+              <span>
+                {t('sound_toggle_label', {
+                  state: state.masterVolume > 0 && !state.muted ? 'on' : 'off',
+                })}
+              </span>
             </button>
             <span className="star-bank">{t('stars_bank', { count: state.stars })}</span>
             <span className="avatar" aria-label={t('little_explorer')}>

@@ -20,7 +20,7 @@ The site bundles character PNG images and generates canvas/SVG scenery and Web A
 
 ## Develop
 
-Use Node 22 (see .nvmrc); Node 24 is also supported.
+Use Node 22.12 or newer in the Node 22 line (see .nvmrc); Node 24 is also supported.
 
 ```sh
 git clone https://github.com/vikas38/happy-diwali.git
@@ -32,6 +32,7 @@ npm run dev
 ## Checks
 
 ```sh
+npm audit --audit-level=moderate
 npm run lint
 npm test
 npm run build

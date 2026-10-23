@@ -10,7 +10,7 @@ Scope: verified the supplied report against local source, tests and build. Exist
 | A4 | Resize handling debounced 200 ms; ignores width changes ≤50 px and height changes ≤150 px. Meaningful geometry changes during active sequences still pause safely; hidden tabs pause. |
 | B1 | Public identity: Little Lights — Your Diwali Adventure; package/repository: happy-diwali. Character names and the compatible legacy storage key remain. |
 | B2 | Open Graph/Twitter metadata, 1200×630 PNG, SVG favicon, Apple/192/512 icons and manifest added. Hosting deployment is still needed for public previews. |
-| B3 | Vite 5.4.21 explicitly pinned; Node 22 in .nvmrc and Node 22–24 engines. |
+| B3 | Vite 7.3.7 explicitly pinned; Node 22 in .nvmrc and Node >=22.12 <25 engines. |
 | B4 | Correct clone/demo URLs, no fixed test count. Documented absent license rather than choosing a legal grant for the owner. |
 | B5 | Confirmed local PNG assets; removed procedural-only/offline-reload claims. No service worker added. |
 | B6 | Repository topics/releases are optional owner-facing publishing decisions; no remote metadata changed. |
@@ -23,14 +23,14 @@ Scope: verified the supplied report against local source, tests and build. Exist
 | E1 | Production Vercel CSP, nosniff, referrer and permissions headers added; inline styles allowed for React. Verify deployed response headers after release. |
 | E2 | Export contains generated geometry and a fixed colour palette; no user-authored strings are injected. No change needed. |
 | E3 | Parent privacy note describes local saves and normal hosting requests accurately; no analytics/accounts introduced. |
-| E4 | npm audit/outdated run. Vitest patched 2.1.8→2.1.9, React unchanged; Dependabot configured. Remaining dev-tool advisories require a separately tested toolchain migration. |
+| E4 | Follow-up migrated Vite to 7.3.7, Vitest to 4.1.12 and the React Vite plugin to 5.1.4 to resolve the retained toolchain advisories. React remains 18.3.1. Full npm audit is clean and CI now fails on moderate-or-higher advisories. |
 
 ## Remaining verification and decisions
 
 - Physical low-end Android, iPhone Safari and tablet test; acoustic measurements with actual devices/headphones.
 - Lighthouse mobile and throttled-device profiling; rendered-video photosensitivity analysis. The flash limiter alone is not proof of WCAG 2.3.1 compliance.
 - Owner license choice; public deployment and verification of preview cards/headers; optional GitHub topics and release tags.
-- Development dependencies still report advisories. Keep development servers local; do not expose Vitest API/UI servers. No claim of a clean development audit is made. Runtime audit is checked separately.
+- Development and production dependency audits now report zero known vulnerabilities. Keep development servers local and continue the CI audit gate.
 
 ## Future enhancement backlog
 
@@ -46,7 +46,11 @@ The keyboard start button was incorrectly affected by a canvas accidental-tap co
 
 - ESLint hooks checks pass.
 - 162 unit tests pass, including adult ignition, blocked storage, audio creation failure, flash bounds and resize thresholds.
-- Four Chromium browser tests pass: axe and keyboard journey/pause/resume; 390px mobile/reduced-motion/blocked storage; every audio effect at all three intensities; missing-canvas recovery.
+- Seven Chromium browser tests cover the keyboard journey/pause/resume, blocked storage and reduced motion, full-chain audio rendering, missing-canvas recovery, blocked audio, and phone/tablet parent and activity dialogs with axe scans and SVG downloads.
 - Production build passes; JavaScript gzip is approximately 80 KiB, below the 150 KiB budget.
-- Production dependency audit: zero known vulnerabilities. Full development audit: six advisories (three moderate, one high, two critical) remain in the retained toolchain.
-- CI and hosting configuration are local changes; remote CI/deployed headers have not yet been exercised.
+- Full dependency audit (including development tools): zero known vulnerabilities after the tested migration.
+- Hosting check: unauthenticated requests to the live URL redirect to Vercel login. Public preview cards and deployed app headers cannot be verified through that protection. No hosting access settings were changed.
+
+## Follow-up scope
+
+The earlier advice to defer major tool upgrades was revisited specifically to resolve six confirmed security advisories. Only development tools changed; the runtime React version and application architecture remain unchanged. The full unit/browser/build suite validates the migration. New phone/tablet scans caught a low-contrast activity result message, now corrected. Real-device, acoustic and photosensitivity checks remain pending.

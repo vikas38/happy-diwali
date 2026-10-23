@@ -68,6 +68,8 @@ export class GameController {
     this._paused = false
     this._currentCountdownBeat = 0
     this._prevCountdownBeat = 0
+    this._activeShowToken = null
+    this._showCompleted = false
   }
 
   // -----------------------------------------------------------------
@@ -117,10 +119,43 @@ export class GameController {
   }
 
   _applyAudioSettings() {
-    const { sound, store } = this._engines
+    const { sound, store } = this._engines || {}
     if (!sound || !store) return
-    sound.setIntensity(store.getState().intensity)
-    sound.setMasterVolume(store.getState().masterVolume)
+    const saveState = store.getState ? store.getState() : store.state
+    sound.setIntensity(saveState.intensity)
+    sound.setMasterVolume(saveState.masterVolume)
+  }
+
+  // -----------------------------------------------------------------
+  // Store query helpers — evaluate dynamically against the store
+  // -----------------------------------------------------------------
+
+  _getStore() {
+    return this._engines?.store
+  }
+
+  _isUnlocked(index) {
+    const store = this._getStore()
+    if (!store) return false
+    if (typeof store.isUnlocked === 'function') return store.isUnlocked(index)
+    const st = store.getState ? store.getState() : store.state
+    return Boolean(st?.unlocked?.includes(index))
+  }
+
+  _hasSticker(index) {
+    const store = this._getStore()
+    if (!store) return false
+    if (typeof store.hasSticker === 'function') return store.hasSticker(index)
+    const st = store.getState ? store.getState() : store.state
+    return Boolean(st?.stickers?.includes(index))
+  }
+
+  _hasSeenIntro(index) {
+    const store = this._getStore()
+    if (!store) return false
+    if (typeof store.hasSeenIntro === 'function') return store.hasSeenIntro(index)
+    const st = store.getState ? store.getState() : store.state
+    return Boolean(st?.seenIntros?.includes(index))
   }
 
   // -----------------------------------------------------------------
@@ -223,7 +258,7 @@ export class GameController {
    * If the intro hasn't been seen, show the intro card. Otherwise, go to ready.
    */
   selectCracker(index) {
-    if (!this._engines.store.isUnlocked(index)) return
+    if (!this._isUnlocked(index)) return
     this.selectedCracker = index
 
     if (this._engines?.background) {
@@ -231,7 +266,7 @@ export class GameController {
     }
 
     const cracker = getCracker(index)
-    if (!this._engines.store.hasSeenIntro(index)) {
+    if (!this._hasSeenIntro(index)) {
       this._setState(STATES.CRACKER_INTRO_CARD, { cracker })
     } else {
       this._gotoReady(index)
@@ -243,7 +278,8 @@ export class GameController {
    */
   putOnStreet() {
     if (this.state !== STATES.CRACKER_INTRO_CARD) return
-    this._engines.store.markIntroSeen(this.selectedCracker)
+    const store = this._getStore()
+    store?.markIntroSeen?.(this.selectedCracker)
     this._gotoReady(this.selectedCracker)
   }
 
@@ -354,63 +390,80 @@ export class GameController {
   _startCrackerShow() {
     this._stopFuse?.()
     this._stopFuse = null
-    this._engines.sound.stopMusic()
+    this._engines?.sound?.stopMusic?.()
     this._setState(STATES.CRACKER_SHOW_ACTIVE, { cracker: getCracker(this.selectedCracker) })
 
-    const { chhotu, pip, particles, comicBubble, sound } = this._engines
-    const cracker = getCracker(this.selectedCracker)
-    const safe = this._safeZonePoint()
-    const { w, h } = this._dims()
+    const { chhotu, pip } = this._engines || {}
 
     // Pip reacts with happy jumps
-    pip.setMood(PIP_MOODS.HAPPY)
-    pip.jump(0.5)
+    pip?.setMood?.(PIP_MOODS.HAPPY)
+    pip?.jump?.(0.5)
+
+    // Token for this specific show run to prevent stale, interrupted, or duplicate completion
+    const runToken = Symbol('cracker-show-run')
+    this._activeShowToken = runToken
+    this._showCompleted = false
+
+    const onDone = () => {
+      this._cancelShow = null
+      if (
+        !this._disposed &&
+        this.state === STATES.CRACKER_SHOW_ACTIVE &&
+        this._activeShowToken === runToken &&
+        !this._showCompleted
+      ) {
+        this._showCompleted = true
+        this._activeShowToken = null
+        this._onCrackerShowComplete()
+      }
+    }
 
     // Run the cracker show function
     if (this._crackerShowFn) {
-      this._cancelShow = this._crackerShowFn(this.selectedCracker, this._engines, () => {
-        this._cancelShow = null
-        if (!this._disposed && this.state === STATES.CRACKER_SHOW_ACTIVE)
-          this._onCrackerShowComplete()
-      })
+      this._cancelShow = this._crackerShowFn(this.selectedCracker, this._engines, onDone)
     } else {
       // No show function registered — complete immediately
-      this._onCrackerShowComplete()
+      onDone()
     }
   }
 
   _onCrackerShowComplete() {
-    const { chhotu, pip, sound } = this._engines
-    sound.startMusic()
+    const { chhotu, pip, sound } = this._engines || {}
+    sound?.startMusic?.()
     // Victory celebration from characters
-    chhotu.setArmState(ARM_STATES.VICTORY_JUMP)
-    chhotu.jump(0.7)
-    pip.setMood(PIP_MOODS.HAPPY)
-    pip.jump(0.5)
+    chhotu?.setArmState?.(ARM_STATES.VICTORY_JUMP)
+    chhotu?.jump?.(0.7)
+    pip?.setMood?.(PIP_MOODS.HAPPY)
+    pip?.jump?.(0.5)
 
-    const isNewSticker = !this._engines.store.hasSticker(this.selectedCracker)
-
-    // Award stars and unlock sticker
-    const { store } = this._engines
+    const store = this._getStore()
     const crackerIndex = this.selectedCracker
-    if (!store.hasSticker(crackerIndex)) {
-      store.collectSticker(crackerIndex)
+
+    let awardResult
+    if (typeof store?.awardShowCompletion === 'function') {
+      awardResult = store.awardShowCompletion(crackerIndex)
     } else {
-      store.addStars(1) // smaller reward for replaying
+      const isNewSticker = !this._hasSticker(crackerIndex)
+      const starsEarned = isNewSticker ? 3 : 1
+      if (isNewSticker) {
+        store?.collectSticker?.(crackerIndex)
+      } else {
+        store?.addStars?.(1)
+      }
+      const nextIndex = crackerIndex + 1
+      if (nextIndex < 6 && !this._isUnlocked(nextIndex)) {
+        store?.unlockCracker?.(nextIndex)
+      }
+      awardResult = { isNewSticker, starsEarned }
     }
 
-    // Unlock the next cracker
-    const nextIndex = crackerIndex + 1
-    if (nextIndex < 6 && !store.isUnlocked(nextIndex)) {
-      store.unlockCracker(nextIndex)
-    }
-
-    // Play fanfare (implemented in Task 9's cracker controllers or here)
+    // Play fanfare (ascending arpeggio)
     this._playFanfare()
 
     this._setState(STATES.REWARD_CELEBRATION, {
       cracker: getCracker(crackerIndex),
-      isNewSticker,
+      isNewSticker: awardResult.isNewSticker,
+      starsEarned: awardResult.starsEarned,
     })
   }
 
@@ -446,7 +499,7 @@ export class GameController {
     }
     this.selectedCracker = nextIndex
     const cracker = getCracker(nextIndex)
-    if (!this._engines.store.hasSeenIntro(nextIndex)) {
+    if (!this._hasSeenIntro(nextIndex)) {
       this._setState(STATES.CRACKER_INTRO_CARD, { cracker })
     } else {
       this._gotoReady(nextIndex)
@@ -477,6 +530,7 @@ export class GameController {
     if (this.state === STATES.CALM_CORNER_OVERLAY) return
     if (this.state === STATES.SAFETY_SPLASH) return // don't interrupt the safety splash
 
+    this._activeShowToken = null
     this._prevState = this.state
     this._prevSelectedCracker = this.selectedCracker
     this._prevCountdownBeat = this._currentCountdownBeat ?? 0
@@ -572,6 +626,7 @@ export class GameController {
 
   dispose() {
     this._disposed = true
+    this._activeShowToken = null
     this._cancelShow?.()
     this._cancelShow = null
     this._stopFuse?.()

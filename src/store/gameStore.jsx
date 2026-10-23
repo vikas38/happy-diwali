@@ -24,89 +24,159 @@ export function GameStoreProvider({ children }) {
     writeSave(state)
   }, [state])
 
+  // Synchronous store state updater ensuring stateRef.current is immediately
+  // updated before any downstream reads, while scheduling React render.
+  const updateStore = useCallback((updater) => {
+    const current = stateRef.current
+    const partial = typeof updater === 'function' ? updater(current) : updater
+    const next = validateSave(partial)
+    stateRef.current = next
+    setState(next)
+    return next
+  }, [])
+
   // ---- Actions ----
 
-  const setIntensity = useCallback((intensity) => {
-    setState((s) => validateSave({ ...s, intensity }))
-  }, [])
+  const setIntensity = useCallback(
+    (intensity) => {
+      updateStore((s) => ({ ...s, intensity }))
+    },
+    [updateStore]
+  )
 
-  const setMasterVolume = useCallback((vol) => {
-    setState((s) => validateSave({ ...s, masterVolume: vol }))
-  }, [])
+  const setMasterVolume = useCallback(
+    (vol) => {
+      updateStore((s) => ({ ...s, masterVolume: vol }))
+    },
+    [updateStore]
+  )
 
-  const unlockCracker = useCallback((index) => {
-    setState((s) => {
-      if (s.unlocked.includes(index)) return s
-      return validateSave({ ...s, unlocked: [...s.unlocked, index] })
-    })
-  }, [])
+  const unlockCracker = useCallback(
+    (index) => {
+      updateStore((s) => {
+        if (s.unlocked.includes(index)) return s
+        return { ...s, unlocked: [...s.unlocked, index] }
+      })
+    },
+    [updateStore]
+  )
 
   const unlockAllCrackers = useCallback(() => {
-    setState((s) =>
-      validateSave({
-        ...s,
-        unlocked: Array.from({ length: TOTAL_CRACKERS }, (_, i) => i),
-        stickers: Array.from({ length: TOTAL_CRACKERS }, (_, i) => i),
-        hasCompletedFirst: true,
-      })
-    )
-  }, [])
+    updateStore((s) => ({
+      ...s,
+      unlocked: Array.from({ length: TOTAL_CRACKERS }, (_, i) => i),
+      stickers: Array.from({ length: TOTAL_CRACKERS }, (_, i) => i),
+      hasCompletedFirst: true,
+    }))
+  }, [updateStore])
 
-  const markIntroSeen = useCallback((index) => {
-    setState((s) => {
-      if (s.seenIntros.includes(index)) return s
-      return validateSave({ ...s, seenIntros: [...s.seenIntros, index] })
-    })
-  }, [])
-
-  const collectSticker = useCallback((index) => {
-    setState((s) => {
-      const stickers = s.stickers.includes(index) ? s.stickers : [...s.stickers, index]
-      return validateSave({
-        ...s,
-        stickers,
-        stars: s.stars + 3,
-        hasCompletedFirst: true,
+  const markIntroSeen = useCallback(
+    (index) => {
+      updateStore((s) => {
+        if (s.seenIntros.includes(index)) return s
+        return { ...s, seenIntros: [...s.seenIntros, index] }
       })
-    })
-  }, [])
+    },
+    [updateStore]
+  )
+
+  const collectSticker = useCallback(
+    (index) => {
+      updateStore((s) => {
+        if (s.stickers.includes(index)) return s
+        return {
+          ...s,
+          stickers: [...s.stickers, index],
+          stars: s.stars + 3,
+          hasCompletedFirst: true,
+        }
+      })
+    },
+    [updateStore]
+  )
 
   // Award stars without collecting a sticker (e.g., replaying a cracker)
-  const addStars = useCallback((count) => {
-    setState((s) => validateSave({ ...s, stars: s.stars + count, hasCompletedFirst: true }))
-  }, [])
+  const addStars = useCallback(
+    (count) => {
+      updateStore((s) => ({
+        ...s,
+        stars: s.stars + count,
+        hasCompletedFirst: true,
+      }))
+    },
+    [updateStore]
+  )
+
+  // Atomic show completion: single transaction for stars, sticker, and next unlock.
+  // Returns deterministic metadata so UI and persistent storage never disagree.
+  const awardShowCompletion = useCallback(
+    (crackerIndex) => {
+      let result = null
+      updateStore((s) => {
+        const isNewSticker = !s.stickers.includes(crackerIndex)
+        const starsEarned = isNewSticker ? 3 : 1
+        const stickers = isNewSticker ? [...s.stickers, crackerIndex] : s.stickers
+        const stars = s.stars + starsEarned
+        const nextIndex = crackerIndex + 1
+        const unlockNext = nextIndex < TOTAL_CRACKERS && !s.unlocked.includes(nextIndex)
+        const unlocked = unlockNext ? [...s.unlocked, nextIndex] : s.unlocked
+
+        result = {
+          isNewSticker,
+          starsEarned,
+          nextUnlocked: unlockNext,
+          nextIndex: unlockNext ? nextIndex : null,
+        }
+
+        return {
+          ...s,
+          stickers,
+          stars,
+          unlocked,
+          hasCompletedFirst: true,
+        }
+      })
+      return result
+    },
+    [updateStore]
+  )
 
   const markFirstCompleted = useCallback(() => {
-    setState((s) => {
+    updateStore((s) => {
       if (s.hasCompletedFirst) return s
-      return validateSave({ ...s, hasCompletedFirst: true })
+      return { ...s, hasCompletedFirst: true }
     })
-  }, [])
+  }, [updateStore])
 
-  const setCalmVisuals = useCallback((val) => {
-    setState((s) => {
-      const next = typeof val === 'function' ? val(s.calmVisuals) : val
-      return validateSave({ ...s, calmVisuals: Boolean(next) })
-    })
-  }, [])
+  const setCalmVisuals = useCallback(
+    (val) => {
+      updateStore((s) => {
+        const next = typeof val === 'function' ? val(s.calmVisuals) : val
+        return { ...s, calmVisuals: Boolean(next) }
+      })
+    },
+    [updateStore]
+  )
 
   const dismissHint = useCallback(() => {
-    setState((s) => {
+    updateStore((s) => {
       if (s.seenHint) return s
-      return validateSave({ ...s, seenHint: true })
+      return { ...s, seenHint: true }
     })
-  }, [])
+  }, [updateStore])
 
   const resetProgress = useCallback(() => {
     const fresh = createDefaultSave()
+    stateRef.current = fresh
     setState(fresh)
   }, [])
 
-  const isUnlocked = useCallback((index) => state.unlocked.includes(index), [state.unlocked])
-
-  const hasSticker = useCallback((index) => state.stickers.includes(index), [state.stickers])
-
-  const hasSeenIntro = useCallback((index) => state.seenIntros.includes(index), [state.seenIntros])
+  // Derived query helpers — always evaluate against stateRef.current
+  // so external references (GameController, callbacks) never capture stale progress.
+  const getState = useCallback(() => stateRef.current, [])
+  const isUnlocked = useCallback((index) => stateRef.current.unlocked.includes(index), [])
+  const hasSticker = useCallback((index) => stateRef.current.stickers.includes(index), [])
+  const hasSeenIntro = useCallback((index) => stateRef.current.seenIntros.includes(index), [])
 
   const value = {
     state,
@@ -123,10 +193,11 @@ export function GameStoreProvider({ children }) {
     markIntroSeen,
     collectSticker,
     addStars,
+    awardShowCompletion,
     markFirstCompleted,
     dismissHint,
     resetProgress,
-    getState: () => stateRef.current,
+    getState,
   }
 
   return <GameStoreContext.Provider value={value}>{children}</GameStoreContext.Provider>

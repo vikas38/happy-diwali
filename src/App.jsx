@@ -98,6 +98,16 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
     [gc, store]
   )
 
+  // Keep store reference in engines in sync across React updates without recreating engines or controller
+  useEffect(() => {
+    if (enginesRef.current) {
+      enginesRef.current.store = store
+    }
+    if (gc._engines) {
+      gc._engines.store = store
+    }
+  }, [gc, store])
+
   // Returning from a hidden tab should never skip the visible safety routine.
   useEffect(() => {
     const pauseWhenHidden = () => {

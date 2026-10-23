@@ -55,6 +55,8 @@ Localized flash overlays are limited to a 100 CSS-pixel radius and at least 400 
 
 React UI, a finite-state game controller, Canvas 2D rendering and synthesized Web Audio. Runtime dependencies are React and ReactDOM. Source lives in src/, static assets (icons, manifest, share card, first-paint CSS, and character sprites) in public/, unit tests in test/, browser checks in e2e/, and the audit response in docs/audit-response.md.
 
-## License status
+## License
 
-No open-source license has been selected by the repository owner. No new license grant is implied by this README. A license decision is still required before advertising this project as open source.
+Copyright © 2026 Vikas. All rights reserved.
+
+This repository and all associated assets (including source code, character designs, artwork, and audio) are proprietary and confidential. No open-source license is granted.

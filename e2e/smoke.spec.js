@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test'
 test.describe('T17 — End-to-End Smoke Test', () => {
   test('completes 5-step celebration, earns a sticker, and persists progress on reload', async ({
     page,
-  }) => {
+  }, testInfo) => {
     // 1. Inject deterministic seeded RNG hook
     await page.addInitScript(() => {
       let seed = 42
@@ -60,6 +60,21 @@ test.describe('T17 — End-to-End Smoke Test', () => {
     await expect(rewardDialog).toBeVisible({ timeout: 25000 })
     await expect(rewardDialog).toContainText('New sticker unlocked')
 
+    // DIW-001: the real provider must immediately expose progress and replay awards.
+    await expect(rewardDialog.getByLabel('3 stars earned')).toBeVisible()
+    await page.screenshot({ path: testInfo.outputPath('first-reward-desktop.png') })
+    await page.getByRole('button', { name: 'Light Again', exact: true }).press('Enter')
+    await lightBtn.click()
+    await expect(rewardDialog).toBeVisible({ timeout: 25000 })
+    await expect(rewardDialog.getByLabel('1 stars earned')).toBeVisible()
+    await expect(rewardDialog).not.toContainText('New sticker unlocked')
+    await page.getByRole('button', { name: 'Light Again', exact: true }).press('Enter')
+    await page.getByRole('option', { name: 'Anar', exact: true }).click()
+    await expect(page.getByRole('dialog', { name: /Meet Anar/i })).toBeVisible()
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.screenshot({ path: testInfo.outputPath('unlocked-intro-mobile-reduced.png') })
+
     // 10. Reload the page and assert progress persists in localStorage
     await page.reload()
 
@@ -70,6 +85,8 @@ test.describe('T17 — End-to-End Smoke Test', () => {
 
     expect(save).not.toBeNull()
     expect(save.stickers).toContain(0) // Phuljhari sticker collected
+    expect(save.stickers).toEqual([0])
+    expect(save.stars).toBe(4)
     expect(save.hasCompletedFirst).toBe(true)
   })
 })

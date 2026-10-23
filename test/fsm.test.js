@@ -395,6 +395,68 @@ describe('GameController — show cancellation', () => {
   )
 })
 
+describe('DIW-001 interruption ownership', () => {
+  it('retains cancellation of the restarted show after an abandoned callback fires', () => {
+    vi.useFakeTimers()
+    const gc = new GameController(STATES.IDLE)
+    const engines = makeMockEngines()
+    const runs = []
+    gc.init(engines)
+    gc.setCrackerShowFn((index, refs, done) => {
+      const cancel = vi.fn()
+      runs.push({ done, cancel })
+      return cancel
+    })
+    try {
+      gc.selectCracker(0)
+      gc.putOnStreet()
+      gc.tapCracker()
+      engines.chhotu._walkCb()
+      vi.advanceTimersByTime(3200)
+      gc.enterCalmCorner()
+      expect(runs[0].cancel).toHaveBeenCalledOnce()
+      gc.exitCalmCorner()
+      vi.advanceTimersByTime(3200)
+      expect(runs).toHaveLength(2)
+      runs[0].done()
+      gc.openStickerBook()
+      expect(runs[1].cancel).toHaveBeenCalledOnce()
+      runs[1].done()
+      expect(engines.store.getState().stars).toBe(0)
+      expect(gc.state).toBe(STATES.STICKER_BOOK_OVERLAY)
+    } finally {
+      gc.dispose()
+      vi.useRealTimers()
+    }
+  })
+
+  it('ignores a stale close action after switching overlays and restores the introduction', () => {
+    const gc = new GameController(STATES.IDLE)
+    gc.init(makeMockEngines())
+    gc.selectCracker(0)
+    const intro = gc.getSnapshot()
+    gc.openSettings()
+    gc.openStickerBook()
+    gc.closeSettings()
+    expect(gc.state).toBe(STATES.STICKER_BOOK_OVERLAY)
+    gc.closeStickerBook()
+    expect(gc.getSnapshot()).toEqual(intro)
+    gc.dispose()
+  })
+
+  it('stops the calm pad when switching to another overlay', () => {
+    const gc = new GameController(STATES.IDLE)
+    const engines = makeMockEngines()
+    gc.init(engines)
+    gc.enterCalmCorner()
+    engines.sound._calls.length = 0
+    gc.openSettings()
+    expect(engines.sound._calls).toContain('stopCalmPad')
+    expect(engines.sound._calls).not.toContain('startCalmPad')
+    gc.dispose()
+  })
+})
+
 describe('Adult ignition regression', () => {
   it('keeps the child out of the lighting pose before countdown', () => {
     const gc = new GameController(),

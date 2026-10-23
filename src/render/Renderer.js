@@ -4,6 +4,12 @@
 
 const MAX_DT = 1 / 30 // clamp to avoid huge jumps after tab switch
 
+export const DEPTH = {
+  BACKDROP: 0,
+  MIDGROUND: 1,
+  INTERACTIVE: 2,
+}
+
 export class Renderer {
   /**
    * @param {HTMLCanvasElement} canvas
@@ -56,10 +62,20 @@ export class Renderer {
     }
   }
 
-  addLayer(layer) {
+  addLayer(layer, depth) {
+    if (depth !== undefined) {
+      layer.depth = depth
+    } else if (layer.depth === undefined) {
+      layer.depth = DEPTH.MIDGROUND
+    }
     this.layers.push(layer)
+    this.sortLayers()
     if (layer.onResize) layer.onResize(this.width, this.height)
     return layer
+  }
+
+  sortLayers() {
+    this.layers.sort((a, b) => (a.depth ?? DEPTH.MIDGROUND) - (b.depth ?? DEPTH.MIDGROUND))
   }
 
   removeLayer(layer) {

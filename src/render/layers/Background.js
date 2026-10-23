@@ -14,6 +14,7 @@
 // ===================================================================
 
 import { STAGE, drawCourtyard, propScale } from './Courtyard.js'
+import { DEPTH } from '../Renderer.js'
 export const LAYOUT = STAGE
 
 export function getLaunchPoint(w, h) {
@@ -23,8 +24,29 @@ export function getSafeZonePoint(w, h) {
   return { x: w * LAYOUT.safeX, y: h * LAYOUT.safeY }
 }
 
+export class InteractivePropLayer {
+  constructor(background) {
+    this.background = background
+    this.depth = DEPTH.INTERACTIVE
+  }
+
+  onResize(w, h) {
+    // Driven by background layout anchors
+  }
+
+  update(dt, time) {
+    // Synchronized with background state
+  }
+
+  draw(ctx, w, h, time) {
+    this.background.drawInteractive(ctx, w, h, time)
+  }
+}
+
 export class Background {
   constructor() {
+    this.depth = DEPTH.BACKDROP
+    this.hasInteractiveLayer = false
     this.stars = []
     this.distantFireworks = []
     this.ambientBursts = []
@@ -474,11 +496,42 @@ export class Background {
     const motionPaused = Boolean(this.reducedMotion || this.calmVisuals)
     drawCourtyard(ctx, w, h, time, this.gameState, motionPaused)
     if (!motionPaused) this._drawAmbientBursts(ctx, w, h, time)
-    this._drawCrackerOnLaunchpad(ctx, w, h, time)
+    if (!this.hasInteractiveLayer) {
+      this._drawCrackerOnLaunchpad(ctx, w, h, time)
+    }
     if (this.light > 0) {
       ctx.fillStyle = `rgba(255,187,100,${this.light * 0.25})`
       ctx.fillRect(0, h * 0.6, w, h * 0.4)
     }
+  }
+
+  drawInteractive(ctx, w, h, time) {
+    this._drawCrackerOnLaunchpad(ctx, w, h, time)
+  }
+
+  _drawInteractiveGlow(ctx, cx, cy, time) {
+    const pulse = 0.9 + Math.sin(time * 3.5) * 0.15
+    const glowRadius = 38 * pulse
+
+    // Radial warm golden interactive aura (WCAG non-text contrast >= 3:1)
+    const glow = ctx.createRadialGradient(cx, cy - 10, 4, cx, cy - 10, glowRadius)
+    glow.addColorStop(0, 'rgba(255, 224, 130, 0.45)')
+    glow.addColorStop(0.55, 'rgba(255, 213, 79, 0.22)')
+    glow.addColorStop(1, 'rgba(255, 213, 79, 0)')
+    ctx.fillStyle = glow
+    ctx.beginPath()
+    ctx.arc(cx, cy - 10, glowRadius, 0, Math.PI * 2)
+    ctx.fill()
+
+    // Outer subtle interactive pulse ring
+    ctx.save()
+    ctx.strokeStyle = `rgba(255, 245, 157, ${0.45 + Math.sin(time * 3.5) * 0.2})`
+    ctx.lineWidth = 1.5
+    ctx.setLineDash([4, 4])
+    ctx.beginPath()
+    ctx.arc(cx, cy - 10, glowRadius * 0.82, 0, Math.PI * 2)
+    ctx.stroke()
+    ctx.restore()
   }
 
   _drawCrackerOnLaunchpad(ctx, w, h, time) {
@@ -512,32 +565,48 @@ export class Background {
     ctx.ellipse(cx, cy + 4, 18, 5, 0, 0, Math.PI * 2)
     ctx.fill()
 
-    // Draw the realistic 3D-shaded cracker prop
+    // Consistent interactive glow treatment when waiting to be lit
+    if (isReady) {
+      this._drawInteractiveGlow(ctx, cx, cy, time)
+    }
+
+    // Draw the realistic 3D-shaded cracker prop with consistent outline/glow
     switch (this.currentCracker) {
       case 0: // Phuljhari
-        this._drawPhuljhariProp(ctx, cx, cy, time, isBurning)
+        this._drawPhuljhariProp(ctx, cx, cy, time, isBurning, isReady)
         break
       case 1: // Anar
-        this._drawAnarProp(ctx, cx, cy, time, isBurning)
+        this._drawAnarProp(ctx, cx, cy, time, isBurning, isReady)
         break
       case 2: // Chakri
-        this._drawChakriProp(ctx, cx, cy, time, isBurning)
+        this._drawChakriProp(ctx, cx, cy, time, isBurning, isReady)
         break
       case 3: // Rocket
-        this._drawRocketProp(ctx, cx, cy, time, isBurning)
+        this._drawRocketProp(ctx, cx, cy, time, isBurning, isReady)
         break
       case 4: // Ladi
-        this._drawLadiProp(ctx, cx, cy, time, isBurning)
+        this._drawLadiProp(ctx, cx, cy, time, isBurning, isReady)
         break
       case 5: // Sutli Bomb
-        this._drawSutliProp(ctx, cx, cy, time, isBurning)
+        this._drawSutliProp(ctx, cx, cy, time, isBurning, isReady)
         break
     }
 
     ctx.restore()
   }
 
-  _drawPhuljhariProp(ctx, cx, cy, time, isBurning) {
+  _drawPhuljhariProp(ctx, cx, cy, time, isBurning, isReady = false) {
+    if (isReady) {
+      ctx.save()
+      ctx.strokeStyle = '#FFE082'
+      ctx.lineWidth = 3
+      ctx.beginPath()
+      ctx.moveTo(cx, cy + 18)
+      ctx.lineTo(cx - 6, cy - 36)
+      ctx.stroke()
+      ctx.restore()
+    }
+
     ctx.strokeStyle = '#D1D5DB'
     ctx.lineWidth = 1.8
     ctx.beginPath()
@@ -562,7 +631,7 @@ export class Background {
     }
   }
 
-  _drawAnarProp(ctx, cx, cy, time, isBurning) {
+  _drawAnarProp(ctx, cx, cy, time, isBurning, isReady = false) {
     const potH = 28
     const topW = 6
     const baseW = 20
@@ -580,6 +649,14 @@ export class Background {
     ctx.lineTo(cx - baseW / 2, cy)
     ctx.closePath()
     ctx.fill()
+
+    if (isReady) {
+      ctx.save()
+      ctx.strokeStyle = '#FFE082'
+      ctx.lineWidth = 1.6
+      ctx.stroke()
+      ctx.restore()
+    }
 
     ctx.fillStyle = '#DC2626'
     ctx.fillRect(cx - baseW * 0.38, cy - potH * 0.6, baseW * 0.76, potH * 0.28)
@@ -601,7 +678,7 @@ export class Background {
     }
   }
 
-  _drawChakriProp(ctx, cx, cy, time, isBurning) {
+  _drawChakriProp(ctx, cx, cy, time, isBurning, isReady = false) {
     const r = 16
     const rot = this.gameState === 'CRACKER_SHOW_ACTIVE' ? time * 24 : 0
 
@@ -618,6 +695,12 @@ export class Background {
     ctx.beginPath()
     ctx.arc(0, 0, r, 0, Math.PI * 2)
     ctx.fill()
+
+    if (isReady) {
+      ctx.strokeStyle = '#FFE082'
+      ctx.lineWidth = 1.8
+      ctx.stroke()
+    }
 
     ctx.strokeStyle = '#FEF08A'
     ctx.lineWidth = 1.5
@@ -638,7 +721,7 @@ export class Background {
     }
   }
 
-  _drawRocketProp(ctx, cx, cy, time, isBurning) {
+  _drawRocketProp(ctx, cx, cy, time, isBurning, isReady = false) {
     ctx.strokeStyle = '#B45309'
     ctx.lineWidth = 2
     ctx.beginPath()
@@ -657,6 +740,14 @@ export class Background {
     ctx.fillStyle = rocketGrad
     ctx.fillRect(cx - bodyW / 2, bodyY, bodyW, bodyH)
 
+    if (isReady) {
+      ctx.save()
+      ctx.strokeStyle = '#FFE082'
+      ctx.lineWidth = 1.6
+      ctx.strokeRect(cx - bodyW / 2, bodyY, bodyW, bodyH)
+      ctx.restore()
+    }
+
     ctx.fillStyle = '#FBBF24'
     ctx.fillRect(cx - bodyW / 2, bodyY + 4, bodyW, 2)
     ctx.fillRect(cx - bodyW / 2, bodyY + 12, bodyW, 2)
@@ -674,7 +765,7 @@ export class Background {
     }
   }
 
-  _drawLadiProp(ctx, cx, cy, time, isBurning) {
+  _drawLadiProp(ctx, cx, cy, time, isBurning, isReady = false) {
     const miniCount = 8
     ctx.strokeStyle = '#F3F4F6'
     ctx.lineWidth = 1.2
@@ -691,6 +782,11 @@ export class Background {
       ctx.save()
       ctx.fillStyle = '#DC2626'
       ctx.fillRect(px - 1.8, py - 4, 3.6, 9)
+      if (isReady) {
+        ctx.strokeStyle = '#FFE082'
+        ctx.lineWidth = 1.2
+        ctx.strokeRect(px - 1.8, py - 4, 3.6, 9)
+      }
       ctx.fillStyle = '#FBBF24'
       ctx.fillRect(px - 1.8, py - 1, 3.6, 1.5)
       ctx.restore()
@@ -702,7 +798,7 @@ export class Background {
     }
   }
 
-  _drawSutliProp(ctx, cx, cy, time, isBurning) {
+  _drawSutliProp(ctx, cx, cy, time, isBurning, isReady = false) {
     const sz = 16
     const topY = cy - sz
 
@@ -712,6 +808,14 @@ export class Background {
     cubeGrad.addColorStop(1, '#14532D')
     ctx.fillStyle = cubeGrad
     ctx.fillRect(cx - sz / 2, topY, sz, sz)
+
+    if (isReady) {
+      ctx.save()
+      ctx.strokeStyle = '#FFE082'
+      ctx.lineWidth = 1.6
+      ctx.strokeRect(cx - sz / 2, topY, sz, sz)
+      ctx.restore()
+    }
 
     ctx.strokeStyle = '#D97706'
     ctx.lineWidth = 1.5

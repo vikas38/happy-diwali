@@ -71,13 +71,14 @@ function lamp(c, x, y, s, t) {
 export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
   const effectiveT = reducedMotion ? t * 0.15 : t
   const ground = h * 0.6
+  // Backdrop: slightly desaturated nocturnal gradient so foreground pops
   const sky = c.createLinearGradient(0, 0, 0, h)
   sky.addColorStop(0, '#080f20')
-  sky.addColorStop(0.55, '#20283a')
-  sky.addColorStop(1, '#655044')
+  sky.addColorStop(0.55, '#1e2433')
+  sky.addColorStop(1, '#4e433d')
   c.fillStyle = sky
   c.fillRect(0, 0, w, h)
-  halo(c, w * 0.55, ground, w * 0.65, '#b2734030')
+  halo(c, w * 0.55, ground, w * 0.65, '#9a633824')
   for (let i = 0; i < 70; i++) {
     const x = (((i * 7919) % 997) / 997) * w,
       y = (((i * 3571) % 991) / 991) * h * 0.5
@@ -93,59 +94,60 @@ export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
   halo(c, w * 0.78, h * 0.18, 75, '#c9d7eb18')
   ellipse(c, w * 0.78, h * 0.18, 18, 18, '#e8e6d4')
   ellipse(c, w * 0.78 + 6, h * 0.18 - 5, 17, 17, '#151f30')
-  // Distant terraces give depth without competing with the fireworks.
+  // Distant terraces give depth with lowered contrast to prevent visual competition
   for (let i = 0; i < 17; i++) {
     const x = (i * w) / 16,
       bh = h * (0.065 + ((i * 37) % 11) / 95)
-    c.fillStyle = i % 2 ? '#242a35' : '#202834'
+    c.fillStyle = i % 2 ? '#20252e' : '#1c212a'
     c.fillRect(x, ground - bh, w / 15, bh)
     if (i % 3 === 0) {
-      ellipse(c, x + w / 34, ground - bh, w / 36, 18, '#242a35')
+      ellipse(c, x + w / 34, ground - bh, w / 36, 18, '#20252e')
     }
     for (let j = 0; j < 3; j++)
-      (c.fillStyle = '#d39d5533'), c.fillRect(x + 12 + j * 16, ground - bh + 22, 3, 7)
+      (c.fillStyle = '#bfa16824'), c.fillRect(x + 12 + j * 16, ground - bh + 22, 3, 7)
   }
-  // Two framing sandstone havelis; the central sky stays open.
+  // Two framing sandstone havelis — desaturated nocturnal tones
   for (const side of [0, 1]) {
     const bw = Math.min(w * 0.21, 270),
       x = side ? w - bw : 0,
       top = ground - h * 0.31
     const wall = c.createLinearGradient(x, 0, x + bw, 0)
-    wall.addColorStop(0, side ? '#544039' : '#342f32')
-    wall.addColorStop(1, side ? '#302c30' : '#58423b')
+    wall.addColorStop(0, side ? '#473d3b' : '#2d2b30')
+    wall.addColorStop(1, side ? '#2b292e' : '#4a3e3c')
     c.fillStyle = wall
     c.fillRect(x, top, bw, ground - top)
-    c.fillStyle = '#76604a'
+    c.fillStyle = '#655444'
     c.fillRect(x, top, bw, 7)
     c.fillRect(x, top + 12, bw, 3)
     c.fillRect(x, ground - 9, bw, 9)
     for (let j = 0; j < 3; j++) {
       const ax = x + bw * (0.12 + j * 0.29),
         aw = bw * 0.17
-      arch(c, ax, top + 33, aw, h * 0.11, '#9d79524d')
-      arch(c, ax + 4, top + 38, aw - 8, h * 0.1, '#d9a45d')
-      arch(c, ax + 8, top + 42, aw - 16, h * 0.095, '#463a32')
-      c.strokeStyle = '#bb915b'
+      arch(c, ax, top + 33, aw, h * 0.11, '#7a604538')
+      arch(c, ax + 4, top + 38, aw - 8, h * 0.1, '#b88f57')
+      arch(c, ax + 8, top + 42, aw - 16, h * 0.095, '#3b332d')
+      c.strokeStyle = '#9f7c4e'
       c.lineWidth = 1
       c.beginPath()
       c.moveTo(ax + aw / 2, top + 45)
       c.lineTo(ax + aw / 2, top + h * 0.15)
       c.stroke()
-      halo(c, ax + aw / 2, top + h * 0.1, aw * 1.8, '#f0af4820')
+      halo(c, ax + aw / 2, top + h * 0.1, aw * 1.8, '#d69d4218')
     }
     for (let i = 0; i < 16; i++) {
       const lx = x + (i * bw) / 15,
         ly = top + 17 + Math.sin((i / 15) * Math.PI) * 16
-      halo(c, lx, ly, 9, '#ffb34745')
+      halo(c, lx, ly, 9, '#ffb34735')
       ellipse(c, lx, ly, 1.8, 2.4, '#fbd493')
     }
     for (let i = 0; i < 5; i++)
       lamp(c, x + 20 + (i * (bw - 40)) / 4, ground - 13, 0.7, effectiveT + i)
   }
+  // Cobblestone street ground
   const floor = c.createLinearGradient(0, ground, 0, h)
-  floor.addColorStop(0, '#49423e')
-  floor.addColorStop(0.55, '#302e30')
-  floor.addColorStop(1, '#171d28')
+  floor.addColorStop(0, '#3e393a')
+  floor.addColorStop(0.55, '#2b292e')
+  floor.addColorStop(1, '#1b1c24')
   c.fillStyle = floor
   c.fillRect(0, ground, w, h - ground)
   c.strokeStyle = '#bba7830d'
@@ -176,6 +178,39 @@ export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
     lamp(c, x, y, 1.8, effectiveT)
     ellipse(c, x, y + 20, 17, 3, '#c68a4030')
   }
+
+  // Safe zone viewing mat (rug) at safeX, safeY
+  const rugX = w * STAGE.safeX
+  const rugY = h * STAGE.safeY
+  const rugW = Math.min(84, w * 0.22)
+  const rugH = 26
+  c.save()
+  c.fillStyle = 'rgba(0, 0, 0, 0.35)'
+  c.beginPath()
+  c.ellipse(rugX, rugY + 3, rugW + 4, rugH / 2 + 3, 0, 0, TAU)
+  c.fill()
+  c.fillStyle = '#4a2233'
+  c.beginPath()
+  c.ellipse(rugX, rugY, rugW, rugH / 2, 0, 0, TAU)
+  c.fill()
+  c.fillStyle = '#3e1d2c'
+  c.beginPath()
+  c.ellipse(rugX, rugY, rugW * 0.82, (rugH / 2) * 0.78, 0, 0, TAU)
+  c.fill()
+  c.strokeStyle = '#c59b3f'
+  c.lineWidth = 1.6
+  c.setLineDash([4, 4])
+  c.beginPath()
+  c.ellipse(rugX, rugY, rugW * 0.88, (rugH / 2) * 0.84, 0, 0, TAU)
+  c.stroke()
+  c.setLineDash([])
+  c.fillStyle = '#d4af37'
+  c.beginPath()
+  c.arc(rugX, rugY, 2.5, 0, TAU)
+  c.fill()
+  c.restore()
+
+  // Cracker launch target on street
   c.save()
   c.strokeStyle = '#d8b57c44'
   c.setLineDash([3, 7])
@@ -183,12 +218,27 @@ export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
   c.ellipse(w * STAGE.launchX, h * STAGE.launchY + 5, Math.min(65, w * 0.12), 18, 0, 0, TAU)
   c.stroke()
   c.restore()
+
+  // Consistent interactive glow & outline on launchpad when ready
   if (state === 'READY_ON_STREET') {
-    const a = 0.2 + Math.sin(effectiveT * 2) * 0.08
-    c.strokeStyle = `rgba(255,209,133,${a})`
+    const pulse = 0.85 + Math.sin(effectiveT * 3.5) * 0.15
+    const a = 0.35 + Math.sin(effectiveT * 3.5) * 0.15
+    halo(c, w * STAGE.launchX, h * STAGE.launchY + 5, 48 * pulse, '#ffe08226')
+    c.save()
+    c.strokeStyle = `rgba(255, 224, 130, ${a})`
+    c.lineWidth = 2
     c.beginPath()
-    c.ellipse(w * STAGE.launchX, h * STAGE.launchY + 5, Math.min(78, w * 0.15), 24, 0, 0, TAU)
+    c.ellipse(
+      w * STAGE.launchX,
+      h * STAGE.launchY + 5,
+      Math.min(78, w * 0.15) * pulse,
+      24 * pulse,
+      0,
+      0,
+      TAU
+    )
     c.stroke()
+    c.restore()
   }
   const vignette = c.createRadialGradient(
     w * 0.5,

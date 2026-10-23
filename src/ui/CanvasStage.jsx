@@ -1,8 +1,8 @@
 import { drawAdult } from '../render/characters/Adult.js'
 import React, { useEffect, useRef, useState } from 'react'
 import { characterStart } from '../render/layers/Courtyard.js'
-import { Renderer } from '../render/Renderer.js'
-import { Background, LAYOUT } from '../render/layers/Background.js'
+import { Renderer, DEPTH } from '../render/Renderer.js'
+import { Background, InteractivePropLayer, LAYOUT } from '../render/layers/Background.js'
 import { ChhotuChamp } from '../render/characters/ChhotuChamp.js'
 import { Pip } from '../render/characters/Pip.js'
 import { Particles } from '../render/Particles.js'
@@ -80,7 +80,8 @@ export default function CanvasStage({
       onFailure?.()
     }
     const background = new Background()
-    renderer.addLayer(background)
+    background.hasInteractiveLayer = true
+    renderer.addLayer(background, DEPTH.BACKDROP)
 
     // FX engine
     const particles = new Particles()
@@ -92,29 +93,39 @@ export default function CanvasStage({
     const pip = new Pip()
     pip.getAudioLevel = () => getSoundEngine().getAudioLevel()
 
-    // Layer order: background -> characters -> particles -> comic bubbles -> jelly squash
-    renderer.addLayer({
-      update(dt) {
-        if (
-          background.gameState === 'STEPPING_BACK_SAFE_ROUTINE' ||
-          background.gameState === 'COUNTDOWN_3_2_1'
-        ) {
-          pip.x += (Math.max(28, chhotu.x - 55) - pip.x) * Math.min(1, dt * 5)
-          pip.y += (chhotu.y + 12 - pip.y) * Math.min(1, dt * 5)
-        }
+    // Layer depth tiers: BACKDROP (0) -> MIDGROUND (1) -> INTERACTIVE (2)
+    renderer.addLayer(
+      {
+        update(dt) {
+          if (
+            background.gameState === 'STEPPING_BACK_SAFE_ROUTINE' ||
+            background.gameState === 'COUNTDOWN_3_2_1'
+          ) {
+            pip.x += (Math.max(28, chhotu.x - 55) - pip.x) * Math.min(1, dt * 5)
+            pip.y += (chhotu.y + 12 - pip.y) * Math.min(1, dt * 5)
+          }
+        },
       },
-    })
-    renderer.addLayer({
-      draw(ctx, w, h, t) {
-        if (background.gameState === 'COUNTDOWN_3_2_1')
-          drawAdult(ctx, w, h, background.currentCracker)
+      DEPTH.MIDGROUND
+    )
+    renderer.addLayer(
+      {
+        draw(ctx, w, h, t) {
+          if (background.gameState === 'COUNTDOWN_3_2_1')
+            drawAdult(ctx, w, h, background.currentCracker)
+        },
       },
-    })
-    renderer.addLayer(chhotu)
-    renderer.addLayer(pip)
-    renderer.addLayer(particles)
-    renderer.addLayer(comicBubble)
-    renderer.addLayer(jellySquash)
+      DEPTH.MIDGROUND
+    )
+    renderer.addLayer(chhotu, DEPTH.MIDGROUND)
+    renderer.addLayer(pip, DEPTH.MIDGROUND)
+    renderer.addLayer(particles, DEPTH.MIDGROUND)
+    renderer.addLayer(comicBubble, DEPTH.MIDGROUND)
+    renderer.addLayer(jellySquash, DEPTH.MIDGROUND)
+
+    // Interactive prop layer (DEPTH.INTERACTIVE = 2)
+    const interactiveProps = new InteractivePropLayer(background)
+    renderer.addLayer(interactiveProps, DEPTH.INTERACTIVE)
 
     // Set initial positions based on layout
     const setInitialPositions = (w, h) => {

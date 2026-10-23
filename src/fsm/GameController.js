@@ -61,6 +61,8 @@ export class GameController {
     this._cancelShow = null
     this._stopFuse = null
     this._paused = false
+    this._currentCountdownBeat = 0
+    this._prevCountdownBeat = 0
   }
 
   // -----------------------------------------------------------------
@@ -284,24 +286,48 @@ export class GameController {
     pip.setMood(PIP_MOODS.IDLE)
   }
 
-  _startCountdown() {
-    const { sound } = this._engines
-    if (sound?.supported) this._stopFuse = playFireworkSound(sound, 'fuse', 3.2)
-    this._setState(STATES.COUNTDOWN_3_2_1, { countdownNumber: COUNTDOWN_BEATS[0] })
-    this._playCountdownChime(0)
+  skipWalk() {
+    if (this.state !== STATES.STEPPING_BACK_SAFE_ROUTINE) return
+    const { chhotu, pip } = this._engines
+    if (chhotu) {
+      chhotu.walkActive = false
+      const to = this._safeZonePoint()
+      chhotu.setPosition(to.x, to.y)
+      chhotu.setArmState(ARM_STATES.COVER_EARS_SMILE)
+    }
+    if (pip) {
+      const to = this._safeZonePoint()
+      pip.setMood(PIP_MOODS.HIDE)
+      pip.setPosition(Math.max(28, to.x - 55), to.y + 12)
+    }
+    this._clearTimers()
+    this._startCountdown(0)
+  }
 
-    for (let i = 1; i < COUNTDOWN_BEATS.length; i++) {
+  _startCountdown(fromBeat = 0) {
+    const { sound } = this._engines
+    if (sound?.supported && fromBeat === 0) {
+      this._stopFuse = playFireworkSound(sound, 'fuse', 3.2)
+    }
+    this._currentCountdownBeat = fromBeat
+    this._setState(STATES.COUNTDOWN_3_2_1, { countdownNumber: COUNTDOWN_BEATS[fromBeat] })
+    this._playCountdownChime(fromBeat)
+
+    for (let i = fromBeat + 1; i < COUNTDOWN_BEATS.length; i++) {
+      const delay = (i - fromBeat) * COUNTDOWN_INTERVAL
       this._addTimer(() => {
+        this._currentCountdownBeat = i
         this._uiData = { countdownNumber: COUNTDOWN_BEATS[i] }
         this._playCountdownChime(i)
         this._notify()
-      }, i * COUNTDOWN_INTERVAL)
+      }, delay)
     }
 
     // After the last beat + its display time, start the cracker show
+    const totalDelay = (COUNTDOWN_BEATS.length - fromBeat) * COUNTDOWN_INTERVAL
     this._addTimer(() => {
       this._startCrackerShow()
-    }, COUNTDOWN_BEATS.length * COUNTDOWN_INTERVAL)
+    }, totalDelay)
   }
 
   _playCountdownChime(beatIndex) {
@@ -440,6 +466,7 @@ export class GameController {
 
     this._prevState = this.state
     this._prevSelectedCracker = this.selectedCracker
+    this._prevCountdownBeat = this._currentCountdownBeat ?? 0
 
     this._cancelShow?.()
     this._cancelShow = null
@@ -485,7 +512,7 @@ export class GameController {
         this._startStepBack()
         break
       case STATES.COUNTDOWN_3_2_1:
-        this._startCountdown()
+        this._startCountdown(this._prevCountdownBeat ?? 0)
         break
       case STATES.CRACKER_SHOW_ACTIVE:
         // Restart the cracker show from the beginning

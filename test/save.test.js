@@ -61,6 +61,10 @@ describe('save.js', () => {
     it('defaults seenHint to false', () => {
       expect(createDefaultSave().seenHint).toBe(false)
     })
+
+    it('defaults hasCompletedFirst to false', () => {
+      expect(createDefaultSave().hasCompletedFirst).toBe(false)
+    })
   })
 
   describe('validateSave', () => {
@@ -114,6 +118,13 @@ describe('save.js', () => {
       expect(validateSave({ seenHint: 'invalid' }).seenHint).toBe(false)
       expect(validateSave({ seenHint: 1 }).seenHint).toBe(false)
     })
+
+    it('tolerates missing hasCompletedFirst and derives true if stickers exist', () => {
+      expect(validateSave({}).hasCompletedFirst).toBe(false)
+      expect(validateSave({ hasCompletedFirst: true }).hasCompletedFirst).toBe(true)
+      expect(validateSave({ stickers: [0] }).hasCompletedFirst).toBe(true)
+      expect(validateSave({ hasCompletedFirst: 'invalid' }).hasCompletedFirst).toBe(false)
+    })
   })
 
   describe('loadSave / writeSave round-trip', () => {
@@ -130,6 +141,7 @@ describe('save.js', () => {
         intensity: INTENSITY.NORMAL,
         seenIntros: [0, 1],
         seenHint: true,
+        hasCompletedFirst: true,
       }
       writeSave(data, storage)
       const loaded = loadSave(storage)
@@ -140,6 +152,7 @@ describe('save.js', () => {
       expect(loaded.intensity).toBe(INTENSITY.NORMAL)
       expect(loaded.seenIntros).toEqual([0, 1])
       expect(loaded.seenHint).toBe(true)
+      expect(loaded.hasCompletedFirst).toBe(true)
     })
 
     it('falls back to defaults on corrupt JSON', () => {

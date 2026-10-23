@@ -17,6 +17,7 @@ import { playCrackerShow, fireRewardConfetti } from './crackers/crackerControlle
 import { getLaunchPoint } from './render/layers/Background.js'
 import { CRACKERS } from './crackers/crackerDefs.js'
 import FestivalHome from './ui/FestivalHome.jsx'
+import ContextualAction from './ui/ContextualAction.jsx'
 
 // ===================================================================
 // Inner app — uses game store context
@@ -38,6 +39,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
   const gc = gcRef.current
 
   const [fsmSnapshot, setFsmSnapshot] = useState(() => gc.getSnapshot())
+  const { state: fsmState, uiData, selectedCracker } = fsmSnapshot
   const [showStickerBook, setShowStickerBook] = useState(false)
   useDialogFocus(fsmSnapshot.state + showStickerBook)
   const [audioState, setAudioState] = useState('')
@@ -176,6 +178,25 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
     gc.nextCracker()
   }, [gc])
 
+  const handleSkipWalk = useCallback(() => {
+    gc.skipWalk()
+  }, [gc])
+
+  const handleContextualPlace = useCallback(() => {
+    if (!saveState.seenHint) store.dismissHint()
+    const target = selectedCracker !== null ? selectedCracker : 0
+    if (fsmSnapshot.state === STATES.IDLE) {
+      if (!store.hasSeenIntro(target)) {
+        gc.selectCracker(target)
+      } else {
+        gc.selectCracker(target)
+        gc.putOnStreet()
+      }
+    } else if (fsmSnapshot.state === STATES.CRACKER_INTRO_CARD) {
+      gc.putOnStreet()
+    }
+  }, [gc, selectedCracker, fsmSnapshot.state, saveState.seenHint, store])
+
   const handleCalmCorner = useCallback(() => {
     gc.enterCalmCorner()
   }, [gc])
@@ -194,7 +215,6 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
 
   // ---- Derived state ----
 
-  const { state: fsmState, uiData, selectedCracker } = fsmSnapshot
   const showHUD = fsmState !== STATES.SAFETY_SPLASH
   const showCarousel =
     fsmState === STATES.IDLE ||
@@ -272,18 +292,27 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
           />
         )}
 
-        {/* Ready to light prompt — shown when cracker is safely on street */}
+        {/* Contextual Action Bar — single primary action + 5-step indicator in lower half */}
+        {showHUD && (
+          <ContextualAction
+            fsmState={fsmState}
+            selectedCracker={selectedCracker ?? 0}
+            countdownNumber={uiData.countdownNumber}
+            canSkipWalk={Boolean(saveState.hasCompletedFirst || saveState.stickers.length > 0)}
+            onPlaceOnStreet={fsmState === STATES.CRACKER_INTRO_CARD ? handlePutOnStreet : handleContextualPlace}
+            onLightFuse={handleTapCracker}
+            onSkipWalk={handleSkipWalk}
+            onNextCracker={handleNextCracker}
+            onLightAgain={handleLightAgain}
+            isLastCracker={isLastCracker}
+          />
+        )}
+
+        {/* Safety notice when ready to light */}
         {fsmState === STATES.READY_ON_STREET && (
-          <div className="ready-street-banner" role="region" aria-label="Light cracker action">
-            <button
-              className="btn btn--primary btn--bounce ready-street-btn"
-              onClick={handleTapCracker}
-              aria-label="Ask the grown-up to start"
-            >
-              <span aria-hidden="true">✦</span> Ask a grown-up <span aria-hidden="true">→</span>
-            </button>
+          <div className="ready-street-banner" role="region" aria-label="Adult supervision reminder">
             <p className="ready-street-hint">
-              Chhotu and Pip watch from a distance. A grown-up handles the pretend fuse.
+              Chhotu and Pip watch from a safe distance. A grown-up handles the pretend fuse.
             </p>
           </div>
         )}

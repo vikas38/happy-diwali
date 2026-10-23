@@ -27,6 +27,7 @@ export function createDefaultSave() {
     intensity: INTENSITY.SOFT,
     seenIntros: [], // cracker indices whose intro card has been shown
     seenHint: false, // first-run courtyard hint
+    hasCompletedFirst: false, // completed at least one firework (unlocks skip walk)
   }
 }
 
@@ -53,6 +54,10 @@ export function validateSave(raw) {
     intensity: raw.intensity,
     seenIntros: Array.isArray(raw.seenIntros) ? raw.seenIntros : defaults.seenIntros,
     seenHint: typeof raw.seenHint === 'boolean' ? raw.seenHint : defaults.seenHint,
+    hasCompletedFirst:
+      typeof raw.hasCompletedFirst === 'boolean'
+        ? raw.hasCompletedFirst
+        : Array.isArray(raw.stickers) && raw.stickers.length > 0,
   }
 
   // unlocked: array of cracker indices 0..5, always include 0

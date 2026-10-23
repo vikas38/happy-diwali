@@ -3,8 +3,8 @@ import React, { useEffect, useRef, useState } from 'react'
 // ===================================================================
 // Countdown — COUNTDOWN_3_2_1 overlay
 // ===================================================================
-// Shows 3 → 2 → 1 → GLOW! with bouncy neon animation.
-// The GameController updates countdownNumber on each beat.
+// Shows 3 → 2 → 1 → GLOW! in one fixed position with a progress ring.
+// Announce through a polite live region (shared with T03).
 
 export default function Countdown({ countdownNumber }) {
   const prevRef = useRef(null)
@@ -14,21 +14,52 @@ export default function Countdown({ countdownNumber }) {
   useEffect(() => {
     if (countdownNumber !== prevRef.current) {
       prevRef.current = countdownNumber
-      setAnimKey(k => k + 1)
+      setAnimKey((k) => k + 1)
     }
   }, [countdownNumber])
 
   const isGlow = countdownNumber === 'GLOW!'
 
+  // Progress mapping: 3 -> 25%, 2 -> 50%, 1 -> 75%, 'GLOW!' -> 100%
+  const progressMap = {
+    3: 0.25,
+    2: 0.5,
+    1: 0.75,
+    'GLOW!': 1.0,
+  }
+  const pct = progressMap[countdownNumber] ?? 0.25
+  const radius = 64
+  const circumference = 2 * Math.PI * radius // ~402.12
+  const strokeDashoffset = circumference * (1 - pct)
+
   return (
-    <div className="countdown-overlay" aria-live="assertive" aria-label={`Countdown: ${countdownNumber}`}>
+    <div
+      className="countdown-overlay countdown-overlay--fixed"
+      role="status"
+      aria-live="polite"
+      aria-label={`Countdown: ${countdownNumber}`}
+    >
       <span className="sr-only">Countdown: {countdownNumber}</span>
-      <div
-        key={animKey}
-        className={`countdown-number${isGlow ? ' countdown-number--glow' : ''} countdown-number--pop`}
-        aria-hidden="true"
-      >
-        {countdownNumber}
+      <div className="countdown-wrap" aria-hidden="true">
+        <svg className="countdown-progress-ring" viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r={radius} className="countdown-ring-bg" />
+          <circle
+            cx="80"
+            cy="80"
+            r={radius}
+            className="countdown-ring-fill"
+            style={{
+              strokeDasharray: circumference,
+              strokeDashoffset,
+            }}
+          />
+        </svg>
+        <div
+          key={animKey}
+          className={`countdown-number${isGlow ? ' countdown-number--glow' : ''} countdown-number--pop`}
+        >
+          {countdownNumber}
+        </div>
       </div>
     </div>
   )

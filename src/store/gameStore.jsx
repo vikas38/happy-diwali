@@ -56,14 +56,26 @@ export function GameStoreProvider({ children }) {
 
   const collectSticker = useCallback((index) => {
     setState((s) => {
-      if (s.stickers.includes(index)) return s
-      return validateSave({ ...s, stickers: [...s.stickers, index], stars: s.stars + 3 })
+      const stickers = s.stickers.includes(index) ? s.stickers : [...s.stickers, index]
+      return validateSave({
+        ...s,
+        stickers,
+        stars: s.stars + 3,
+        hasCompletedFirst: true,
+      })
     })
   }, [])
 
   // Award stars without collecting a sticker (e.g., replaying a cracker)
   const addStars = useCallback((count) => {
-    setState((s) => validateSave({ ...s, stars: s.stars + count }))
+    setState((s) => validateSave({ ...s, stars: s.stars + count, hasCompletedFirst: true }))
+  }, [])
+
+  const markFirstCompleted = useCallback(() => {
+    setState((s) => {
+      if (s.hasCompletedFirst) return s
+      return validateSave({ ...s, hasCompletedFirst: true })
+    })
   }, [])
 
   const dismissHint = useCallback(() => {
@@ -107,6 +119,7 @@ export function GameStoreProvider({ children }) {
     markIntroSeen,
     collectSticker,
     addStars,
+    markFirstCompleted,
     dismissHint,
     resetProgress,
     getState: () => stateRef.current,

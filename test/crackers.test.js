@@ -36,7 +36,7 @@ describe('Cracker definitions integrity', () => {
   })
 
   it('intensity dots escalate correctly (1→2→2→3→3→4)', () => {
-    const dots = CRACKERS.map(c => c.intensityDots)
+    const dots = CRACKERS.map((c) => c.intensityDots)
     expect(dots).toEqual([1, 2, 2, 3, 3, 4])
   })
 
@@ -113,8 +113,8 @@ describe('fireRewardConfetti', () => {
     fireRewardConfetti(mockParticles, 400, 800)
 
     expect(mockParticles.spawn).toHaveBeenCalled()
-    const leftCalls = spawnCalls.filter(c => c.x < 200)
-    const rightCalls = spawnCalls.filter(c => c.x > 200)
+    const leftCalls = spawnCalls.filter((c) => c.x < 200)
+    const rightCalls = spawnCalls.filter((c) => c.x > 200)
     expect(leftCalls.length).toBeGreaterThan(0)
     expect(rightCalls.length).toBeGreaterThan(0)
   })
@@ -125,8 +125,8 @@ describe('fireRewardConfetti', () => {
       spawn: vi.fn((x, y, cfg) => spawnCalls.push(cfg)),
     }
     fireRewardConfetti(mockParticles, 400, 800)
-    const shapes = new Set(spawnCalls.map(c => c.shape))
-    expect([...shapes].every(s => ['confetti', 'star'].includes(s))).toBe(true)
+    const shapes = new Set(spawnCalls.map((c) => c.shape))
+    expect([...shapes].every((s) => ['confetti', 'star'].includes(s))).toBe(true)
   })
 
   it('all spawned particles have positive alpha and decay', () => {
@@ -135,7 +135,7 @@ describe('fireRewardConfetti', () => {
       spawn: vi.fn((x, y, cfg) => spawnCalls.push(cfg)),
     }
     fireRewardConfetti(mockParticles, 400, 800)
-    spawnCalls.forEach(cfg => {
+    spawnCalls.forEach((cfg) => {
       expect(cfg.alpha).toBe(1)
       expect(cfg.decay).toBeGreaterThan(0)
     })
@@ -220,12 +220,15 @@ describe('Ladi 8-pop timing sequence', () => {
       comicBubble: { spawn: vi.fn() },
       jellySquash: { trigger: vi.fn() },
       renderer: { width: 400, height: 800 },
-      chhotu: {}, pip: {},
+      chhotu: {},
+      pip: {},
     }
 
     // Intercept particle spawns as proxy for pops
     let popCount = 0
-    mockEngines.particles.spawn.mockImplementation(() => { popCount++ })
+    mockEngines.particles.spawn.mockImplementation(() => {
+      popCount++
+    })
 
     playCrackerShow(4, mockEngines, vi.fn())
 
@@ -243,22 +246,48 @@ describe('Ladi 8-pop timing sequence', () => {
 
 // Regression: stopping a continuous show must stop particle production too.
 describe('Firework lifecycle', () => {
-  it.each([0,1,2,3,4,5])('cancels every emitter and delayed burst for firework %i', index => {
+  it.each([0, 1, 2, 3, 4, 5])(
+    'cancels every emitter and delayed burst for firework %i',
+    (index) => {
+      vi.useFakeTimers()
+      const particles = { spawn: vi.fn(), flash: vi.fn() },
+        done = vi.fn()
+      const cancel = playCrackerShow(
+        index,
+        {
+          particles,
+          renderer: { width: 1000, height: 700 },
+          sound: { supported: false },
+          jellySquash: { trigger: vi.fn() },
+        },
+        done
+      )
+      vi.advanceTimersByTime(400)
+      cancel()
+      const emitted = particles.spawn.mock.calls.length
+      vi.advanceTimersByTime(10000)
+      expect(particles.spawn).toHaveBeenCalledTimes(emitted)
+      expect(done).not.toHaveBeenCalled()
+      expect(vi.getTimerCount()).toBe(0)
+      vi.useRealTimers()
+    }
+  )
+  it('suppresses camera movement when reduced motion is requested', () => {
     vi.useFakeTimers()
-    const particles={spawn:vi.fn(),flash:vi.fn()},done=vi.fn()
-    const cancel=playCrackerShow(index,{particles,renderer:{width:1000,height:700},sound:{supported:false},jellySquash:{trigger:vi.fn()}},done)
-    vi.advanceTimersByTime(400); cancel()
-    const emitted=particles.spawn.mock.calls.length
-    vi.advanceTimersByTime(10000)
-    expect(particles.spawn).toHaveBeenCalledTimes(emitted)
-    expect(done).not.toHaveBeenCalled()
-    expect(vi.getTimerCount()).toBe(0)
+    const trigger = vi.fn()
+    const cancel = playCrackerShow(
+      5,
+      {
+        particles: { spawn: vi.fn(), flash: vi.fn() },
+        renderer: { width: 1000, height: 700, _reducedMotion: true },
+        sound: { supported: false },
+        jellySquash: { trigger },
+      },
+      vi.fn()
+    )
+    vi.advanceTimersByTime(1600)
+    expect(trigger).not.toHaveBeenCalled()
+    cancel()
     vi.useRealTimers()
-  })
-  it('suppresses camera movement when reduced motion is requested',()=>{
-    vi.useFakeTimers()
-    const trigger=vi.fn()
-    const cancel=playCrackerShow(5,{particles:{spawn:vi.fn(),flash:vi.fn()},renderer:{width:1000,height:700,_reducedMotion:true},sound:{supported:false},jellySquash:{trigger}},vi.fn())
-    vi.advanceTimersByTime(1600);expect(trigger).not.toHaveBeenCalled();cancel();vi.useRealTimers()
   })
 })

@@ -101,9 +101,6 @@ export class JellySquash {
    * Check if the squash has settled back to rest.
    */
   get isAtRest() {
-    return (
-      Math.abs(this.scaleX - 1) < 0.01 &&
-      Math.abs(this.scaleY - 1) < 0.01
-    )
+    return Math.abs(this.scaleX - 1) < 0.01 && Math.abs(this.scaleY - 1) < 0.01
   }
 }

@@ -120,7 +120,9 @@ export default function ContextualAction({
               disabled
               aria-label="Stepping back safely to watching spot"
             >
-              <span className="spinner-sparkle" aria-hidden="true">✧</span>
+              <span className="spinner-sparkle" aria-hidden="true">
+                ✧
+              </span>
               <span>Walking to safe spot…</span>
             </button>
             {canSkipWalk && (
@@ -143,7 +145,9 @@ export default function ContextualAction({
             disabled
             aria-label={`Counting down: ${countdownNumber}`}
           >
-            <span className="spinner-sparkle" aria-hidden="true">✧</span>
+            <span className="spinner-sparkle" aria-hidden="true">
+              ✧
+            </span>
             <span>Get ready… {countdownNumber}</span>
           </button>
         )}

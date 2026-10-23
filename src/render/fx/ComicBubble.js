@@ -65,7 +65,10 @@ export class ComicBubble {
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       const metrics = ctx.measureText ? ctx.measureText(b.text) : null
-      const tw = (metrics && typeof metrics.width === 'number') ? metrics.width : (b.text.length * b.fontSize * 0.6)
+      const tw =
+        metrics && typeof metrics.width === 'number'
+          ? metrics.width
+          : b.text.length * b.fontSize * 0.6
       const th = b.fontSize
       const padX = 18
       const padY = 10
@@ -105,7 +108,9 @@ export class ComicBubble {
       ctx.fillStyle = badgeGrad
 
       ctx.beginPath()
-      ctx.roundRect ? ctx.roundRect(-bw / 2, -bh / 2, bw, bh, rad) : this._drawBurst(ctx, 0, 0, bw / 2, bh / 2, 14)
+      ctx.roundRect
+        ? ctx.roundRect(-bw / 2, -bh / 2, bw, bh, rad)
+        : this._drawBurst(ctx, 0, 0, bw / 2, bh / 2, 14)
       ctx.fill()
 
       // 3. Ornate Golden Leaf Filigree Border

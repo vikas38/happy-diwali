@@ -212,7 +212,14 @@ export class Pip {
 
     // 1. Warm ambient radial glow halo illuminating surroundings
     ctx.globalCompositeOperation = 'lighter'
-    const ambGlow = ctx.createRadialGradient(sway, y - flameH * 0.4, 2, sway, y - flameH * 0.4, flameH * 2.5)
+    const ambGlow = ctx.createRadialGradient(
+      sway,
+      y - flameH * 0.4,
+      2,
+      sway,
+      y - flameH * 0.4,
+      flameH * 2.5
+    )
     ambGlow.addColorStop(0, 'rgba(255, 180, 50, 0.55)')
     ambGlow.addColorStop(0.4, 'rgba(255, 100, 20, 0.22)')
     ambGlow.addColorStop(1, 'rgba(0, 0, 0, 0)')

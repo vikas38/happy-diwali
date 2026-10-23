@@ -61,7 +61,9 @@ describe('T06 — shouldPauseOnResize & Visibility Pausing', () => {
     })
 
     it('does not pause on 119px height-only change', () => {
-      expect(shouldPauseOnResize({ width: 375, height: 667 }, { width: 375, height: 786 })).toBe(false)
+      expect(shouldPauseOnResize({ width: 375, height: 667 }, { width: 375, height: 786 })).toBe(
+        false
+      )
     })
   })
 
@@ -82,21 +84,31 @@ describe('T06 — shouldPauseOnResize & Visibility Pausing', () => {
   describe('Desktop window resize (large vs small)', () => {
     it('pauses on desktop window resize exceeding 20% width change', () => {
       // 1200 -> 900 is 300px change = 25% > 20%
-      expect(shouldPauseOnResize({ width: 1200, height: 800 }, { width: 900, height: 800 })).toBe(true)
+      expect(shouldPauseOnResize({ width: 1200, height: 800 }, { width: 900, height: 800 })).toBe(
+        true
+      )
       // 800 -> 1100 is 300px change = 37.5% > 20%
-      expect(shouldPauseOnResize({ width: 800, height: 800 }, { width: 1100, height: 800 })).toBe(true)
+      expect(shouldPauseOnResize({ width: 800, height: 800 }, { width: 1100, height: 800 })).toBe(
+        true
+      )
     })
 
     it('pauses on large desktop vertical resize >= 120px and > 20%', () => {
       // 800 -> 1100 height = 300px change = 37.5%
-      expect(shouldPauseOnResize({ width: 1200, height: 800 }, { width: 1200, height: 1100 })).toBe(true)
+      expect(shouldPauseOnResize({ width: 1200, height: 800 }, { width: 1200, height: 1100 })).toBe(
+        true
+      )
     })
 
     it('does not pause on minor resize under 20%', () => {
       // 1000 -> 1050 is 5% change
-      expect(shouldPauseOnResize({ width: 1000, height: 800 }, { width: 1050, height: 800 })).toBe(false)
+      expect(shouldPauseOnResize({ width: 1000, height: 800 }, { width: 1050, height: 800 })).toBe(
+        false
+      )
       // 1000 -> 950 is 5% change
-      expect(shouldPauseOnResize({ width: 1000, height: 800 }, { width: 950, height: 800 })).toBe(false)
+      expect(shouldPauseOnResize({ width: 1000, height: 800 }, { width: 950, height: 800 })).toBe(
+        false
+      )
     })
   })
 
@@ -105,7 +117,9 @@ describe('T06 — shouldPauseOnResize & Visibility Pausing', () => {
       expect(shouldPauseOnResize(null, null)).toBe(false)
       expect(shouldPauseOnResize(undefined, { width: 400, height: 400 })).toBe(false)
       expect(shouldPauseOnResize({ width: 0, height: 0 }, { width: 400, height: 400 })).toBe(false)
-      expect(shouldPauseOnResize({ width: -100, height: 200 }, { width: 400, height: 400 })).toBe(false)
+      expect(shouldPauseOnResize({ width: -100, height: 200 }, { width: 400, height: 400 })).toBe(
+        false
+      )
     })
 
     it('meaningfulResize is an alias to shouldPauseOnResize for backward compatibility', () => {

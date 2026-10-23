@@ -43,7 +43,7 @@ export function GameStoreProvider({ children }) {
 
   const unlockAllCrackers = useCallback(() => {
     setState((s) =>
-      validateSave({ ...s, unlocked: Array.from({ length: TOTAL_CRACKERS }, (_, i) => i) }),
+      validateSave({ ...s, unlocked: Array.from({ length: TOTAL_CRACKERS }, (_, i) => i) })
     )
   }, [])
 
@@ -97,20 +97,11 @@ export function GameStoreProvider({ children }) {
     setState(fresh)
   }, [])
 
-  const isUnlocked = useCallback(
-    (index) => state.unlocked.includes(index),
-    [state.unlocked],
-  )
+  const isUnlocked = useCallback((index) => state.unlocked.includes(index), [state.unlocked])
 
-  const hasSticker = useCallback(
-    (index) => state.stickers.includes(index),
-    [state.stickers],
-  )
+  const hasSticker = useCallback((index) => state.stickers.includes(index), [state.stickers])
 
-  const hasSeenIntro = useCallback(
-    (index) => state.seenIntros.includes(index),
-    [state.seenIntros],
-  )
+  const hasSeenIntro = useCallback((index) => state.seenIntros.includes(index), [state.seenIntros])
 
   const value = {
     state,

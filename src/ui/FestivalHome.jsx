@@ -39,7 +39,13 @@ function Rangoli({ color = '#dd796d' }) {
     <svg viewBox="0 0 240 240" aria-hidden="true">
       <defs>
         <filter id={grainId}>
-          <feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="2" seed="8" result="grain" />
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency=".65"
+            numOctaves="2"
+            seed="8"
+            result="grain"
+          />
           <feComposite in="grain" in2="SourceGraphic" operator="in" result="clipped" />
           <feBlend in="SourceGraphic" in2="clipped" mode="soft-light" />
         </filter>
@@ -267,7 +273,9 @@ function GrownUpsNavButton({ onOpen }) {
       <span className="grown-ups-hold-hint" aria-hidden="true">
         {holding ? 'Hold…' : 'Hold'}
       </span>
-      <span className="nav-arrow" aria-hidden="true">↗</span>
+      <span className="nav-arrow" aria-hidden="true">
+        ↗
+      </span>
     </button>
   )
 }
@@ -286,7 +294,8 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
     return () => clearInterval(id)
   }, [modal])
 
-  const explore = () => document.getElementById('activities')?.scrollIntoView({ behavior: 'smooth' })
+  const explore = () =>
+    document.getElementById('activities')?.scrollIntoView({ behavior: 'smooth' })
 
   return (
     <div className={`festival-app ${motion ? '' : 'motion-paused'}`}>
@@ -302,14 +311,18 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
         </a>
         <div className="sidebar-label">YOUR FESTIVAL SPACE</div>
         <nav aria-label="Main navigation">
-          <button className="nav-item active" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <button
+            className="nav-item active"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
             <Icon name="home" /> My Diwali <span className="nav-dot" />
           </button>
           <button className="nav-item" onClick={explore}>
             <Icon name="spark" /> Play & discover
           </button>
           <button className="nav-item" onClick={() => setModal('stickers')}>
-            <Icon name="book" /> My sticker book <span className="nav-count">{state.stickers.length}</span>
+            <Icon name="book" /> My sticker book{' '}
+            <span className="nav-count">{state.stickers.length}</span>
           </button>
           <button className="nav-item" onClick={() => setModal('calm')}>
             <Icon name="moon" /> Calm corner
@@ -336,7 +349,11 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
             <span className="season-dot" /> THE FESTIVAL OF LIGHTS
           </div>
           <div className="topbar-actions">
-            <button className="motion-toggle" aria-pressed={motion} onClick={() => setMotion((v) => !v)}>
+            <button
+              className="motion-toggle"
+              aria-pressed={motion}
+              onClick={() => setMotion((v) => !v)}
+            >
               <Icon name="spark" size={16} />
               <span>Motion {motion ? 'on' : 'off'}</span>
             </button>
@@ -392,7 +409,9 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
                 onClick={onPlay}
                 aria-label="Play Little Lights"
               >
-                <span className="play-btn-spark" aria-hidden="true">✦</span>
+                <span className="play-btn-spark" aria-hidden="true">
+                  ✦
+                </span>
                 <span>Play Little Lights</span>
                 <Icon name="arrow" size={24} />
               </button>
@@ -574,7 +593,9 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
                   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
                   svg.setAttribute('width', '800')
                   svg.setAttribute('height', '800')
-                  const url = URL.createObjectURL(new Blob([svg.outerHTML], { type: 'image/svg+xml' }))
+                  const url = URL.createObjectURL(
+                    new Blob([svg.outerHTML], { type: 'image/svg+xml' })
+                  )
                   const a = document.createElement('a')
                   a.href = url
                   a.download = 'my-diwali-rangoli.svg'
@@ -594,7 +615,9 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
                   <div key={c.id} className={state.stickers.includes(c.id) ? 'collected' : ''}>
                     <span>{state.stickers.includes(c.id) ? c.emoji : '✧'}</span>
                     <strong>{c.name}</strong>
-                    <small>{state.stickers.includes(c.id) ? 'Collected' : 'Waiting to be discovered'}</small>
+                    <small>
+                      {state.stickers.includes(c.id) ? 'Collected' : 'Waiting to be discovered'}
+                    </small>
                   </div>
                 ))}
               </div>
@@ -620,15 +643,16 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
           {modal === 'parents' && (
             <>
               <p>
-                Little Lights is a playful, virtual Diwali celebration. Children can explore at their own pace,
-                start with soft sound, and take a breathing break whenever they like.
+                Little Lights is a playful, virtual Diwali celebration. Children can explore at
+                their own pace, start with soft sound, and take a breathing break whenever they
+                like.
               </p>
               <div className="parent-note">
                 <Icon name="shield" />
                 <p>
-                  Fireworks here are pretend. Real fireworks need responsible adult supervision and a safe distance.
-                  This is a playful experience, not a treatment. For persistent distress, consider speaking with
-                  a paediatric professional.
+                  Fireworks here are pretend. Real fireworks need responsible adult supervision and
+                  a safe distance. This is a playful experience, not a treatment. For persistent
+                  distress, consider speaking with a paediatric professional.
                 </p>
               </div>
               <label className="parent-volume">
@@ -643,8 +667,9 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
                 />
               </label>
               <p className="privacy-note">
-                Progress and sound settings stay in this browser. No accounts, analytics, or progress uploads.
-                Loading the site sends normal web requests to our hosting provider.
+                Progress and sound settings stay in this browser. No accounts, analytics, or
+                progress uploads. Loading the site sends normal web requests to our hosting
+                provider.
               </p>
             </>
           )}

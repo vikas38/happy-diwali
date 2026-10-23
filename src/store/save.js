@@ -61,21 +61,22 @@ export function validateSave(raw) {
       typeof raw.hasCompletedFirst === 'boolean'
         ? raw.hasCompletedFirst
         : Array.isArray(raw.stickers) && raw.stickers.length > 0,
-    calmVisuals:
-      typeof raw.calmVisuals === 'boolean' ? raw.calmVisuals : defaults.calmVisuals,
+    calmVisuals: typeof raw.calmVisuals === 'boolean' ? raw.calmVisuals : defaults.calmVisuals,
   }
 
   // unlocked: array of cracker indices 0..5, always include 0
   if (!Array.isArray(result.unlocked)) result.unlocked = []
-  result.unlocked = result.unlocked
-    .filter((n) => Number.isInteger(n) && n >= 0 && n < TOTAL_CRACKERS)
+  result.unlocked = result.unlocked.filter(
+    (n) => Number.isInteger(n) && n >= 0 && n < TOTAL_CRACKERS
+  )
   if (!result.unlocked.includes(0)) result.unlocked.unshift(0)
   result.unlocked = [...new Set(result.unlocked)].sort((a, b) => a - b)
 
   // stickers: array of cracker indices
   if (!Array.isArray(result.stickers)) result.stickers = []
-  result.stickers = result.stickers
-    .filter((n) => Number.isInteger(n) && n >= 0 && n < TOTAL_CRACKERS)
+  result.stickers = result.stickers.filter(
+    (n) => Number.isInteger(n) && n >= 0 && n < TOTAL_CRACKERS
+  )
   result.stickers = [...new Set(result.stickers)].sort((a, b) => a - b)
 
   // stars: non-negative integer
@@ -91,8 +92,9 @@ export function validateSave(raw) {
 
   // seenIntros: array of cracker indices
   if (!Array.isArray(result.seenIntros)) result.seenIntros = []
-  result.seenIntros = result.seenIntros
-    .filter((n) => Number.isInteger(n) && n >= 0 && n < TOTAL_CRACKERS)
+  result.seenIntros = result.seenIntros.filter(
+    (n) => Number.isInteger(n) && n >= 0 && n < TOTAL_CRACKERS
+  )
   result.seenIntros = [...new Set(result.seenIntros)].sort((a, b) => a - b)
 
   return result

@@ -5,6 +5,7 @@ import path from 'node:path'
 describe('T05 — First paint, favicon, noscript, and share metadata', () => {
   const rootDir = path.resolve(__dirname, '..')
   const indexHtml = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8')
+  const normalizedHtml = indexHtml.replace(/\s+/g, ' ')
   const firstPaintCss = fs.readFileSync(path.join(rootDir, 'public', 'first-paint.css'), 'utf8')
 
   it('sets theme-color to #221b35 in index.html', () => {
@@ -41,17 +42,23 @@ describe('T05 — First paint, favicon, noscript, and share metadata', () => {
 
   it('syncs canonical, og:url, og:image, and twitter:image to the production domain', () => {
     const prodDomain = 'https://happy-diwali-alpha-mauve.vercel.app'
-    expect(indexHtml).toContain(`<link rel="canonical" href="${prodDomain}/"`)
-    expect(indexHtml).toContain(`<meta property="og:url" content="${prodDomain}/"`)
-    expect(indexHtml).toContain(`<meta property="og:image" content="${prodDomain}/share-card.png"`)
-    expect(indexHtml).toContain(`<meta name="twitter:image" content="${prodDomain}/share-card.png"`)
+    expect(normalizedHtml).toContain(`<link rel="canonical" href="${prodDomain}/"`)
+    expect(normalizedHtml).toContain(`<meta property="og:url" content="${prodDomain}/"`)
+    expect(normalizedHtml).toContain(
+      `<meta property="og:image" content="${prodDomain}/share-card.png"`
+    )
+    expect(normalizedHtml).toContain(
+      `<meta name="twitter:image" content="${prodDomain}/share-card.png"`
+    )
 
     expect(fs.existsSync(path.join(rootDir, 'public', 'share-card.png'))).toBe(true)
   })
 
   it('agrees on title and meta description with Little Lights branding', () => {
-    expect(indexHtml).toContain('<title>Little Lights — Your Diwali Adventure</title>')
-    expect(indexHtml).toContain('name="description" content="A gentle, sensory-friendly virtual Diwali celebration.')
+    expect(normalizedHtml).toContain('<title>Little Lights — Your Diwali Adventure</title>')
+    expect(normalizedHtml).toContain(
+      'name="description" content="A gentle, sensory-friendly virtual Diwali celebration.'
+    )
   })
 
   it('first-paint.css honours prefers-reduced-motion: reduce', () => {

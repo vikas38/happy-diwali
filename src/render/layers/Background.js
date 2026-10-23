@@ -177,7 +177,9 @@ export class Background {
 
       const hasTerrace = true
       const hasKandil = Math.random() < 0.55
-      const kandilColor = ['#FF1493', '#FFB703', '#00F5D4', '#9D4EDD', '#FF5722'][Math.floor(Math.random() * 5)]
+      const kandilColor = ['#FF1493', '#FFB703', '#00F5D4', '#9D4EDD', '#FF5722'][
+        Math.floor(Math.random() * 5)
+      ]
 
       this.buildings.push({
         x,
@@ -200,7 +202,7 @@ export class Background {
     for (const b of this.buildings) {
       const diyaCount = Math.floor(b.w / 22)
       for (let i = 0; i <= diyaCount; i++) {
-        const dx = b.x + 4 + i * (b.w - 8) / Math.max(1, diyaCount)
+        const dx = b.x + 4 + (i * (b.w - 8)) / Math.max(1, diyaCount)
         this.rooftopDiyas.push({
           x: dx,
           y: b.top - 2,
@@ -218,7 +220,7 @@ export class Background {
       const x = (i / Math.max(1, curbCount)) * this.w
       this.streetDiyas.push({
         x: x + (Math.random() - 0.5) * 8,
-        y: streetTop + 4 + (Math.random() * 4),
+        y: streetTop + 4 + Math.random() * 4,
         phase: Math.random() * Math.PI * 2,
         speed: 7 + Math.random() * 6,
       })
@@ -249,7 +251,7 @@ export class Background {
         x1: -10,
         y1: h * (0.12 + i * 0.05),
         x2: w + 10,
-        y2: h * (0.10 + i * 0.05),
+        y2: h * (0.1 + i * 0.05),
         sag: 20 + i * 8,
         bulbCount: 22 + Math.floor(Math.random() * 8),
         color: warmPalette[i % warmPalette.length],
@@ -276,7 +278,7 @@ export class Background {
 
   _generateDistantFireworks() {
     this.distantFireworks = [
-      { x: this.w * 0.22, y: this.h * 0.20, color: '#FFB703', size: 22, delay: 0 },
+      { x: this.w * 0.22, y: this.h * 0.2, color: '#FFB703', size: 22, delay: 0 },
       { x: this.w * 0.78, y: this.h * 0.16, color: '#FF4D6D', size: 26, delay: 1.6 },
       { x: this.w * 0.48, y: this.h * 0.13, color: '#00F5D4', size: 24, delay: 3.0 },
       { x: this.w * 0.35, y: this.h * 0.17, color: '#9D4EDD', size: 20, delay: 4.2 },
@@ -299,18 +301,23 @@ export class Background {
     // Burst across the upper sky area (avoiding direct lower ground stage)
     const launchX = 0.08 + Math.random() * 0.84
     const launchY = 0.07 + Math.random() * 0.23
-    const burstType = Math.random() < 0.45 ? 'chrysanthemum' : (Math.random() < 0.5 ? 'willow' : 'ring')
-    const count = burstType === 'willow' ? 24 : (burstType === 'ring' ? 22 : 32)
+    const burstType =
+      Math.random() < 0.45 ? 'chrysanthemum' : Math.random() < 0.5 ? 'willow' : 'ring'
+    const count = burstType === 'willow' ? 24 : burstType === 'ring' ? 22 : 32
     const riseTime = 0.35 + Math.random() * 0.15
 
     const particles = []
     for (let i = 0; i < count; i++) {
-      const angle = burstType === 'ring'
-        ? (i / count) * Math.PI * 2
-        : (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.35
-      const speed = burstType === 'willow'
-        ? 24 + Math.random() * 32
-        : (burstType === 'ring' ? 42 + (i % 2) * 6 : 32 + Math.random() * 45)
+      const angle =
+        burstType === 'ring'
+          ? (i / count) * Math.PI * 2
+          : (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.35
+      const speed =
+        burstType === 'willow'
+          ? 24 + Math.random() * 32
+          : burstType === 'ring'
+            ? 42 + (i % 2) * 6
+            : 32 + Math.random() * 45
       particles.push({
         angle,
         speed,
@@ -379,7 +386,7 @@ export class Background {
         // Tiny sparks trailing the comet
         for (let i = 0; i < 2; i++) {
           const sparkY = headY + (i + 1) * 5 + Math.sin(time * 40 + i) * 2
-          const sparkX = bx + (Math.sin(time * 30 + i * 2)) * 2
+          const sparkX = bx + Math.sin(time * 30 + i * 2) * 2
           ctx.fillStyle = 'rgba(255, 170, 50, 0.6)'
           ctx.beginPath()
           ctx.arc(sparkX, sparkY, 1, 0, Math.PI * 2)
@@ -442,10 +449,12 @@ export class Background {
     ctx.restore()
   }
 
-  illuminate(amount) { this.light = Math.max(this.light || 0, amount) }
+  illuminate(amount) {
+    this.light = Math.max(this.light || 0, amount)
+  }
 
   update(dt, time) {
-    this.light = Math.max(0, (this.light || 0) - dt * .8)
+    this.light = Math.max(0, (this.light || 0) - dt * 0.8)
 
     // Schedule and trigger ambient sky bursts every 1.5 - 3.2 seconds
     if (!this.ambientBursts) this.ambientBursts = []
@@ -458,7 +467,7 @@ export class Background {
     }
 
     // Clean up finished bursts
-    this.ambientBursts = this.ambientBursts.filter(b => (time - b.born) < b.life)
+    this.ambientBursts = this.ambientBursts.filter((b) => time - b.born < b.life)
   }
 
   draw(ctx, w, h, time) {
@@ -467,8 +476,8 @@ export class Background {
     if (!motionPaused) this._drawAmbientBursts(ctx, w, h, time)
     this._drawCrackerOnLaunchpad(ctx, w, h, time)
     if (this.light > 0) {
-      ctx.fillStyle = `rgba(255,187,100,${this.light*.25})`
-      ctx.fillRect(0, h*.6, w, h*.4)
+      ctx.fillStyle = `rgba(255,187,100,${this.light * 0.25})`
+      ctx.fillRect(0, h * 0.6, w, h * 0.4)
     }
   }
 
@@ -488,7 +497,10 @@ export class Background {
 
     ctx.save()
 
-    if (this.gameState === 'CRACKER_SHOW_ACTIVE' && [3, 4, 5].includes(this.currentCracker)) { ctx.restore(); return }
+    if (this.gameState === 'CRACKER_SHOW_ACTIVE' && [3, 4, 5].includes(this.currentCracker)) {
+      ctx.restore()
+      return
+    }
     const size = propScale(w, h)
     ctx.translate(cx, cy)
     ctx.scale(size, size)
@@ -740,7 +752,7 @@ export class Background {
 
     for (let i = 0; i < 4; i++) {
       const a = (i / 4) * Math.PI * 2 + time * 12
-      const dist = 5 + (i * 2 + Math.sin(time * 20)) % 6
+      const dist = 5 + ((i * 2 + Math.sin(time * 20)) % 6)
       ctx.fillStyle = '#FFD700'
       ctx.beginPath()
       ctx.arc(fx + Math.cos(a) * dist, fy + Math.sin(a) * dist, 1, 0, Math.PI * 2)

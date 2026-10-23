@@ -10,7 +10,7 @@ import CrackerArt from './CrackerArt.jsx'
 function IntensityDots({ count }) {
   return (
     <div className="intensity-dots" aria-label={`Intensity level ${count} of 4`}>
-      {[1, 2, 3, 4].map(i => (
+      {[1, 2, 3, 4].map((i) => (
         <span
           key={i}
           className={`intensity-dot${i <= count ? ' intensity-dot--active' : ''}`}
@@ -25,10 +25,19 @@ export default function IntroCard({ cracker, onPutOnStreet }) {
   if (!cracker) return null
 
   return (
-    <div className="overlay overlay--intro" role="dialog" aria-modal="true" aria-label={`Meet ${cracker.name}!`}>
+    <div
+      className="overlay overlay--intro"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Meet ${cracker.name}!`}
+    >
       <div className="intro-card intro-card--bounce-in">
-        <div className="intro-card__emoji" aria-hidden="true"><CrackerArt index={cracker.id} /></div>
-        <h2 className="intro-card__title">Meet <span className="neon">{cracker.name}</span>!</h2>
+        <div className="intro-card__emoji" aria-hidden="true">
+          <CrackerArt index={cracker.id} />
+        </div>
+        <h2 className="intro-card__title">
+          Meet <span className="neon">{cracker.name}</span>!
+        </h2>
         <p className="intro-card__desc">{cracker.description}</p>
         <div className="intro-card__meta">
           <span className="intro-card__audio">{cracker.audioProfile}</span>

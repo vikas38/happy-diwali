@@ -7,15 +7,17 @@ describe('T08 — Naming, README and public/ cleanup', () => {
   const packageJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8'))
   const readme = fs.readFileSync(path.join(rootDir, 'README.md'), 'utf8')
   const indexHtml = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8')
+  const normalizedHtml = indexHtml.replace(/\s+/g, ' ')
 
   it('aligns product name in package.json to little-lights', () => {
     expect(packageJson.name).toBe('little-lights')
   })
 
   it('aligns description across package.json, README, and index.html meta description', () => {
-    const canonicalDesc = 'A gentle, sensory-friendly virtual Diwali celebration. Light diyas, create rangoli, and discover pretend fireworks at your own pace.'
+    const canonicalDesc =
+      'A gentle, sensory-friendly virtual Diwali celebration. Light diyas, create rangoli, and discover pretend fireworks at your own pace.'
     expect(packageJson.description).toBe(canonicalDesc)
-    expect(indexHtml).toContain(`<meta name="description" content="${canonicalDesc}" />`)
+    expect(normalizedHtml).toContain(`<meta name="description" content="${canonicalDesc}" />`)
     expect(readme).toContain(canonicalDesc)
   })
 

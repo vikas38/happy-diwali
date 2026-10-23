@@ -33,7 +33,9 @@ function makeMockEngines() {
       setPosition: () => {},
       setFacing: () => {},
       setArmState: vi.fn(),
-      walkTo: vi.fn((fx, fy, tx, ty, d, cb) => { cb?.() }),
+      walkTo: vi.fn((fx, fy, tx, ty, d, cb) => {
+        cb?.()
+      }),
     },
     pip: {
       setPosition: () => {},
@@ -66,7 +68,10 @@ describe('T09 — Grown-up lights the fuse, copy wording', () => {
   })
 
   it('includes "this is a playful experience, not a treatment" in the For Grown-ups panel', () => {
-    const festivalHome = fs.readFileSync(path.join(rootDir, 'src', 'ui', 'FestivalHome.jsx'), 'utf8')
+    const festivalHome = fs.readFileSync(
+      path.join(rootDir, 'src', 'ui', 'FestivalHome.jsx'),
+      'utf8'
+    )
     expect(festivalHome).toContain('This is a playful experience, not a treatment.')
   })
 

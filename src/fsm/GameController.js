@@ -35,7 +35,12 @@ const TRANSITIONS = {
   [STATES.SAFETY_SPLASH]: [STATES.IDLE],
   [STATES.IDLE]: [STATES.CRACKER_INTRO_CARD, STATES.READY_ON_STREET],
   [STATES.CRACKER_INTRO_CARD]: [STATES.READY_ON_STREET],
-  [STATES.READY_ON_STREET]: [STATES.STEPPING_BACK_SAFE_ROUTINE, STATES.CRACKER_INTRO_CARD, STATES.READY_ON_STREET, STATES.IDLE],
+  [STATES.READY_ON_STREET]: [
+    STATES.STEPPING_BACK_SAFE_ROUTINE,
+    STATES.CRACKER_INTRO_CARD,
+    STATES.READY_ON_STREET,
+    STATES.IDLE,
+  ],
   [STATES.STEPPING_BACK_SAFE_ROUTINE]: [STATES.COUNTDOWN_3_2_1],
   [STATES.COUNTDOWN_3_2_1]: [STATES.CRACKER_SHOW_ACTIVE],
   [STATES.CRACKER_SHOW_ACTIVE]: [STATES.REWARD_CELEBRATION],
@@ -178,7 +183,7 @@ export class GameController {
 
   _chhotuStartPoint() {
     const { w, h } = this._dims()
-    return characterStart(w,h)
+    return characterStart(w, h)
   }
 
   _pipStartPoint() {
@@ -196,12 +201,20 @@ export class GameController {
    */
   startGame() {
     const { sound } = this._engines
-    try { sound.init() } catch { this._setState(STATES.IDLE); return }
-    sound.resume().then(() => {
-      if (this._disposed || this.state === STATES.CALM_CORNER_OVERLAY) return
-      this._applyAudioSettings()
-      sound.startMusic()
-    }).catch(() => {})
+    try {
+      sound.init()
+    } catch {
+      this._setState(STATES.IDLE)
+      return
+    }
+    sound
+      .resume()
+      .then(() => {
+        if (this._disposed || this.state === STATES.CALM_CORNER_OVERLAY) return
+        this._applyAudioSettings()
+        sound.startMusic()
+      })
+      .catch(() => {})
     this._setState(STATES.IDLE)
   }
 
@@ -266,7 +279,6 @@ export class GameController {
     chhotu.setFacing(1)
     chhotu.setArmState(ARM_STATES.COVER_EARS_SMILE)
 
-
     // Set state BEFORE starting the walk so the callback (which fires
     // synchronously in tests) can legally transition to COUNTDOWN.
     this._setState(STATES.STEPPING_BACK_SAFE_ROUTINE)
@@ -278,7 +290,7 @@ export class GameController {
       // Once safely at the safe zone, cover ears and start countdown
       chhotu.setArmState(ARM_STATES.COVER_EARS_SMILE)
       pip.setMood(PIP_MOODS.HIDE)
-      pip.setPosition(Math.max(28,to.x-55),to.y+12)
+      pip.setPosition(Math.max(28, to.x - 55), to.y + 12)
       this._startCountdown()
     })
 
@@ -358,7 +370,8 @@ export class GameController {
     if (this._crackerShowFn) {
       this._cancelShow = this._crackerShowFn(this.selectedCracker, this._engines, () => {
         this._cancelShow = null
-        if (!this._disposed && this.state === STATES.CRACKER_SHOW_ACTIVE) this._onCrackerShowComplete()
+        if (!this._disposed && this.state === STATES.CRACKER_SHOW_ACTIVE)
+          this._onCrackerShowComplete()
       })
     } else {
       // No show function registered — complete immediately

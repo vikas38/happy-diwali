@@ -4,11 +4,11 @@
 // ===================================================================
 
 export const CALM_VISUALS_CONFIG = {
-  particleCountMultiplier: 0.5,     // particle count x0.5
-  particleLifetimeMultiplier: 0.6,  // particle lifetime x0.6
-  allowScreenFlash: false,          // no full-screen flash or vignette pulse
-  squashMultiplier: 0.5,            // squash amplitude x0.5
-  allowScreenShake: false,          // zero screen shake
+  particleCountMultiplier: 0.5, // particle count x0.5
+  particleLifetimeMultiplier: 0.6, // particle lifetime x0.6
+  allowScreenFlash: false, // no full-screen flash or vignette pulse
+  squashMultiplier: 0.5, // squash amplitude x0.5
+  allowScreenShake: false, // zero screen shake
 }
 
 export const STANDARD_VISUALS_CONFIG = {
@@ -39,7 +39,10 @@ export class FlashLimiter {
    * @param {boolean} [calmVisuals=false] - if true, no flashes permitted
    * @returns {boolean} true if flash is allowed, false if rejected
    */
-  requestFlash(now = (typeof performance !== 'undefined' ? performance.now() : Date.now()), calmVisuals = false) {
+  requestFlash(
+    now = typeof performance !== 'undefined' ? performance.now() : Date.now(),
+    calmVisuals = false
+  ) {
     if (calmVisuals) return false
     const cutoff = now - this.windowMs
     this.history = this.history.filter((t) => t > cutoff)
@@ -68,7 +71,7 @@ export class FlashLimiter {
 export function canTriggerFlash(
   history,
   now,
-  { maxFlashes = MAX_FLASHES_PER_SECOND, windowMs = FLASH_WINDOW_MS, calmVisuals = false } = {},
+  { maxFlashes = MAX_FLASHES_PER_SECOND, windowMs = FLASH_WINDOW_MS, calmVisuals = false } = {}
 ) {
   if (calmVisuals) return false
   const cutoff = now - windowMs

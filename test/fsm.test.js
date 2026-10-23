@@ -56,7 +56,11 @@ function makeMockEngines() {
   }
 
   const chhotu = {
-    x: 0, y: 0, facing: 1, walkActive: false, jumpActive: false,
+    x: 0,
+    y: 0,
+    facing: 1,
+    walkActive: false,
+    jumpActive: false,
     setPosition: (x, y) => {
       chhotu.x = x
       chhotu.y = y
@@ -75,7 +79,9 @@ function makeMockEngines() {
   }
 
   const pip = {
-    x: 0, y: 0, _jumpActive: false,
+    x: 0,
+    y: 0,
+    _jumpActive: false,
     setPosition: (x, y) => {
       pip.x = x
       pip.y = y
@@ -358,28 +364,46 @@ describe('GameController — reward & next cracker', () => {
 })
 
 describe('GameController — show cancellation', () => {
-  it.each(['calm', 'dispose'])('cancels running emitters on %s and ignores their stale completion', (action) => {
-    vi.useFakeTimers()
-    const gc = new GameController(), engines = makeMockEngines()
-    const cancel = vi.fn()
-    let finish
-    gc.init(engines)
-    gc.setCrackerShowFn((index, eng, done) => {finish=done; return cancel})
-    gc.startGame(); engines.store.markIntroSeen(0); gc.selectCracker(0); gc.tapCracker()
-    engines.chhotu._walkCb(); vi.advanceTimersByTime(3200)
-    expect(gc.state).toBe(STATES.CRACKER_SHOW_ACTIVE)
-    if(action==='calm')gc.enterCalmCorner();else gc.dispose()
-    expect(cancel).toHaveBeenCalledOnce()
-    finish()
-    if(action==='calm')expect(gc.state).toBe(STATES.CALM_CORNER_OVERLAY)
-    expect(engines.store.getState().stars).toBe(0)
-    vi.useRealTimers()
-  })
+  it.each(['calm', 'dispose'])(
+    'cancels running emitters on %s and ignores their stale completion',
+    (action) => {
+      vi.useFakeTimers()
+      const gc = new GameController(),
+        engines = makeMockEngines()
+      const cancel = vi.fn()
+      let finish
+      gc.init(engines)
+      gc.setCrackerShowFn((index, eng, done) => {
+        finish = done
+        return cancel
+      })
+      gc.startGame()
+      engines.store.markIntroSeen(0)
+      gc.selectCracker(0)
+      gc.tapCracker()
+      engines.chhotu._walkCb()
+      vi.advanceTimersByTime(3200)
+      expect(gc.state).toBe(STATES.CRACKER_SHOW_ACTIVE)
+      if (action === 'calm') gc.enterCalmCorner()
+      else gc.dispose()
+      expect(cancel).toHaveBeenCalledOnce()
+      finish()
+      if (action === 'calm') expect(gc.state).toBe(STATES.CALM_CORNER_OVERLAY)
+      expect(engines.store.getState().stars).toBe(0)
+      vi.useRealTimers()
+    }
+  )
 })
 
-describe('Adult ignition regression',()=>{
-  it('keeps the child out of the lighting pose before countdown',()=>{
-    const gc=new GameController(),engines=makeMockEngines();gc.init(engines);gc.startGame();gc.selectCracker(0);gc.putOnStreet();gc.tapCracker()
+describe('Adult ignition regression', () => {
+  it('keeps the child out of the lighting pose before countdown', () => {
+    const gc = new GameController(),
+      engines = makeMockEngines()
+    gc.init(engines)
+    gc.startGame()
+    gc.selectCracker(0)
+    gc.putOnStreet()
+    gc.tapCracker()
     expect(gc.state).toBe(STATES.STEPPING_BACK_SAFE_ROUTINE)
     expect(engines.chhotu.setArmState).not.toHaveBeenCalledWith(ARM_STATES.LIGHTING_REACH)
     engines.chhotu._walkCb()

@@ -1,6 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import { Renderer } from '../src/render/Renderer.js'
-import { Background, LAYOUT, getLaunchPoint, getSafeZonePoint } from '../src/render/layers/Background.js'
+import {
+  Background,
+  LAYOUT,
+  getLaunchPoint,
+  getSafeZonePoint,
+} from '../src/render/layers/Background.js'
 
 describe('Renderer — dt clamping', () => {
   it('clamps dt to 1/30 max', () => {
@@ -75,7 +80,12 @@ describe('Background — generation', () => {
     bg.onResize(400, 700)
     const mockGradient = {
       addColorStop: (offset, color) => {
-        if (color === undefined || color === null || typeof color !== 'string' || color === 'undefined') {
+        if (
+          color === undefined ||
+          color === null ||
+          typeof color !== 'string' ||
+          color === 'undefined'
+        ) {
           throw new Error(`Invalid color in addColorStop: ${color}`)
         }
       },
@@ -109,7 +119,16 @@ describe('Background — generation', () => {
     expect(() => bg.draw(mockCtx, 1200, 800, 2.5)).not.toThrow()
 
     // Test all game states and all 6 crackers
-    const states = ['SAFETY_SPLASH', 'IDLE', 'CRACKER_INTRO_CARD', 'READY_ON_STREET', 'STEPPING_BACK_SAFE_ROUTINE', 'COUNTDOWN_3_2_1', 'CRACKER_SHOW_ACTIVE', 'REWARD_CELEBRATION']
+    const states = [
+      'SAFETY_SPLASH',
+      'IDLE',
+      'CRACKER_INTRO_CARD',
+      'READY_ON_STREET',
+      'STEPPING_BACK_SAFE_ROUTINE',
+      'COUNTDOWN_3_2_1',
+      'CRACKER_SHOW_ACTIVE',
+      'REWARD_CELEBRATION',
+    ]
     for (const st of states) {
       for (let c = 0; c < 6; c++) {
         bg.setGameState(st, c)

@@ -1,11 +1,17 @@
 /* First paint styles — instant dark background & CSS diya loader before JS loads */
-html, body {
+html,
+body {
   background-color: #221b35;
   color: #f7eedf;
   margin: 0;
   padding: 0;
   min-height: 100%;
-  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  font-family:
+    'Segoe UI',
+    -apple-system,
+    BlinkMacSystemFont,
+    Roboto,
+    sans-serif;
 }
 .first-paint-loader {
   display: flex;
@@ -27,7 +33,13 @@ html, body {
 .fp-flame {
   width: 14px;
   height: 22px;
-  background: radial-gradient(ellipse at 50% 75%, #ffffff 0%, #ffdf7a 40%, #f59e0b 80%, #dc2626 100%);
+  background: radial-gradient(
+    ellipse at 50% 75%,
+    #ffffff 0%,
+    #ffdf7a 40%,
+    #f59e0b 80%,
+    #dc2626 100%
+  );
   border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
   animation: fp-flicker 2s ease-in-out infinite alternate;
   filter: drop-shadow(0 0 10px rgba(245, 190, 108, 0.7));
@@ -68,9 +80,18 @@ html, body {
   color: #d1c4db;
 }
 @keyframes fp-flicker {
-  0% { transform: scale(0.95) rotate(-2deg); opacity: 0.85; }
-  50% { transform: scale(1.05) rotate(2deg); opacity: 1; }
-  100% { transform: scale(0.95) rotate(-2deg); opacity: 0.85; }
+  0% {
+    transform: scale(0.95) rotate(-2deg);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.05) rotate(2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.95) rotate(-2deg);
+    opacity: 0.85;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .fp-flame {

@@ -45,8 +45,12 @@ function loadSprites() {
       const img = new Image()
       img.src = src
       spriteCache[key] = { img, loaded: false }
-      img.onload = () => { spriteCache[key].loaded = true }
-      img.onerror = () => { console.warn('Failed to load sprite:', src) }
+      img.onload = () => {
+        spriteCache[key].loaded = true
+      }
+      img.onerror = () => {
+        console.warn('Failed to load sprite:', src)
+      }
     }
   }
 }
@@ -181,7 +185,10 @@ export class ChhotuChamp {
 
     // Walk cycle
     if (this.walkActive) {
-      if (this._walkDelay > 0) { this._walkDelay -= dt; return }
+      if (this._walkDelay > 0) {
+        this._walkDelay -= dt
+        return
+      }
       this._walkElapsed += dt
       const t = Math.min(1, this._walkElapsed / this._walkDuration)
       const easeT = this._easeInOut(t)
@@ -220,7 +227,8 @@ export class ChhotuChamp {
     ctx.save()
 
     // Proportional character scale matching the scene layout
-    const responsiveScale = this.scale * Math.max(1.55, Math.min(2.8, (h || 600) / 285, (w || 800) / 240))
+    const responsiveScale =
+      this.scale * Math.max(1.55, Math.min(2.8, (h || 600) / 285, (w || 800) / 240))
 
     ctx.translate(this.x, this.y + this._jumpY)
     ctx.scale(this.facing * responsiveScale, responsiveScale)
@@ -236,7 +244,15 @@ export class ChhotuChamp {
     ctx.fillStyle = 'rgba(5, 2, 18, 0.45)'
     ctx.beginPath()
     const shadowStretch = Math.max(0.35, 1 - Math.abs(this._jumpY) * 0.02)
-    ctx.ellipse(0, 1.5 - this._jumpY * 0.1, 16 * bodyScaleX * shadowStretch, 4.5 * shadowStretch, 0, 0, Math.PI * 2)
+    ctx.ellipse(
+      0,
+      1.5 - this._jumpY * 0.1,
+      16 * bodyScaleX * shadowStretch,
+      4.5 * shadowStretch,
+      0,
+      0,
+      Math.PI * 2
+    )
     ctx.fill()
     ctx.restore()
 
@@ -250,7 +266,16 @@ export class ChhotuChamp {
 
     const spriteObj = spriteCache[spriteKey]
     if (spriteObj && spriteObj.loaded) {
-      this._drawSprite(ctx, spriteObj.img, spriteKey, bodyScaleX, bodyScaleY, walkBob, walkTilt, time)
+      this._drawSprite(
+        ctx,
+        spriteObj.img,
+        spriteKey,
+        bodyScaleX,
+        bodyScaleY,
+        walkBob,
+        walkTilt,
+        time
+      )
     } else {
       this._drawProceduralFallback(ctx, bodyScaleX, bodyScaleY, walkBob, time)
     }
@@ -385,11 +410,20 @@ export class ChhotuChamp {
   _drawArms(ctx, time) {
     const shoulderY = -43
     const pose = this._currentPose
-    const wave = this.walkActive ? Math.sin(this._walkPhase) * 9 : this.armState === ARM_STATES.IDLE_WAVE
-      ? Math.sin(time * 3.5) * 4.5
-      : 0
+    const wave = this.walkActive
+      ? Math.sin(this._walkPhase) * 9
+      : this.armState === ARM_STATES.IDLE_WAVE
+        ? Math.sin(time * 3.5) * 4.5
+        : 0
 
-    this._drawArm(ctx, -5, shoulderY, pose.lx, shoulderY + pose.ly - (this.walkActive ? wave : 0), '#BF360C')
+    this._drawArm(
+      ctx,
+      -5,
+      shoulderY,
+      pose.lx,
+      shoulderY + pose.ly - (this.walkActive ? wave : 0),
+      '#BF360C'
+    )
     this._drawArm(ctx, 5, shoulderY, pose.rx, shoulderY + pose.ry + wave, '#E65100')
 
     if (this.armState === ARM_STATES.LIGHTING_REACH) {

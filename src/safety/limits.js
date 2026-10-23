@@ -3,7 +3,10 @@ export const MASTER_CEILING_DB = -6.0
 export const MASTER_CEILING_LINEAR = Math.pow(10, MASTER_CEILING_DB / 20) // ~0.501187
 export const FLASH_INTERVAL_MS = 400
 export function limiterCurve(size = 4097) {
-  return Float32Array.from({ length: size }, (_, i) => MAX_OUTPUT_PEAK * Math.tanh((i / (size - 1) * 2 - 1) / MAX_OUTPUT_PEAK))
+  return Float32Array.from(
+    { length: size },
+    (_, i) => MAX_OUTPUT_PEAK * Math.tanh(((i / (size - 1)) * 2 - 1) / MAX_OUTPUT_PEAK)
+  )
 }
 
 /**
@@ -47,11 +50,11 @@ export function shouldPauseOnResize(prev, next) {
   const widthRatio = dw / prev.width
   const heightRatio = dh / prev.height
 
-  if (widthRatio > 0.20) {
+  if (widthRatio > 0.2) {
     return true
   }
 
-  if (dh >= 120 && heightRatio > 0.20) {
+  if (dh >= 120 && heightRatio > 0.2) {
     return true
   }
 

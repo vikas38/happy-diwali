@@ -74,7 +74,12 @@ export class SoundEngine {
       this._supported = false
       return
     }
-    try { this.ctx = new Ctx() } catch { this._supported = false; return }
+    try {
+      this.ctx = new Ctx()
+    } catch {
+      this._supported = false
+      return
+    }
     this._supported = true
 
     // Build the chain: intensityGain -> intensityFilter -> masterGain -> compressor -> destination
@@ -132,7 +137,11 @@ export class SoundEngine {
     if (!this.ctx) this.init()
     if (!this._supported) return
     if (this.ctx.state === 'suspended') {
-      try { await this.ctx.resume() } catch { /* Retry through the visible sound button. */ }
+      try {
+        await this.ctx.resume()
+      } catch {
+        /* Retry through the visible sound button. */
+      }
     }
   }
 
@@ -210,7 +219,13 @@ export class SoundEngine {
     // Pink noise (Paul Kellet's algorithm)
     const pink = this.ctx.createBuffer(1, len, this.ctx.sampleRate)
     const pData = pink.getChannelData(0)
-    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0
+    let b0 = 0,
+      b1 = 0,
+      b2 = 0,
+      b3 = 0,
+      b4 = 0,
+      b5 = 0,
+      b6 = 0
     for (let i = 0; i < len; i++) {
       const white = Math.random() * 2 - 1
       b0 = 0.99886 * b0 + white * 0.0555179
@@ -374,16 +389,36 @@ export class SoundEngine {
 
   // Pentatonic note frequencies (C4–A5)
   static PENTATONIC = {
-    C4: 261.63, D4: 293.66, E4: 329.63, G4: 392.0, A4: 440.0,
-    C5: 523.25, D5: 587.33, E5: 659.25, G5: 783.99, A5: 880.0,
+    C4: 261.63,
+    D4: 293.66,
+    E4: 329.63,
+    G4: 392.0,
+    A4: 440.0,
+    C5: 523.25,
+    D5: 587.33,
+    E5: 659.25,
+    G5: 783.99,
+    A5: 880.0,
   }
 
   // A gentle, slow melodic phrase (16 notes, ~400ms each)
   static MELODY = [
-    ['C4', 0.4], ['E4', 0.4], ['G4', 0.4], ['A4', 0.4],
-    ['G4', 0.4], ['E4', 0.4], ['D4', 0.4], ['C4', 0.4],
-    ['E4', 0.4], ['G4', 0.4], ['A4', 0.4], ['C5', 0.4],
-    ['A4', 0.4], ['G4', 0.4], ['E4', 0.4], ['D4', 0.4],
+    ['C4', 0.4],
+    ['E4', 0.4],
+    ['G4', 0.4],
+    ['A4', 0.4],
+    ['G4', 0.4],
+    ['E4', 0.4],
+    ['D4', 0.4],
+    ['C4', 0.4],
+    ['E4', 0.4],
+    ['G4', 0.4],
+    ['A4', 0.4],
+    ['C5', 0.4],
+    ['A4', 0.4],
+    ['G4', 0.4],
+    ['E4', 0.4],
+    ['D4', 0.4],
   ]
 
   // Calm Corner chords (Fmaj7 / Cmaj7), low octave for warmth

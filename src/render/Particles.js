@@ -28,13 +28,23 @@ export class Particles {
   _createParticle() {
     return {
       active: false,
-      x: 0, y: 0, vx: 0, vy: 0,
-      gravity: 0, drag: 0.98,
-      size: 2, alpha: 1, decay: 1,
-      hue: 0, sat: 100, light: 60,
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      gravity: 0,
+      drag: 0.98,
+      size: 2,
+      alpha: 1,
+      decay: 1,
+      hue: 0,
+      sat: 100,
+      light: 60,
       shape: 'circle',
-      trail: null, maxTrail: 0,
-      rotation: 0, rotSpeed: 0,
+      trail: null,
+      maxTrail: 0,
+      rotation: 0,
+      rotSpeed: 0,
       glow: false,
       bounceY: null, // floor for bouncing
       bounceDamp: 0.5,
@@ -78,7 +88,9 @@ export class Particles {
     p.size = config.size || 2
     p.alpha = config.alpha ?? 1
     const baseDecay = config.decay ?? 1
-    p.decay = this.calmVisuals ? baseDecay / CALM_VISUALS_CONFIG.particleLifetimeMultiplier : baseDecay
+    p.decay = this.calmVisuals
+      ? baseDecay / CALM_VISUALS_CONFIG.particleLifetimeMultiplier
+      : baseDecay
     p.hue = config.hue ?? 0
     p.sat = config.sat ?? 100
     p.light = config.light ?? 60
@@ -115,9 +127,10 @@ export class Particles {
     for (let i = 0; i < actualCount; i++) {
       const angle = angleBase + (Math.random() - 0.5) * spread
       const speed = speedMin + Math.random() * (speedMax - speedMin)
-      const hue = config.hueMin !== undefined
-        ? config.hueMin + Math.random() * ((config.hueMax ?? config.hueMin) - config.hueMin)
-        : config.hue ?? 0
+      const hue =
+        config.hueMin !== undefined
+          ? config.hueMin + Math.random() * ((config.hueMax ?? config.hueMin) - config.hueMin)
+          : (config.hue ?? 0)
 
       this.spawn(x, y, {
         ...config,
@@ -130,7 +143,7 @@ export class Particles {
   }
 
   update(dt, time) {
-    this.flashes = this.flashes.filter(f => (f.life -= dt) > 0)
+    this.flashes = this.flashes.filter((f) => (f.life -= dt) > 0)
     this.activeCount = 0
     const dragFactor = Math.pow(0.98, dt * 60) // frame-rate independent drag baseline
 
@@ -179,12 +192,13 @@ export class Particles {
     ctx.globalCompositeOperation = 'lighter'
     for (const f of this.flashes) {
       const a = f.life / f.duration
-      const radius = f.radius * (1.2 - a * .2)
+      const radius = f.radius * (1.2 - a * 0.2)
       const g = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, radius)
-      g.addColorStop(0, `hsla(${f.hue},100%,80%,${a*.3})`)
-      g.addColorStop(.2, `hsla(${f.hue},100%,60%,${a*.12})`)
+      g.addColorStop(0, `hsla(${f.hue},100%,80%,${a * 0.3})`)
+      g.addColorStop(0.2, `hsla(${f.hue},100%,60%,${a * 0.12})`)
       g.addColorStop(1, 'transparent')
-      ctx.fillStyle=g; ctx.fillRect(f.x-radius,f.y-radius,radius*2,radius*2)
+      ctx.fillStyle = g
+      ctx.fillRect(f.x - radius, f.y - radius, radius * 2, radius * 2)
     }
     // Pass 1: glow particles (additive)
     ctx.globalCompositeOperation = 'lighter'
@@ -212,11 +226,11 @@ export class Particles {
       const alpha = Math.max(0, Math.min(1, p.alpha))
       for (let i = 1; i < p.trail.length; i++) {
         const heat = i / (p.trail.length - 1)
-        ctx.globalAlpha = alpha * heat * heat * .8
-        ctx.strokeStyle = `hsl(${p.hue - (1-heat)*12}, ${p.sat}%, ${Math.max(35,p.light-(1-heat)*30-p.age*8)}%)`
-        ctx.lineWidth = Math.max(.25, p.size * heat * .8)
+        ctx.globalAlpha = alpha * heat * heat * 0.8
+        ctx.strokeStyle = `hsl(${p.hue - (1 - heat) * 12}, ${p.sat}%, ${Math.max(35, p.light - (1 - heat) * 30 - p.age * 8)}%)`
+        ctx.lineWidth = Math.max(0.25, p.size * heat * 0.8)
         ctx.beginPath()
-        ctx.moveTo(p.trail[i-1].x, p.trail[i-1].y)
+        ctx.moveTo(p.trail[i - 1].x, p.trail[i - 1].y)
         ctx.lineTo(p.trail[i].x, p.trail[i].y)
         ctx.stroke()
       }
@@ -225,10 +239,12 @@ export class Particles {
 
     switch (p.shape) {
       case 'smoke': {
-        ctx.globalAlpha = Math.min(.2, p.alpha) * Math.min(1, p.age * 4)
+        ctx.globalAlpha = Math.min(0.2, p.alpha) * Math.min(1, p.age * 4)
         const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size)
-        g.addColorStop(0, '#b2a9a4'); g.addColorStop(1, 'transparent')
-        ctx.fillStyle = g; ctx.fillRect(p.x-p.size,p.y-p.size,p.size*2,p.size*2)
+        g.addColorStop(0, '#b2a9a4')
+        g.addColorStop(1, 'transparent')
+        ctx.fillStyle = g
+        ctx.fillRect(p.x - p.size, p.y - p.size, p.size * 2, p.size * 2)
         break
       }
       case 'circle': {
@@ -328,14 +344,14 @@ export class Particles {
   /**
    * Deactivate all particles.
    */
-  flash(x, y, radius = 120, hue = 38, duration = .35, timestamp) {
+  flash(x, y, radius = 120, hue = 38, duration = 0.35, timestamp) {
     const now = timestamp ?? (typeof performance !== 'undefined' ? performance.now() : Date.now())
     if (!this.flashLimiter.requestFlash(now, this.calmVisuals || this.reducedMotion)) {
       return false
     }
     this._lastFlash = now
     radius = Math.min(radius, 100)
-    duration = Math.min(duration, .25)
+    duration = Math.min(duration, 0.25)
     this.flashes.push({ x, y, radius, hue, duration, life: duration })
     if (this.flashes.length > 20) this.flashes.shift()
     return true

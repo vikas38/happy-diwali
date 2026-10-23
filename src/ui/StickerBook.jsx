@@ -19,7 +19,9 @@ function StickerTile({ cracker, unlocked }) {
       </span>
       <span className="sticker-tile__name">{cracker.name}</span>
       {Array.from({ length: cracker.intensityDots }).map((_, i) => (
-        <span key={i} className="sticker-dot" aria-hidden="true">●</span>
+        <span key={i} className="sticker-dot" aria-hidden="true">
+          ●
+        </span>
       ))}
     </div>
   )
@@ -65,17 +67,28 @@ export default function StickerBook({ stickers, onClose, onUnlockAll }) {
   }
 
   return (
-    <div className="overlay overlay--sticker" role="dialog" aria-modal="true" aria-label="Sticker Book">
+    <div
+      className="overlay overlay--sticker"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Sticker Book"
+    >
       <div className="sticker-book">
         <div className="sticker-book__header">
           <h2 className="sticker-book__title">Sticker Book 📖</h2>
-          <button className="btn btn--icon sticker-book__close" onClick={onClose} aria-label="Close Sticker Book">✕</button>
+          <button
+            className="btn btn--icon sticker-book__close"
+            onClick={onClose}
+            aria-label="Close Sticker Book"
+          >
+            ✕
+          </button>
         </div>
         <div className="sticker-book__count" aria-live="polite">
           {stickers.length} / {CRACKERS.length} collected
         </div>
         <div className="sticker-grid">
-          {CRACKERS.map(cracker => (
+          {CRACKERS.map((cracker) => (
             <StickerTile
               key={cracker.id}
               cracker={cracker}
@@ -93,9 +106,7 @@ export default function StickerBook({ stickers, onClose, onUnlockAll }) {
             aria-label="Parent Unlock All — hold for 2 seconds"
             style={{ position: 'relative', overflow: 'hidden' }}
           >
-            {holding
-              ? `Unlocking… ${Math.round(holdProgress * 100)}%`
-              : '🔓 Parent Unlock All'}
+            {holding ? `Unlocking… ${Math.round(holdProgress * 100)}%` : '🔓 Parent Unlock All'}
             {holding && (
               <span
                 className="parent-unlock-progress"

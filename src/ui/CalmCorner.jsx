@@ -52,10 +52,12 @@ function BreathingCircle() {
     <div className="breathing-guide" aria-live="polite">
       <div className="breathing-circle-wrap">
         <div className="breathing-circle" ref={circleRef} aria-hidden="true">
-          <Diya className="breathing-diya"/>
+          <Diya className="breathing-diya" />
         </div>
       </div>
-      <p className="breathing-text" ref={textRef}>Breathe in slowly… ☾</p>
+      <p className="breathing-text" ref={textRef}>
+        Breathe in slowly… ☾
+      </p>
     </div>
   )
 }
@@ -72,8 +74,12 @@ export default function CalmCorner({ onResume }) {
   return (
     <div className="overlay overlay--calm" role="dialog" aria-modal="true" aria-label="Calm Corner">
       <div className="calm-corner">
-        <button className="calm-corner__close" onClick={onResume} aria-label="Close Calm Corner">×</button>
-        <span className="calm-corner__tag" aria-hidden="true">A QUIET MOMENT</span>
+        <button className="calm-corner__close" onClick={onResume} aria-label="Close Calm Corner">
+          ×
+        </button>
+        <span className="calm-corner__tag" aria-hidden="true">
+          A QUIET MOMENT
+        </span>
         <h2 className="calm-corner__title">
           Calm <span className="title-accent">Corner</span>
         </h2>

@@ -61,9 +61,9 @@ export default function HUD({
             type="button"
             className="game-mute-btn"
             onClick={onToggleMute}
-            aria-label={masterVolume === 0 ? "Unmute audio" : "Mute audio"}
+            aria-label={masterVolume === 0 ? 'Unmute audio' : 'Mute audio'}
             aria-pressed={masterVolume === 0}
-            title={masterVolume === 0 ? "Unmute audio" : "Mute audio"}
+            title={masterVolume === 0 ? 'Unmute audio' : 'Mute audio'}
           >
             <span aria-hidden="true">{masterVolume === 0 ? '🔇' : '🔊'}</span>
             <span>{masterVolume === 0 ? 'Unmute' : 'Mute'}</span>
@@ -92,11 +92,7 @@ export default function HUD({
             <span>Settings</span>
           </button>
 
-          <button
-            className="game-pause"
-            onClick={onCalmCorner}
-            aria-label="Take a breath"
-          >
+          <button className="game-pause" onClick={onCalmCorner} aria-label="Take a breath">
             Ⅱ <span>Take a breath</span>
           </button>
         </div>
@@ -174,7 +170,9 @@ export default function HUD({
                 >
                   <span aria-hidden="true">🔔</span> Test sound
                 </button>
-                <small className="sheet-row-hint">Plays a soft chime at your selected sound level.</small>
+                <small className="sheet-row-hint">
+                  Plays a soft chime at your selected sound level.
+                </small>
               </div>
 
               <div className="sheet-row">
@@ -186,9 +184,12 @@ export default function HUD({
                   onClick={onToggleCalmVisuals || onToggleMotion}
                   aria-label={`Calm visuals ${Boolean(calmVisuals ?? reducedMotion) ? 'on' : 'off'}`}
                 >
-                  <span aria-hidden="true">🍃</span> Calm visuals {Boolean(calmVisuals ?? reducedMotion) ? 'ON' : 'OFF'}
+                  <span aria-hidden="true">🍃</span> Calm visuals{' '}
+                  {Boolean(calmVisuals ?? reducedMotion) ? 'ON' : 'OFF'}
                 </button>
-                <small className="sheet-row-hint">Halves particle bursts, softens motion, and suppresses all flashing.</small>
+                <small className="sheet-row-hint">
+                  Halves particle bursts, softens motion, and suppresses all flashing.
+                </small>
               </div>
             </div>
 

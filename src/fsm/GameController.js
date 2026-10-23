@@ -477,18 +477,23 @@ export class GameController {
     this._clearTimers()
 
     // Stop cracker audio (fade out 150ms) and particles
-    const { sound, particles } = this._engines
-    sound.fadeCrackerAudio(150)
-    sound.stopCrackerAudio()
-    particles.clear()
-    sound.stopMusic()
-    sound.startCalmPad()
+    if (this._engines) {
+      const { sound, particles, chhotu, pip } = this._engines
+      sound?.fadeCrackerAudio?.(150)
+      sound?.stopCrackerAudio?.()
+      particles?.clear?.()
+      sound?.stopMusic?.()
+      sound?.startCalmPad?.()
 
-    // Stop character walks
-    const { chhotu, pip } = this._engines
-    chhotu.walkActive = false
-    chhotu.jumpActive = false
-    pip._jumpActive = false
+      // Stop character walks
+      if (chhotu) {
+        chhotu.walkActive = false
+        chhotu.jumpActive = false
+      }
+      if (pip) {
+        pip._jumpActive = false
+      }
+    }
 
     this._paused = true
     this._setState(STATES.CALM_CORNER_OVERLAY)
@@ -497,10 +502,11 @@ export class GameController {
   exitCalmCorner() {
     if (this.state !== STATES.CALM_CORNER_OVERLAY) return
 
-    const { sound } = this._engines
-    sound.stopCalmPad()
-    sound.startMusic()
-    this._applyAudioSettings()
+    if (this._engines?.sound) {
+      this._engines.sound.stopCalmPad?.()
+      this._engines.sound.startMusic?.()
+      this._applyAudioSettings()
+    }
 
     this._paused = false
     const prev = this._prevState

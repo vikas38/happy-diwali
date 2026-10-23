@@ -1,5 +1,5 @@
 import { useDialogFocus } from './accessibility/useDialogFocus.js'
-import { meaningfulResize } from './safety/limits.js'
+import { shouldPauseOnResize } from './safety/limits.js'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { GameStoreProvider, useGameStore } from './store/gameStore.jsx'
 import CanvasStage from './ui/CanvasStage.jsx'
@@ -107,11 +107,11 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
       clearTimeout(resizeTimer)
       resizeTimer = setTimeout(() => {
         const next = { width: window.innerWidth, height: window.innerHeight }
-        if (meaningfulResize(size, next)) {
+        if (shouldPauseOnResize(size, next)) {
           if ([STATES.STEPPING_BACK_SAFE_ROUTINE, STATES.COUNTDOWN_3_2_1, STATES.CRACKER_SHOW_ACTIVE].includes(gc.state)) gc.enterCalmCorner()
           size = next
         }
-      }, 200)
+      }, 250)
     }
     document.addEventListener('visibilitychange', pauseWhenHidden)
     window.addEventListener('resize', pauseOnResize)

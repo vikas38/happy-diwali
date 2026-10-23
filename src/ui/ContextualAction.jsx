@@ -40,7 +40,9 @@ export function StepIndicator({ step = 1, totalSteps = 5 }) {
           <span
             key={i}
             className={`flow-step-dot ${i === step ? 'is-current' : i < step ? 'is-done' : ''}`}
-          />
+          >
+            {i < step ? '✦' : ''}
+          </span>
         ))}
       </div>
       <span className="flow-step-text" aria-hidden="true">

@@ -1532,6 +1532,31 @@ button:focus-visible,
   gap: 14px;
 }
 
+.reward-skip-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.reward-skip-btn:hover,
+.reward-skip-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--text-primary);
+  outline: 2px solid var(--neon-gold);
+}
+
 .reward-card__title {
   font-size: 26px;
   font-weight: 900;
@@ -1686,7 +1711,29 @@ button:focus-visible,
 }
 
 .sticker-tile--locked {
-  opacity: 0.45;
+  opacity: 0.6;
+}
+
+.sticker-art-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sticker-silhouette {
+  filter: brightness(0) opacity(0.35);
+  transition:
+    filter 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.sticker-lock-badge {
+  position: absolute;
+  bottom: -4px;
+  right: -6px;
+  font-size: 13px;
+  line-height: 1;
 }
 
 .sticker-tile__emoji {

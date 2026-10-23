@@ -43,7 +43,12 @@ export function GameStoreProvider({ children }) {
 
   const unlockAllCrackers = useCallback(() => {
     setState((s) =>
-      validateSave({ ...s, unlocked: Array.from({ length: TOTAL_CRACKERS }, (_, i) => i) })
+      validateSave({
+        ...s,
+        unlocked: Array.from({ length: TOTAL_CRACKERS }, (_, i) => i),
+        stickers: Array.from({ length: TOTAL_CRACKERS }, (_, i) => i),
+        hasCompletedFirst: true,
+      })
     )
   }, [])
 

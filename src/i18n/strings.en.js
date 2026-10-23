@@ -131,6 +131,8 @@ export const STRINGS_EN = {
 
   // Reward Celebration
   reward_dialog_aria: 'You did it!',
+  reward_skip_aria: 'Skip celebration',
+  reward_skip_btn: 'Skip celebration →',
   reward_title_prefix: 'A little more',
   reward_title_accent: 'wonder.',
   stars_earned: '{count} stars earned',
@@ -274,6 +276,10 @@ export const STRINGS_EN = {
   modal_calm_out: 'Breathe out, softly.',
   modal_calm_ready: "I'm ready to return",
   modal_parents_title: 'Little moments, thoughtfully made.',
+  grownups_unlock_all_aria: 'Unlock all fireworks and stickers',
+  grownups_unlock_all_btn: 'Unlock all fireworks',
+  grownups_unlock_all_hint: 'Unlocks all 6 pretend fireworks and stickers immediately.',
+  grownups_unlocked_done: 'All fireworks unlocked!',
   modal_parents_desc:
     'Little Lights is a playful, virtual Diwali celebration. Children can explore at their own pace, start with soft sound, and take a breathing break whenever they like.',
   modal_parents_safety:

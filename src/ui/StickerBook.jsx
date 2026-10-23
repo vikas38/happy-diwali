@@ -19,9 +19,19 @@ function StickerTile({ cracker, unlocked }) {
       }
       role="img"
     >
-      <span className="sticker-tile__emoji" aria-hidden="true">
-        {unlocked ? cracker.emoji : '🔒'}
-      </span>
+      <div className="sticker-art-wrap">
+        <span
+          className={`sticker-tile__emoji${!unlocked ? ' sticker-silhouette' : ''}`}
+          aria-hidden="true"
+        >
+          {cracker.emoji}
+        </span>
+        {!unlocked && (
+          <span className="sticker-lock-badge" aria-hidden="true">
+            🔒
+          </span>
+        )}
+      </div>
       <span className="sticker-tile__name">{cracker.name}</span>
       {Array.from({ length: cracker.intensityDots }).map((_, i) => (
         <span key={i} className="sticker-dot" aria-hidden="true">

@@ -282,7 +282,7 @@ function GrownUpsNavButton({ onOpen }) {
 }
 
 export default function FestivalHome({ onPlay, motion, setMotion }) {
-  const { state, setMasterVolume } = useGameStore()
+  const { state, setMasterVolume, unlockAllCrackers } = useGameStore()
   const [modal, setModal] = useState(null)
 
   const [lit, setLit] = useState([])
@@ -619,7 +619,9 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
               <div className="home-stickers">
                 {CRACKERS.map((c) => (
                   <div key={c.id} className={state.stickers.includes(c.id) ? 'collected' : ''}>
-                    <span>{state.stickers.includes(c.id) ? c.emoji : '✧'}</span>
+                    <span className={state.stickers.includes(c.id) ? '' : 'sticker-silhouette'}>
+                      {c.emoji}
+                    </span>
                     <strong>{c.name}</strong>
                     <small>
                       {state.stickers.includes(c.id)
@@ -666,6 +668,22 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
                   onChange={(e) => setMasterVolume(Number(e.target.value))}
                 />
               </label>
+              <div className="parent-actions">
+                <button
+                  type="button"
+                  className="btn btn--secondary parent-unlock-btn"
+                  onClick={() => {
+                    unlockAllCrackers()
+                  }}
+                  aria-label={t('grownups_unlock_all_aria')}
+                >
+                  <span aria-hidden="true">🔓</span>{' '}
+                  {state.unlocked.length >= 6
+                    ? t('grownups_unlocked_done')
+                    : t('grownups_unlock_all_btn')}
+                </button>
+                <small className="parent-unlock-hint">{t('grownups_unlock_all_hint')}</small>
+              </div>
               <div className="privacy-note" role="region" aria-label={t('privacy_notice_region')}>
                 <p>{t('privacy_line1')}</p>
                 <p>{t('privacy_line2')}</p>

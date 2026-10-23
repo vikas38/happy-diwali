@@ -431,6 +431,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             isNewSticker={uiData.isNewSticker}
             onLightAgain={handleLightAgain}
             onNextCracker={handleNextCracker}
+            onSkip={handleNextCracker}
             isLastCracker={isLastCracker}
           />
         )}

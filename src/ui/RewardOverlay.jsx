@@ -43,9 +43,15 @@ export default function RewardOverlay({
   isNewSticker,
   onLightAgain,
   onNextCracker,
+  onSkip,
   isLastCracker,
 }) {
   if (!cracker) return null
+
+  const handleSkip = () => {
+    if (onSkip) onSkip()
+    else onNextCracker()
+  }
 
   return (
     <div
@@ -55,6 +61,14 @@ export default function RewardOverlay({
       aria-label={t('reward_dialog_aria')}
     >
       <div className="reward-card">
+        <button
+          type="button"
+          className="reward-skip-btn"
+          onClick={handleSkip}
+          aria-label={t('reward_skip_aria')}
+        >
+          {t('reward_skip_btn')}
+        </button>
         <h2 className="reward-card__title">
           {t('reward_title_prefix')} <span className="neon">{t('reward_title_accent')}</span>
         </h2>

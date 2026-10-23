@@ -8,6 +8,9 @@ export default function HUD({
   reducedMotion,
   onToggleMotion,
   showSettings = true,
+  settingsOpen: controlledSettingsOpen,
+  onOpenSettings,
+  onCloseSettings,
   masterVolume,
   intensity,
   stars,
@@ -18,17 +21,27 @@ export default function HUD({
   onOpenStickerBook,
   onCalmCorner,
 }) {
-  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [internalSettingsOpen, setInternalSettingsOpen] = useState(false)
+  const isSettingsOpen =
+    typeof controlledSettingsOpen !== 'undefined' ? controlledSettingsOpen : internalSettingsOpen
+  const handleOpenSettings = useCallback(() => {
+    if (onOpenSettings) onOpenSettings()
+    else setInternalSettingsOpen(true)
+  }, [onOpenSettings])
+  const handleCloseSettings = useCallback(() => {
+    if (onCloseSettings) onCloseSettings()
+    else setInternalSettingsOpen(false)
+  }, [onCloseSettings])
   const dialogRef = useRef(null)
 
   useEffect(() => {
-    if (!settingsOpen) return
+    if (!isSettingsOpen) return
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setSettingsOpen(false)
+      if (e.key === 'Escape') handleCloseSettings()
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [settingsOpen])
+  }, [isSettingsOpen, handleCloseSettings])
 
   const soundModes = [
     { id: 'SOFT', icon: '🔈', label: t('sound_gentle'), hint: t('sound_gentle_hint') },
@@ -78,9 +91,9 @@ export default function HUD({
 
           <button
             className="game-settings-btn"
-            onClick={() => setSettingsOpen(true)}
+            onClick={handleOpenSettings}
             aria-label={t('settings')}
-            aria-expanded={settingsOpen}
+            aria-expanded={isSettingsOpen}
           >
             <svg
               width="17"
@@ -105,13 +118,9 @@ export default function HUD({
         </div>
       )}
 
-      {settingsOpen && (
+      {isSettingsOpen && (
         <>
-          <div
-            className="hud-settings-backdrop"
-            onClick={() => setSettingsOpen(false)}
-            aria-hidden="true"
-          />
+          <div className="hud-settings-backdrop" onClick={handleCloseSettings} aria-hidden="true" />
           <dialog
             ref={dialogRef}
             open
@@ -124,7 +133,7 @@ export default function HUD({
               <h3>{t('courtyard_settings')}</h3>
               <button
                 className="sheet-close-btn"
-                onClick={() => setSettingsOpen(false)}
+                onClick={handleCloseSettings}
                 aria-label={t('close_settings')}
               >
                 ×
@@ -199,7 +208,7 @@ export default function HUD({
               <button
                 type="button"
                 className="btn btn--primary sheet-done-btn"
-                onClick={() => setSettingsOpen(false)}
+                onClick={handleCloseSettings}
               >
                 {t('done')}
               </button>

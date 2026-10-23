@@ -41,8 +41,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
 
   const [fsmSnapshot, setFsmSnapshot] = useState(() => gc.getSnapshot())
   const { state: fsmState, uiData, selectedCracker } = fsmSnapshot
-  const [showStickerBook, setShowStickerBook] = useState(false)
-  useDialogFocus(fsmSnapshot.state + showStickerBook)
+  useDialogFocus(fsmSnapshot.state)
   const [audioState, setAudioState] = useState('')
   const [canvasFailed, setCanvasFailed] = useState(false)
   const enginesRef = useRef(null)
@@ -306,11 +305,14 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
         masterVolume={saveState.masterVolume}
         intensity={saveState.intensity}
         stars={saveState.stars}
+        settingsOpen={fsmState === STATES.SETTINGS_OVERLAY}
+        onOpenSettings={() => gc.openSettings()}
+        onCloseSettings={() => gc.closeSettings()}
         onVolumeChange={handleVolumeChange}
         onIntensityChange={handleIntensityChange}
         onToggleMute={handleToggleMute}
         onTestSound={handleTestSound}
-        onOpenStickerBook={() => setShowStickerBook(true)}
+        onOpenStickerBook={() => gc.openStickerBook()}
         onCalmCorner={handleCalmCorner}
       />
 
@@ -375,7 +377,11 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
           onClick={handleTapCracker}
           reducedMotion={isMotionPaused}
           calmVisuals={calmVisuals}
-          paused={fsmState === STATES.CALM_CORNER_OVERLAY}
+          paused={
+            fsmState === STATES.CALM_CORNER_OVERLAY ||
+            fsmState === STATES.STICKER_BOOK_OVERLAY ||
+            fsmState === STATES.SETTINGS_OVERLAY
+          }
           onFailure={() => {
             if (enginesRef.current) gc.enterCalmCorner()
             getSoundEngine().stopMusic()
@@ -448,14 +454,14 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
 
         {fsmState === STATES.CALM_CORNER_OVERLAY && <CalmCorner onResume={handleResumeFromCalm} />}
 
-        {/* Sticker Book — modal on top */}
-        {showStickerBook && (
+        {/* Sticker Book — modal governed by FSM interruption */}
+        {fsmState === STATES.STICKER_BOOK_OVERLAY && (
           <StickerBook
             stickers={saveState.stickers}
-            onClose={() => setShowStickerBook(false)}
+            onClose={() => gc.closeStickerBook()}
             onUnlockAll={() => {
               store.unlockAllCrackers()
-              setShowStickerBook(false)
+              gc.closeStickerBook()
             }}
           />
         )}

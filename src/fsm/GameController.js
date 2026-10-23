@@ -28,9 +28,17 @@ export const STATES = {
   CRACKER_SHOW_ACTIVE: 'CRACKER_SHOW_ACTIVE',
   REWARD_CELEBRATION: 'REWARD_CELEBRATION',
   CALM_CORNER_OVERLAY: 'CALM_CORNER_OVERLAY',
+  STICKER_BOOK_OVERLAY: 'STICKER_BOOK_OVERLAY',
+  SETTINGS_OVERLAY: 'SETTINGS_OVERLAY',
 }
 
-// Legal forward transitions (calm corner is allowed from any state)
+export const INTERRUPTION_STATES = [
+  STATES.CALM_CORNER_OVERLAY,
+  STATES.STICKER_BOOK_OVERLAY,
+  STATES.SETTINGS_OVERLAY,
+]
+
+// Legal forward transitions (interruption overlays are allowed from any state except safety splash)
 const TRANSITIONS = {
   [STATES.SAFETY_SPLASH]: [STATES.IDLE],
   [STATES.IDLE]: [STATES.CRACKER_INTRO_CARD, STATES.READY_ON_STREET],
@@ -46,6 +54,8 @@ const TRANSITIONS = {
   [STATES.CRACKER_SHOW_ACTIVE]: [STATES.REWARD_CELEBRATION],
   [STATES.REWARD_CELEBRATION]: [STATES.READY_ON_STREET, STATES.CRACKER_INTRO_CARD, STATES.IDLE],
   [STATES.CALM_CORNER_OVERLAY]: [],
+  [STATES.STICKER_BOOK_OVERLAY]: [],
+  [STATES.SETTINGS_OVERLAY]: [],
 }
 
 const COUNTDOWN_BEATS = [3, 2, 1, 'GLOW!']
@@ -164,14 +174,14 @@ export class GameController {
   // -----------------------------------------------------------------
 
   _canTransition(from, to) {
-    if (to === STATES.CALM_CORNER_OVERLAY) return true
-    if (from === STATES.CALM_CORNER_OVERLAY) return true // resume
+    if (INTERRUPTION_STATES.includes(to)) return true
+    if (INTERRUPTION_STATES.includes(from)) return true // resume or modal switch
     const allowed = TRANSITIONS[from] || []
     return allowed.includes(to)
   }
 
   _setState(newState, uiData = {}) {
-    if (newState !== STATES.CALM_CORNER_OVERLAY && !this._canTransition(this.state, newState)) {
+    if (!INTERRUPTION_STATES.includes(newState) && !this._canTransition(this.state, newState)) {
       console.warn(`Illegal transition: ${this.state} → ${newState}`)
       return false
     }
@@ -527,21 +537,27 @@ export class GameController {
   // Calm Corner (global interrupt)
   // -----------------------------------------------------------------
 
-  enterCalmCorner() {
-    if (this.state === STATES.CALM_CORNER_OVERLAY) return
-    if (this.state === STATES.SAFETY_SPLASH) return // don't interrupt the safety splash
+  // -----------------------------------------------------------------
+  // Interruption modal contract (Calm Corner, Sticker Book, Settings)
+  // -----------------------------------------------------------------
 
-    // Interruption snapshot contract: preserve complete resumable state and UI payload
-    this._interruptionSnapshot = {
-      returnState: this.state,
-      selectedCracker: this.selectedCracker,
-      uiData: { ...this._uiData },
-      currentCountdownBeat: this._currentCountdownBeat ?? 0,
-      timestamp: Date.now(),
+  _suspendForInterruption(targetState) {
+    if (this.state === STATES.SAFETY_SPLASH) return false
+    if (this.state === targetState) return false // already in this modal
+
+    // If not already in an interruption, capture snapshot of underlying gameplay
+    if (!INTERRUPTION_STATES.includes(this.state)) {
+      this._interruptionSnapshot = {
+        returnState: this.state,
+        selectedCracker: this.selectedCracker,
+        uiData: { ...this._uiData },
+        currentCountdownBeat: this._currentCountdownBeat ?? 0,
+        timestamp: Date.now(),
+      }
+      this._prevState = this.state
+      this._prevSelectedCracker = this.selectedCracker
+      this._prevCountdownBeat = this._currentCountdownBeat ?? 0
     }
-    this._prevState = this.state
-    this._prevSelectedCracker = this.selectedCracker
-    this._prevCountdownBeat = this._currentCountdownBeat ?? 0
 
     // Invalidate active show token so abandoned show callbacks cannot grant awards
     this._activeShowToken = null
@@ -559,10 +575,13 @@ export class GameController {
       sound?.fadeCrackerAudio?.(150)
       sound?.stopCrackerAudio?.()
       particles?.clear?.()
-      sound?.stopMusic?.()
-      sound?.startCalmPad?.()
 
-      // Stop character walks
+      if (targetState === STATES.CALM_CORNER_OVERLAY) {
+        sound?.stopMusic?.()
+        sound?.startCalmPad?.()
+      }
+
+      // Stop character walks / jumps
       if (chhotu) {
         chhotu.walkActive = false
         chhotu.jumpActive = false
@@ -573,11 +592,12 @@ export class GameController {
     }
 
     this._paused = true
-    this._setState(STATES.CALM_CORNER_OVERLAY)
+    this._setState(targetState)
+    return true
   }
 
-  exitCalmCorner() {
-    if (this.state !== STATES.CALM_CORNER_OVERLAY) return
+  _resumeFromInterruption(closingState) {
+    if (this.state !== closingState && !INTERRUPTION_STATES.includes(this.state)) return
 
     if (this._engines?.sound) {
       this._engines.sound.stopCalmPad?.()
@@ -649,6 +669,30 @@ export class GameController {
       default:
         this._setState(returnState || STATES.IDLE, { ...uiData })
     }
+  }
+
+  enterCalmCorner() {
+    this._suspendForInterruption(STATES.CALM_CORNER_OVERLAY)
+  }
+
+  exitCalmCorner() {
+    this._resumeFromInterruption(STATES.CALM_CORNER_OVERLAY)
+  }
+
+  openStickerBook() {
+    this._suspendForInterruption(STATES.STICKER_BOOK_OVERLAY)
+  }
+
+  closeStickerBook() {
+    this._resumeFromInterruption(STATES.STICKER_BOOK_OVERLAY)
+  }
+
+  openSettings() {
+    this._suspendForInterruption(STATES.SETTINGS_OVERLAY)
+  }
+
+  closeSettings() {
+    this._resumeFromInterruption(STATES.SETTINGS_OVERLAY)
   }
 
   // -----------------------------------------------------------------

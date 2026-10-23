@@ -45,36 +45,45 @@ export function playFireworkSound(sound, kind, duration = 1, pan = 0) {
     nodes.push(o, g)
   }
   if (kind === 'boom') {
-    noise(now, 0.12, 0.7, 2400)
-    noise(now, 0.85, 0.5, 700, 'lowpass')
-    tone(now, 0.65, 110, 0.55)
-    noise(now + 0.15, 0.65, 0.17, 550, 'lowpass')
-    noise(now + 0.31, 0.8, 0.09, 380, 'lowpass')
+    noise(now, 0.12, 0.85, 2400)
+    noise(now, 0.85, 0.65, 700, 'lowpass')
+    tone(now, 0.65, 110, 0.5)
+    noise(now + 0.15, 0.65, 0.25, 550, 'lowpass')
+    noise(now + 0.31, 0.8, 0.15, 380, 'lowpass')
   } else if (kind === 'pop') {
-    noise(now, 0.11, 0.55, 1800)
-    tone(now, 0.13, 170, 0.18)
-    noise(now + 0.09, 0.2, 0.08, 650)
+    noise(now, 0.11, 0.75, 1800)
+    tone(now, 0.13, 170, 0.22)
+    noise(now + 0.09, 0.2, 0.18, 650)
   } else {
     const fountain = kind === 'fountain',
-      whoosh = kind === 'whoosh'
-    noise(
-      now,
-      duration,
-      whoosh ? 0.55 : fountain ? 0.4 : 0.14,
-      whoosh ? 1500 : fountain ? 2200 : 3800,
-      whoosh ? 'lowpass' : 'bandpass'
-    )
-    // Irregular small transients sound like burning metal, not a sustained note.
-    if (!whoosh)
-      for (let t = 0; t < duration; t += 0.045 + Math.random() * 0.08)
-        noise(
-          now + t,
-          0.018 + Math.random() * 0.045,
-          kind === 'fuse' ? 0.09 : 0.11 + Math.random() * 0.13,
-          1500 + Math.random() * 4200
-        )
-    if (kind === 'spinner')
-      for (let t = 0; t < duration; t += 0.1) noise(now + t, 0.08, 0.2, 1100 + t * 700)
+      whoosh = kind === 'whoosh',
+      fuse = kind === 'fuse',
+      spinner = kind === 'spinner'
+
+    const baseGain = whoosh ? 0.72 : fountain ? 0.58 : fuse ? 0.28 : spinner ? 0.35 : 0.38
+    const baseFreq = whoosh ? 1600 : fountain ? 2200 : fuse ? 3200 : spinner ? 3000 : 3600
+    const filterType = whoosh ? 'lowpass' : 'bandpass'
+
+    noise(now, duration, baseGain, baseFreq, filterType)
+
+    // Irregular small transients sound like burning metal / sizzle crackles, not a sustained note.
+    if (!whoosh) {
+      for (let t = 0; t < duration; t += 0.045 + Math.random() * 0.08) {
+        const tLen = 0.018 + Math.random() * 0.045
+        const tGain = fuse
+          ? 0.18 + Math.random() * 0.16
+          : fountain
+            ? 0.22 + Math.random() * 0.22
+            : 0.24 + Math.random() * 0.22
+        const tFreq = 1600 + Math.random() * 4000
+        noise(now + t, tLen, tGain, tFreq)
+      }
+    }
+    if (kind === 'spinner') {
+      for (let t = 0; t < duration; t += 0.1) {
+        noise(now + t, 0.08, 0.36, 1100 + t * 700)
+      }
+    }
   }
   sound.trackCrackerNode(bus, bus)
   let stopped = false

@@ -241,7 +241,7 @@ export class SoundEngine {
   }
 
   /**
-   * Create a looping noise source buffer node connected to the chain.
+   * Create a looping noise source buffer node (unconnected for explicit routing).
    * @param {'white'|'pink'} type
    * @returns {AudioBufferSourceNode|null}
    */
@@ -252,12 +252,12 @@ export class SoundEngine {
     const src = this.ctx.createBufferSource()
     src.buffer = buffer
     src.loop = true
-    src.connect(this.intensityGain)
+    // Return unconnected node; callers wire explicit routing (filter -> env -> bus -> panner)
     return src
   }
 
   /**
-   * Create an oscillator connected to the chain input.
+   * Create an oscillator (unconnected for explicit routing).
    * @param {string} type - oscillator type ('sine','triangle','square','sawtooth')
    * @param {number} freq - frequency in Hz
    * @returns {OscillatorNode|null}
@@ -267,23 +267,20 @@ export class SoundEngine {
     const osc = this.ctx.createOscillator()
     osc.type = type
     osc.frequency.value = freq
-    osc.connect(this.intensityGain)
     return osc
   }
 
   /**
-   * Create a gain node connected to the chain input (for per-source volume envelopes).
+   * Create a gain node (unconnected for explicit routing).
    * @returns {GainNode|null}
    */
   createGain() {
     if (!this.ctx || !this._supported) return null
-    const g = this.ctx.createGain()
-    g.connect(this.intensityGain)
-    return g
+    return this.ctx.createGain()
   }
 
   /**
-   * Create a biquad filter connected to the chain input.
+   * Create a biquad filter (unconnected for explicit routing).
    * @param {string} type - filter type
    * @returns {BiquadFilterNode|null}
    */
@@ -291,7 +288,6 @@ export class SoundEngine {
     if (!this.ctx || !this._supported) return null
     const f = this.ctx.createBiquadFilter()
     f.type = type
-    f.connect(this.intensityGain)
     return f
   }
 

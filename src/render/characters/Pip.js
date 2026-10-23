@@ -24,6 +24,7 @@ export class Pip {
     this.facing = 1
     this.mood = PIP_MOODS.IDLE
     this.visible = true
+    this.reducedMotion = false
     this._bouncePhase = 0
     this._hideAmount = 0
     this._hideTarget = 0
@@ -93,8 +94,9 @@ export class Pip {
     }
 
     // Flame flicker from audio level + base natural flicker
-    const audioLevel = this.getAudioLevel()
-    const baseFlicker = 0.6 + 0.4 * Math.sin(time * 8) + 0.2 * Math.sin(time * 13.7)
+    const audioLevel = this.reducedMotion ? 0 : this.getAudioLevel()
+    const flickTime = this.reducedMotion ? time * 0.2 : time
+    const baseFlicker = 0.6 + 0.4 * Math.sin(flickTime * 8) + 0.2 * Math.sin(flickTime * 13.7)
     this._flameFlicker = baseFlicker * 0.5 + audioLevel * 1.5
 
     // Blink
@@ -204,7 +206,7 @@ export class Pip {
     const flick = this._flameFlicker
     const flameH = 15 + flick * 7
     const flameW = 6.5 + flick * 2.2
-    const sway = Math.sin(time * 7) * 1.5
+    const sway = this.reducedMotion ? 0 : Math.sin(time * 7) * 1.5
 
     ctx.save()
 
@@ -259,13 +261,15 @@ export class Pip {
     ctx.fill()
 
     // 5. Tiny floating embers from flame tip
-    for (let i = 0; i < 2; i++) {
-      const ey = y - flameH - 3 - ((time * 25 + i * 15) % 18)
-      const ex = sway + Math.sin(time * 10 + i * 3) * 3
-      ctx.fillStyle = '#FFD700'
-      ctx.beginPath()
-      ctx.arc(ex, ey, 0.8, 0, Math.PI * 2)
-      ctx.fill()
+    if (!this.reducedMotion) {
+      for (let i = 0; i < 2; i++) {
+        const ey = y - flameH - 3 - ((time * 25 + i * 15) % 18)
+        const ex = sway + Math.sin(time * 10 + i * 3) * 3
+        ctx.fillStyle = '#FFD700'
+        ctx.beginPath()
+        ctx.arc(ex, ey, 0.8, 0, Math.PI * 2)
+        ctx.fill()
+      }
     }
 
     ctx.restore()

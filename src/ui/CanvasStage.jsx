@@ -15,20 +15,26 @@ import { getSoundEngine } from '../audio/SoundEngine.js'
  * Exposes the engine instances via a callback so the parent (GameController)
  * can drive characters, particles, FX, and audio.
  */
-export default function CanvasStage({ onReady, onClick, reducedMotion, paused, onFailure }) {
+export default function CanvasStage({ onReady, onClick, reducedMotion, calmVisuals, paused, onFailure }) {
   const canvasRef = useRef(null)
   const engines = useRef(null)
   const [failed, setFailed] = useState(false)
   useEffect(() => {
     if (!engines.current) return
-    const { renderer, particles, jellySquash, background } = engines.current
+    const { renderer, particles, jellySquash, background, pip } = engines.current
+    const motionPaused = Boolean(reducedMotion || calmVisuals)
     background.reducedMotion = reducedMotion
+    background.calmVisuals = calmVisuals
     renderer._reducedMotion = reducedMotion
+    renderer._calmVisuals = calmVisuals
     particles.reducedMotion = reducedMotion
-    if (reducedMotion) particles.flashes = []
+    particles.calmVisuals = calmVisuals
+    if (pip) pip.reducedMotion = motionPaused
+    if (reducedMotion || calmVisuals) particles.flashes = []
     jellySquash.reducedMotion = reducedMotion
+    jellySquash.calmVisuals = calmVisuals
     jellySquash.reset()
-  }, [reducedMotion])
+  }, [reducedMotion, calmVisuals])
   useEffect(() => {
     const sync = () => { const r = engines.current?.renderer; if (!r) return; if (paused || document.hidden) r.stop(); else r.start() }
     sync(); document.addEventListener('visibilitychange', sync)
@@ -90,10 +96,15 @@ export default function CanvasStage({ onReady, onClick, reducedMotion, paused, o
     }
 
     renderer._reducedMotion = reducedMotion
+    renderer._calmVisuals = calmVisuals
     particles.reducedMotion = reducedMotion
+    particles.calmVisuals = calmVisuals
     jellySquash.reducedMotion = reducedMotion
+    jellySquash.calmVisuals = calmVisuals
     background.reducedMotion = reducedMotion
-    engines.current = { renderer, particles, jellySquash, background }
+    background.calmVisuals = calmVisuals
+    pip.reducedMotion = Boolean(reducedMotion || calmVisuals)
+    engines.current = { renderer, particles, jellySquash, background, pip }
     renderer.start()
 
     if (onReady) {

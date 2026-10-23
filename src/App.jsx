@@ -223,13 +223,18 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
   const isLastCracker = selectedCracker === 5
 
   if (canvasFailed) return <main className="recovery-card" role="alert"><h1>The courtyard needs a little rest.</h1><p>Your browser could not draw the scene. Your saved progress is unchanged.</p><button className="sun-button" onClick={onBack}>Back to festival</button></main>
+  const calmVisuals = Boolean(saveState.calmVisuals)
+  const isMotionPaused = calmVisuals || Boolean(reducedMotion)
+
   return (
-    <div className={`play-shell ${reducedMotion ? "motion-paused" : ""}`}>
+    <div className={`play-shell ${isMotionPaused ? "motion-paused" : ""}`}>
       {/* Top Navigation Bar with Back button & settings */}
       <HUD
         onBack={onBack}
-        reducedMotion={reducedMotion}
-        onToggleMotion={onToggleMotion}
+        calmVisuals={calmVisuals}
+        onToggleCalmVisuals={() => store.setCalmVisuals((v) => !v)}
+        reducedMotion={isMotionPaused}
+        onToggleMotion={() => store.setCalmVisuals((v) => !v)}
         showSettings={showHUD}
         masterVolume={saveState.masterVolume}
         intensity={saveState.intensity}
@@ -281,7 +286,14 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
         )}
 
         {/* Canvas layer — always rendered */}
-        <CanvasStage onReady={handleEnginesReady} onClick={handleTapCracker} reducedMotion={reducedMotion} paused={fsmState === STATES.CALM_CORNER_OVERLAY} onFailure={() => { if (enginesRef.current) gc.enterCalmCorner(); getSoundEngine().stopMusic(); getSoundEngine().stopCalmPad(); setCanvasFailed(true) }} />
+        <CanvasStage
+          onReady={handleEnginesReady}
+          onClick={handleTapCracker}
+          reducedMotion={isMotionPaused}
+          calmVisuals={calmVisuals}
+          paused={fsmState === STATES.CALM_CORNER_OVERLAY}
+          onFailure={() => { if (enginesRef.current) gc.enterCalmCorner(); getSoundEngine().stopMusic(); getSoundEngine().stopCalmPad(); setCanvasFailed(true) }}
+        />
 
         {/* Cracker carousel — shown in idle / ready / reward */}
         {showCarousel && (
@@ -364,8 +376,11 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
 // ===================================================================
 // Festival Home Wrapper — unlocks audio on gesture and wires settings
 // ===================================================================
-function FestivalHomeWrapper({ onPlay, motion, setMotion }) {
+function FestivalHomeWrapper({ onPlay, reducedMotion }) {
   const store = useGameStore()
+  const calmVisuals = Boolean(store.state.calmVisuals)
+  const isMotionPaused = calmVisuals || Boolean(reducedMotion)
+
   const handlePlay = useCallback(() => {
     const sound = getSoundEngine()
     try {
@@ -382,8 +397,11 @@ function FestivalHomeWrapper({ onPlay, motion, setMotion }) {
   return (
     <FestivalHome
       onPlay={handlePlay}
-      motion={motion}
-      setMotion={setMotion}
+      motion={!isMotionPaused}
+      setMotion={(v) => {
+        const nextMotion = typeof v === 'function' ? v(!isMotionPaused) : v
+        store.setCalmVisuals(!nextMotion)
+      }}
     />
   )
 }
@@ -408,9 +426,9 @@ export default function App() {
   return (
     <GameStoreProvider>
       {playing ? (
-        <GameApp onBack={handleBackToFestival} reducedMotion={reducedMotion} onToggleMotion={()=>setReducedMotion(v=>!v)} />
+        <GameApp onBack={handleBackToFestival} reducedMotion={reducedMotion} />
       ) : (
-        <FestivalHomeWrapper onPlay={() => setPlaying(true)} motion={!reducedMotion} setMotion={value=>setReducedMotion(v=>!(typeof value === 'function' ? value(!v) : value))} />
+        <FestivalHomeWrapper onPlay={() => setPlaying(true)} reducedMotion={reducedMotion} />
       )}
     </GameStoreProvider>
   )

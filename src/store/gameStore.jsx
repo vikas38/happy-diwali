@@ -78,6 +78,13 @@ export function GameStoreProvider({ children }) {
     })
   }, [])
 
+  const setCalmVisuals = useCallback((val) => {
+    setState((s) => {
+      const next = typeof val === 'function' ? val(s.calmVisuals) : val
+      return validateSave({ ...s, calmVisuals: Boolean(next) })
+    })
+  }, [])
+
   const dismissHint = useCallback(() => {
     setState((s) => {
       if (s.seenHint) return s
@@ -114,6 +121,7 @@ export function GameStoreProvider({ children }) {
     // actions
     setIntensity,
     setMasterVolume,
+    setCalmVisuals,
     unlockCracker,
     unlockAllCrackers,
     markIntroSeen,

@@ -61,6 +61,14 @@ function BreathingCircle() {
 }
 
 export default function CalmCorner({ onResume }) {
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'Escape') onResume()
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [onResume])
+
   return (
     <div className="overlay overlay--calm" role="dialog" aria-modal="true" aria-label="Calm Corner">
       <div className="calm-corner">

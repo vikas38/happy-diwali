@@ -32,6 +32,14 @@ export default function StickerBook({ stickers, onClose, onUnlockAll }) {
   const holdStartRef = React.useRef(null)
   const rafRef = React.useRef(null)
 
+  React.useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [onClose])
+
   function startHold() {
     setHolding(true)
     holdStartRef.current = Date.now()

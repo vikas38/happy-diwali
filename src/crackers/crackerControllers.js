@@ -1,5 +1,6 @@
 import { effectOrigin, STAGE } from '../render/layers/Courtyard.js'
 import { playFireworkSound } from '../audio/FireworkSound.js'
+import { CALM_VISUALS_CONFIG } from '../safety/calmVisuals.js'
 export { fireRewardConfetti } from './rewardConfetti.js'
 export const SHOW_DURATIONS = {0:3000,1:3500,2:3500,3:4000,4:4500,5:5000}
 const TAU=Math.PI*2
@@ -17,14 +18,17 @@ export function playCrackerShow(index, engines, onDone) {
   let cancelled=false, tick=0
   const {x,y}=effectOrigin(index,r.width,r.height)
   const scale=Math.max(.7,Math.min(1.5,r.height/650,r.width/650))
-  const motionReduced=r._reducedMotion
+  const calm=Boolean(p.calmVisuals || r._calmVisuals)
+  const motionReduced=Boolean(r._reducedMotion || p.reducedMotion)
   p.reducedMotion = motionReduced
-  const density=motionReduced?.55:1
+  p.calmVisuals = calm
+  if (jellySquash) jellySquash.calmVisuals = calm
+  const density=calm ? CALM_VISUALS_CONFIG.particleCountMultiplier : (motionReduced ? .55 : 1)
   const later=(fn,ms)=>{const id=setTimeout(()=>{if(!cancelled)fn()},ms);timers.push(id)}
   const audio=(kind,seconds=1,px=x)=>sounds.push(playFireworkSound(sound,kind,seconds,(px/r.width-.5)*1.2))
   const smoke=(px,py,size=18)=>p.spawn(px,py,{shape:'smoke',vx:12+Math.random()*12,vy:-20-Math.random()*18,gravity:-3,drag:.998,size,alpha:.28,decay:.1,hue:30,sat:8,light:60})
   const spark=(px,py,vx,vy,extra={})=>p.spawn(px,py,{vx:vx*scale,vy:vy*scale,gravity:115*scale,drag:.992,size:.85+Math.random()*1.25,alpha:1,decay:.55+Math.random()*.4,hue:32+Math.random()*17,sat:85,light:82,shape:'spark',glow:true,trail:9,...extra})
-  const flash=(px,py,radius=140,hue=38)=>{p.flash?.(px,py,radius*scale,hue,motionReduced?.2:.45)}
+  const flash=(px,py,radius=140,hue=38)=>{if(calm)return;p.flash?.(px,py,radius*scale,hue,motionReduced?.2:.45)}
   const burst=(px,py,count=100,power=220,hue=38)=>{flash(px,py,220,hue);for(let i=0;i<count*density;i++){const a=i/(count*density)*TAU+(Math.random()-.5)*.1;const speed=power*(.3+Math.random()*.7);spark(px,py,Math.cos(a)*speed,Math.sin(a)*speed,{hue:hue+Math.random()*12,decay:.35+Math.random()*.2,gravity:70*scale,drag:.992,trail:12})}for(let i=0;i<4;i++)smoke(px+(i-2)*10,py,25)}
   const started=Date.now()
   if(index===0)audio('sparkler',2.2)

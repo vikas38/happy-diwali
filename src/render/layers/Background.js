@@ -462,8 +462,9 @@ export class Background {
   }
 
   draw(ctx, w, h, time) {
-    drawCourtyard(ctx, w, h, time, this.gameState)
-    if (!this.reducedMotion) this._drawAmbientBursts(ctx, w, h, time)
+    const motionPaused = Boolean(this.reducedMotion || this.calmVisuals)
+    drawCourtyard(ctx, w, h, time, this.gameState, motionPaused)
+    if (!motionPaused) this._drawAmbientBursts(ctx, w, h, time)
     this._drawCrackerOnLaunchpad(ctx, w, h, time)
     if (this.light > 0) {
       ctx.fillStyle = `rgba(255,187,100,${this.light*.25})`

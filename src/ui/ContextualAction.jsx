@@ -31,7 +31,7 @@ export function StepIndicator({ step = 1, totalSteps = 5 }) {
   ]
   return (
     <div className="flow-step-tracker" role="region" aria-label="Celebration steps">
-      <span className="sr-only">
+      <span className="sr-only" aria-live="polite">
         Step {step} of {totalSteps}: {stepLabels[step - 1]}
       </span>
       <div className="flow-step-dots" aria-hidden="true">

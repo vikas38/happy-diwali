@@ -65,6 +65,10 @@ describe('save.js', () => {
     it('defaults hasCompletedFirst to false', () => {
       expect(createDefaultSave().hasCompletedFirst).toBe(false)
     })
+
+    it('defaults calmVisuals to a boolean', () => {
+      expect(typeof createDefaultSave().calmVisuals).toBe('boolean')
+    })
   })
 
   describe('validateSave', () => {
@@ -125,6 +129,12 @@ describe('save.js', () => {
       expect(validateSave({ stickers: [0] }).hasCompletedFirst).toBe(true)
       expect(validateSave({ hasCompletedFirst: 'invalid' }).hasCompletedFirst).toBe(false)
     })
+
+    it('tolerates missing or invalid calmVisuals', () => {
+      expect(validateSave({ calmVisuals: true }).calmVisuals).toBe(true)
+      expect(validateSave({ calmVisuals: false }).calmVisuals).toBe(false)
+      expect(typeof validateSave({ calmVisuals: 'not-a-bool' }).calmVisuals).toBe('boolean')
+    })
   })
 
   describe('loadSave / writeSave round-trip', () => {
@@ -142,6 +152,7 @@ describe('save.js', () => {
         seenIntros: [0, 1],
         seenHint: true,
         hasCompletedFirst: true,
+        calmVisuals: true,
       }
       writeSave(data, storage)
       const loaded = loadSave(storage)
@@ -153,6 +164,7 @@ describe('save.js', () => {
       expect(loaded.seenIntros).toEqual([0, 1])
       expect(loaded.seenHint).toBe(true)
       expect(loaded.hasCompletedFirst).toBe(true)
+      expect(loaded.calmVisuals).toBe(true)
     })
 
     it('falls back to defaults on corrupt JSON', () => {

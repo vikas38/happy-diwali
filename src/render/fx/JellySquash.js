@@ -3,8 +3,10 @@
 // ===================================================================
 // Applies a scaleX/scaleY spring oscillation to the canvas container
 // element so loud crackers feel cartoonish rather than jarring.
-// Respects prefers-reduced-motion (disables entirely).
+// Respects prefers-reduced-motion (disables entirely) and calm visuals (x0.5 amplitude).
 // ===================================================================
+
+import { CALM_VISUALS_CONFIG } from '../../safety/calmVisuals.js'
 
 export class JellySquash {
   /**
@@ -19,6 +21,7 @@ export class JellySquash {
     this.k = 220 // spring constant
     this.c = 9 // damping (underdamped for bouncy feel)
     this._triggered = false
+    this.calmVisuals = false
     this.reducedMotion =
       typeof window !== 'undefined' && window.matchMedia
         ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -33,6 +36,7 @@ export class JellySquash {
    */
   trigger(amount = 0.15, axis = 'y') {
     if (this.reducedMotion) return
+    if (this.calmVisuals) amount *= CALM_VISUALS_CONFIG.squashMultiplier
     this._triggered = true
     if (axis === 'y') {
       this.scaleX = 1 + amount

@@ -969,12 +969,21 @@
 .game-stage[data-state=REWARD_CELEBRATION] .firework-dock {
   display: none;
 }
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
 .game-stage .btn:focus-visible,
 .game-navbar button:focus-visible,
 .game-navbar input:focus-visible,
-.firework-choice:focus-visible {
-  outline: 2px solid #ffe0a5;
-  outline-offset: 4px;
+.firework-choice:focus-visible,
+.contextual-primary-btn:focus-visible,
+.contextual-secondary-btn:focus-visible,
+.walk-skip-btn:focus-visible,
+.sheet-close-btn:focus-visible,
+.modal-close:focus-visible {
+  outline: 3px solid #ffe0a5 !important;
+  outline-offset: 4px !important;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.8) !important;
 }
 @keyframes scene-enter {
   from {
@@ -1151,9 +1160,17 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .game-stage * {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .cracker-twinkle,
+  .spinner-sparkle {
     animation: none !important;
-    transition: none !important;
   }
 }
 

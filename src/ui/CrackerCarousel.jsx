@@ -12,6 +12,20 @@ const labels = [
 ]
 
 export default function CrackerCarousel({ unlocked, selectedCracker, onSelect }) {
+  const handleKeyDown = (e, i) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault()
+      const next = (i + 1) % CRACKERS.length
+      const btn = document.querySelectorAll('.firework-choice')[next]
+      btn?.focus()
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault()
+      const prev = (i - 1 + CRACKERS.length) % CRACKERS.length
+      const btn = document.querySelectorAll('.firework-choice')[prev]
+      btn?.focus()
+    }
+  }
+
   return (
     <nav className="firework-dock" aria-label="Cracker selection">
       <div className="dock-heading">
@@ -32,6 +46,7 @@ export default function CrackerCarousel({ unlocked, selectedCracker, onSelect })
               aria-label={`${c.name}${!isUnlocked ? ' — locked' : ''}`}
               aria-selected={isSelected}
               onClick={() => onSelect(c.id)}
+              onKeyDown={(e) => handleKeyDown(e, i)}
             >
               <span className="choice-number">0{i + 1}</span>
               <div className="choice-art-wrap">

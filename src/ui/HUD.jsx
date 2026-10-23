@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 
 export default function HUD({
   onBack,
+  calmVisuals,
+  onToggleCalmVisuals,
   reducedMotion,
   onToggleMotion,
   showSettings = true,
@@ -152,11 +154,13 @@ export default function HUD({
                 <button
                   type="button"
                   className="motion-control sheet-motion-btn"
-                  aria-pressed={reducedMotion}
-                  onClick={onToggleMotion}
+                  aria-pressed={Boolean(calmVisuals ?? reducedMotion)}
+                  onClick={onToggleCalmVisuals || onToggleMotion}
+                  aria-label={`Calm visuals ${Boolean(calmVisuals ?? reducedMotion) ? 'on' : 'off'}`}
                 >
-                  Gentle visuals {reducedMotion ? 'ON' : 'OFF'}
+                  <span aria-hidden="true">🍃</span> Calm visuals {Boolean(calmVisuals ?? reducedMotion) ? 'ON' : 'OFF'}
                 </button>
+                <small className="sheet-row-hint">Halves particle bursts, softens motion, and suppresses all flashing.</small>
               </div>
             </div>
 

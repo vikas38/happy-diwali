@@ -1,4 +1,5 @@
 import { FLASH_INTERVAL_MS } from '../safety/limits.js'
+import { CALM_VISUALS_CONFIG, FlashLimiter } from '../safety/calmVisuals.js'
 // ===================================================================
 // Particle Engine — Object-pooled, 60fps, additive neon glow
 // ===================================================================
@@ -12,6 +13,8 @@ const POOL_SIZE = 800
 export class Particles {
   constructor() {
     this.reducedMotion = false
+    this.calmVisuals = false
+    this.flashLimiter = new FlashLimiter()
     this._lastFlash = -Infinity
     this.pool = new Array(POOL_SIZE)
     for (let i = 0; i < POOL_SIZE; i++) {
@@ -74,7 +77,8 @@ export class Particles {
     p.drag = config.drag ?? 0.98
     p.size = config.size || 2
     p.alpha = config.alpha ?? 1
-    p.decay = config.decay ?? 1
+    const baseDecay = config.decay ?? 1
+    p.decay = this.calmVisuals ? baseDecay / CALM_VISUALS_CONFIG.particleLifetimeMultiplier : baseDecay
     p.hue = config.hue ?? 0
     p.sat = config.sat ?? 100
     p.light = config.light ?? 60
@@ -98,6 +102,9 @@ export class Particles {
    * @param {object} config - burst config with angle, spread, speedMin/Max, hueMin/Max, etc.
    */
   burst(x, y, count, config = {}) {
+    const actualCount = this.calmVisuals
+      ? Math.max(1, Math.round(count * CALM_VISUALS_CONFIG.particleCountMultiplier))
+      : count
     const speedMin = config.speedMin ?? 30
     const speedMax = config.speedMax ?? 100
     const sizeMin = config.sizeMin ?? 2
@@ -105,7 +112,7 @@ export class Particles {
     const angleBase = config.angle ?? 0
     const spread = config.spread ?? Math.PI * 2
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < actualCount; i++) {
       const angle = angleBase + (Math.random() - 0.5) * spread
       const speed = speedMin + Math.random() * (speedMax - speedMin)
       const hue = config.hueMin !== undefined
@@ -321,18 +328,22 @@ export class Particles {
   /**
    * Deactivate all particles.
    */
-  flash(x, y, radius = 120, hue = 38, duration = .35) {
-    const now = performance.now()
-    if (this.reducedMotion || now - this._lastFlash < FLASH_INTERVAL_MS) return
+  flash(x, y, radius = 120, hue = 38, duration = .35, timestamp) {
+    const now = timestamp ?? (typeof performance !== 'undefined' ? performance.now() : Date.now())
+    if (!this.flashLimiter.requestFlash(now, this.calmVisuals || this.reducedMotion)) {
+      return false
+    }
     this._lastFlash = now
     radius = Math.min(radius, 100)
     duration = Math.min(duration, .25)
-    this.flashes.push({x, y, radius, hue, duration, life:duration})
+    this.flashes.push({ x, y, radius, hue, duration, life: duration })
     if (this.flashes.length > 20) this.flashes.shift()
+    return true
   }
 
   clear() {
     this.flashes = []
+    this.flashLimiter.reset()
     for (const p of this.pool) p.active = false
     this.activeCount = 0
   }

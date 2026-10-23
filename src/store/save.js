@@ -7,6 +7,8 @@ export const SAVE_KEY = 'chhotu_diwali_save_v1'
 export const SAVE_VERSION = 1
 export const TOTAL_CRACKERS = 6
 
+import { detectsReducedMotion } from '../safety/calmVisuals.js'
+
 export const INTENSITY = {
   SOFT: 'SOFT',
   NORMAL: 'NORMAL',
@@ -28,6 +30,7 @@ export function createDefaultSave() {
     seenIntros: [], // cracker indices whose intro card has been shown
     seenHint: false, // first-run courtyard hint
     hasCompletedFirst: false, // completed at least one firework (unlocks skip walk)
+    calmVisuals: detectsReducedMotion(), // calm visual effects & reduced flashing
   }
 }
 
@@ -58,6 +61,8 @@ export function validateSave(raw) {
       typeof raw.hasCompletedFirst === 'boolean'
         ? raw.hasCompletedFirst
         : Array.isArray(raw.stickers) && raw.stickers.length > 0,
+    calmVisuals:
+      typeof raw.calmVisuals === 'boolean' ? raw.calmVisuals : defaults.calmVisuals,
   }
 
   // unlocked: array of cracker indices 0..5, always include 0

@@ -10,6 +10,17 @@ import { CALM_VISUALS_CONFIG, FlashLimiter } from '../safety/calmVisuals.js'
 
 const POOL_SIZE = 800
 
+/**
+ * Seeded RNG hook for testing environments.
+ * Returns window.__SEEDED_RNG__() if defined; falls back to Math.random() in production.
+ */
+export function particleRng() {
+  if (typeof window !== 'undefined' && typeof window.__SEEDED_RNG__ === 'function') {
+    return window.__SEEDED_RNG__()
+  }
+  return Math.random()
+}
+
 export class Particles {
   constructor() {
     this.reducedMotion = false
@@ -97,7 +108,7 @@ export class Particles {
     p.shape = config.shape || 'circle'
     p.maxTrail = config.trail || 0
     p.trail = p.maxTrail > 0 ? [] : null
-    p.rotation = config.rotation ?? Math.random() * Math.PI * 2
+    p.rotation = config.rotation ?? particleRng() * Math.PI * 2
     p.rotSpeed = config.rotSpeed ?? 0
     p.glow = config.glow || false
     p.bounceY = config.bounceY ?? null
@@ -125,11 +136,11 @@ export class Particles {
     const spread = config.spread ?? Math.PI * 2
 
     for (let i = 0; i < actualCount; i++) {
-      const angle = angleBase + (Math.random() - 0.5) * spread
-      const speed = speedMin + Math.random() * (speedMax - speedMin)
+      const angle = angleBase + (particleRng() - 0.5) * spread
+      const speed = speedMin + particleRng() * (speedMax - speedMin)
       const hue =
         config.hueMin !== undefined
-          ? config.hueMin + Math.random() * ((config.hueMax ?? config.hueMin) - config.hueMin)
+          ? config.hueMin + particleRng() * ((config.hueMax ?? config.hueMin) - config.hueMin)
           : (config.hue ?? 0)
 
       this.spawn(x, y, {
@@ -137,7 +148,7 @@ export class Particles {
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         hue,
-        size: sizeMin + Math.random() * (sizeMax - sizeMin),
+        size: sizeMin + particleRng() * (sizeMax - sizeMin),
       })
     }
   }

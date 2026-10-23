@@ -203,6 +203,34 @@
 .sheet-val {
   color: #e5c897;
 }
+.sheet-volume-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.sheet-mute-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #f0deb8;
+  border-radius: 20px;
+  min-height: 32px;
+  padding: 4px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+.sheet-mute-btn[aria-pressed='true'] {
+  background: rgba(220, 70, 70, 0.22);
+  border-color: rgba(248, 113, 113, 0.45);
+  color: #fca5a5;
+}
+.sheet-mute-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
 .sheet-row input[type='range'] {
   width: 100%;
   height: 6px;
@@ -906,10 +934,71 @@
   backdrop-filter: none;
 }
 .game-stage .reward-card {
+  position: relative;
   pointer-events: auto;
   max-width: 440px;
   padding: 24px;
   gap: 12px;
+}
+.game-stage .reward-card__top {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.game-stage .reward-card__top .reward-skip-btn {
+  position: static;
+}
+.game-stage .reward-mute-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #f0deb8;
+  font-size: 14px;
+  min-height: 36px;
+  min-width: 36px;
+  padding: 4px 8px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.game-stage .reward-mute-btn[aria-pressed='true'] {
+  background: rgba(220, 70, 70, 0.22);
+  border-color: rgba(248, 113, 113, 0.45);
+  color: #fca5a5;
+}
+.game-stage .reward-mute-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.sticker-book__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sticker-book__mute {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #f0deb8;
+  font-size: 15px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.2s ease;
+}
+.sticker-book__mute[aria-pressed='true'] {
+  background: rgba(220, 70, 70, 0.22);
+  border-color: rgba(248, 113, 113, 0.45);
+  color: #fca5a5;
+}
+.sticker-book__mute:hover {
+  background: rgba(255, 255, 255, 0.16);
 }
 .game-stage .reward-card__title {
   font-size: 26px;
@@ -1054,11 +1143,43 @@
   margin: 12px 0 0;
   text-shadow: 0 0 15px rgba(241, 214, 159, 0.3);
 }
-.game-stage .calm-corner__resume {
+.game-stage .calm-corner__controls {
   width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 6px;
+}
+.game-stage .calm-corner__mute {
+  min-height: 44px;
+  min-width: 90px;
+  padding: 10px 14px;
+  font-size: 12px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f7eedf;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.game-stage .calm-corner__mute[aria-pressed='true'] {
+  background: rgba(220, 70, 70, 0.22);
+  border-color: rgba(248, 113, 113, 0.45);
+  color: #fca5a5;
+}
+.game-stage .calm-corner__mute:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.game-stage .calm-corner__resume {
+  flex: 1;
   min-height: 44px;
   font-size: 13px;
-  margin-top: 6px;
+  margin-top: 0;
 }
 .sheet-test-row {
   margin-top: 4px;
@@ -1181,12 +1302,32 @@ input:focus-visible,
     display: none;
   }
   .game-pause {
+    min-height: 44px;
+    min-width: 44px;
     padding: 5px 9px;
   }
   .game-pause span {
     display: none;
   }
+  .game-mute-btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 5px 9px;
+  }
+  .game-mute-btn span:not([aria-hidden]) {
+    display: none;
+  }
+  .game-settings-btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 5px 9px;
+  }
+  .game-settings-btn span {
+    display: none;
+  }
   .game-collection {
+    min-height: 44px;
+    min-width: 44px;
     padding: 5px 9px;
     font-size: 10px;
   }
@@ -1481,6 +1622,7 @@ input:focus-visible,
     padding: 4px 10px;
     font-size: 11px;
   }
+  .game-navbar .game-mute-btn,
   .game-navbar .hud-mute-btn,
   .game-navbar .game-settings-btn,
   .game-navbar .game-pause,

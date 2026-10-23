@@ -42,7 +42,13 @@ function StickerTile({ cracker, unlocked }) {
   )
 }
 
-export default function StickerBook({ stickers, onClose, onUnlockAll }) {
+export default function StickerBook({
+  stickers,
+  onClose,
+  onUnlockAll,
+  isMuted = false,
+  onToggleMute,
+}) {
   const [holdProgress, setHoldProgress] = useState(0)
   const [holding, setHolding] = useState(false)
   const holdTimerRef = React.useRef(null)
@@ -86,18 +92,32 @@ export default function StickerBook({ stickers, onClose, onUnlockAll }) {
       className="overlay overlay--sticker"
       role="dialog"
       aria-modal="true"
-      aria-label={t('sticker_book_dialog_aria')}
+      aria-label={t('sticker_book_dialog') || t('sticker_book_dialog_aria')}
     >
       <div className="sticker-book">
         <div className="sticker-book__header">
           <h2 className="sticker-book__title">{t('sticker_book_title')}</h2>
-          <button
-            className="btn btn--icon sticker-book__close"
-            onClick={onClose}
-            aria-label={t('sticker_book_close_aria')}
-          >
-            ✕
-          </button>
+          <div className="sticker-book__header-actions">
+            {onToggleMute && (
+              <button
+                type="button"
+                className="btn btn--icon sticker-book__mute"
+                onClick={onToggleMute}
+                aria-pressed={isMuted}
+                aria-label={isMuted ? t('unmute_audio') : t('mute_audio')}
+                title={isMuted ? t('unmute_audio') : t('mute_audio')}
+              >
+                <span aria-hidden="true">{isMuted ? '🔇' : '🔊'}</span>
+              </button>
+            )}
+            <button
+              className="btn btn--icon sticker-book__close"
+              onClick={onClose}
+              aria-label={t('sticker_book_close') || t('sticker_book_close_aria')}
+            >
+              ✕
+            </button>
+          </div>
         </div>
         <div className="sticker-book__count" aria-live="polite">
           {t('stickers_collected_count', { count: stickers.length, total: CRACKERS.length })}

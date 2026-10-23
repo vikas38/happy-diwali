@@ -45,6 +45,8 @@ export default function RewardOverlay({
   onNextCracker,
   onSkip,
   isLastCracker,
+  isMuted = false,
+  onToggleMute,
 }) {
   if (!cracker) return null
 
@@ -61,14 +63,28 @@ export default function RewardOverlay({
       aria-label={t('reward_dialog_aria')}
     >
       <div className="reward-card">
-        <button
-          type="button"
-          className="reward-skip-btn"
-          onClick={handleSkip}
-          aria-label={t('reward_skip_aria')}
-        >
-          {t('reward_skip_btn')}
-        </button>
+        <div className="reward-card__top">
+          {onToggleMute && (
+            <button
+              type="button"
+              className="reward-mute-btn"
+              onClick={onToggleMute}
+              aria-pressed={isMuted}
+              aria-label={isMuted ? t('unmute_audio') : t('mute_audio')}
+              title={isMuted ? t('unmute_audio') : t('mute_audio')}
+            >
+              <span aria-hidden="true">{isMuted ? '🔇' : '🔊'}</span>
+            </button>
+          )}
+          <button
+            type="button"
+            className="reward-skip-btn"
+            onClick={handleSkip}
+            aria-label={t('reward_skip_aria')}
+          >
+            {t('reward_skip_btn')}
+          </button>
+        </div>
         <h2 className="reward-card__title">
           {t('reward_title_prefix')} <span className="neon">{t('reward_title_accent')}</span>
         </h2>

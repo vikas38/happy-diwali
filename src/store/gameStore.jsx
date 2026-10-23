@@ -46,10 +46,56 @@ export function GameStoreProvider({ children }) {
 
   const setMasterVolume = useCallback(
     (vol) => {
-      updateStore((s) => ({ ...s, masterVolume: vol }))
+      const clamped = Math.min(1, Math.max(0, Number(vol) || 0))
+      updateStore((s) => {
+        if (clamped === 0) {
+          const nonZero =
+            s.lastNonZeroVolume > 0
+              ? s.lastNonZeroVolume
+              : s.masterVolume > 0
+                ? s.masterVolume
+                : 0.7
+          return { ...s, masterVolume: 0, muted: true, lastNonZeroVolume: nonZero }
+        }
+        return {
+          ...s,
+          masterVolume: clamped,
+          lastNonZeroVolume: clamped,
+          muted: false,
+        }
+      })
     },
     [updateStore]
   )
+
+  const toggleMute = useCallback(() => {
+    let nextVol = 0
+    updateStore((s) => {
+      const isMuted = s.masterVolume === 0 || s.muted
+      if (isMuted) {
+        // Restore previous non-zero volume (default 0.7, never 0.35)
+        const restoreVol = s.lastNonZeroVolume > 0 ? s.lastNonZeroVolume : 0.7
+        nextVol = restoreVol
+        return {
+          ...s,
+          masterVolume: restoreVol,
+          muted: false,
+          lastNonZeroVolume: restoreVol,
+        }
+      } else {
+        const nonZero =
+          s.masterVolume > 0 ? s.masterVolume : s.lastNonZeroVolume > 0 ? s.lastNonZeroVolume : 0.7
+        nextVol = 0
+        return {
+          ...s,
+          masterVolume: 0,
+          muted: true,
+          lastNonZeroVolume: nonZero,
+        }
+      }
+    })
+    return nextVol
+  }, [updateStore])
 
   const unlockCracker = useCallback(
     (index) => {
@@ -187,6 +233,7 @@ export function GameStoreProvider({ children }) {
     // actions
     setIntensity,
     setMasterVolume,
+    toggleMute,
     setCalmVisuals,
     unlockCracker,
     unlockAllCrackers,

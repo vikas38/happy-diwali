@@ -248,20 +248,9 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
     [gc]
   )
 
-  const lastNonZeroVolumeRef = useRef(saveState.masterVolume || 0.7)
-  if (saveState.masterVolume > 0) {
-    lastNonZeroVolumeRef.current = saveState.masterVolume
-  }
-
   const handleToggleMute = useCallback(() => {
-    if (saveState.masterVolume > 0) {
-      lastNonZeroVolumeRef.current = saveState.masterVolume
-      gc.setMasterVolume(0)
-    } else {
-      const restoreVol = lastNonZeroVolumeRef.current || 0.7
-      gc.setMasterVolume(restoreVol)
-    }
-  }, [saveState.masterVolume, gc])
+    gc.toggleMute()
+  }, [gc])
 
   const handleTestSound = useCallback(() => {
     const sound = getSoundEngine()
@@ -278,6 +267,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
     fsmState === STATES.READY_ON_STREET ||
     fsmState === STATES.REWARD_CELEBRATION
   const isLastCracker = selectedCracker === 5
+  const isMuted = Boolean(saveState.muted || saveState.masterVolume === 0)
 
   if (canvasFailed)
     return (
@@ -449,10 +439,18 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             onNextCracker={handleNextCracker}
             onSkip={handleNextCracker}
             isLastCracker={isLastCracker}
+            isMuted={isMuted}
+            onToggleMute={handleToggleMute}
           />
         )}
 
-        {fsmState === STATES.CALM_CORNER_OVERLAY && <CalmCorner onResume={handleResumeFromCalm} />}
+        {fsmState === STATES.CALM_CORNER_OVERLAY && (
+          <CalmCorner
+            onResume={handleResumeFromCalm}
+            isMuted={isMuted}
+            onToggleMute={handleToggleMute}
+          />
+        )}
 
         {/* Sticker Book — modal governed by FSM interruption */}
         {fsmState === STATES.STICKER_BOOK_OVERLAY && (
@@ -463,6 +461,8 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
               store.unlockAllCrackers()
               gc.closeStickerBook()
             }}
+            isMuted={isMuted}
+            onToggleMute={handleToggleMute}
           />
         )}
       </div>
@@ -486,13 +486,17 @@ function FestivalHomeWrapper({ onPlay, reducedMotion }) {
         .resume()
         .then(() => {
           sound.setIntensity(store.state.intensity || 'SOFT')
-          sound.setMasterVolume(store.state.masterVolume ?? 0.7)
-          sound.startMusic()
+          const isMuted = Boolean(store.state.muted || store.state.masterVolume === 0)
+          const vol = isMuted ? 0 : (store.state.masterVolume ?? 0.7)
+          sound.setMasterVolume(vol)
+          if (!isMuted) {
+            sound.startMusic()
+          }
         })
         .catch(() => {})
     } catch {}
     onPlay()
-  }, [store.state.intensity, store.state.masterVolume, onPlay])
+  }, [store.state.intensity, store.state.masterVolume, store.state.muted, onPlay])
 
   return (
     <FestivalHome

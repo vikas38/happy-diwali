@@ -26,6 +26,8 @@ export function createDefaultSave() {
     stickers: [], // indices of collected stickers
     stars: 0, // total stars earned
     masterVolume: 0.7, // 0..1
+    lastNonZeroVolume: 0.7, // remembered volume for unmuting (never hardcoded to 0.35)
+    muted: false, // explicit master mute state
     intensity: INTENSITY.SOFT,
     seenIntros: [], // cracker indices whose intro card has been shown
     seenHint: false, // first-run courtyard hint
@@ -79,12 +81,35 @@ export function validateSave(raw) {
 
   // Explicitly pick only known fields (version-upgrade safety: unknown
   // keys from future/old versions are dropped rather than persisted).
+  // Determine muted & volume preferences with backward compatibility
+  const rawVolProvided = typeof raw.masterVolume !== 'undefined' && raw.masterVolume !== null
+  const parsedVol = rawVolProvided
+    ? Math.min(1, Math.max(0, Number(raw.masterVolume) || 0))
+    : defaults.masterVolume
+
+  let lastNonZero = defaults.lastNonZeroVolume
+  if (
+    typeof raw.lastNonZeroVolume === 'number' &&
+    raw.lastNonZeroVolume > 0 &&
+    raw.lastNonZeroVolume <= 1
+  ) {
+    lastNonZero = raw.lastNonZeroVolume
+  } else if (parsedVol > 0) {
+    lastNonZero = parsedVol
+  }
+
+  const isMuted = typeof raw.muted === 'boolean' ? raw.muted : rawVolProvided && parsedVol === 0
+
+  const finalMasterVol = isMuted ? 0 : parsedVol
+
   const result = {
     version: SAVE_VERSION,
     unlocked: Array.isArray(raw.unlocked) ? raw.unlocked : defaults.unlocked,
     stickers: Array.isArray(raw.stickers) ? raw.stickers : defaults.stickers,
     stars: raw.stars,
-    masterVolume: raw.masterVolume,
+    masterVolume: finalMasterVol,
+    lastNonZeroVolume: lastNonZero,
+    muted: isMuted || finalMasterVol === 0,
     intensity: raw.intensity,
     seenIntros: Array.isArray(raw.seenIntros) ? raw.seenIntros : defaults.seenIntros,
     seenHint: typeof raw.seenHint === 'boolean' ? raw.seenHint : defaults.seenHint,
@@ -115,6 +140,12 @@ export function validateSave(raw) {
 
   // masterVolume: 0..1
   result.masterVolume = Math.min(1, Math.max(0, Number(result.masterVolume) || 0))
+  if (result.masterVolume > 0) {
+    result.lastNonZeroVolume = result.masterVolume
+    result.muted = false
+  } else {
+    result.muted = true
+  }
 
   // intensity: must be one of the valid modes
   if (!Object.values(INTENSITY).includes(result.intensity)) {

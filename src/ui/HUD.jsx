@@ -141,11 +141,25 @@ export default function HUD({
             </div>
 
             <div className="sheet-body">
-              <label className="sheet-row">
-                <span className="sheet-label">
-                  {t('master_volume')}{' '}
-                  <span className="sheet-val">{Math.round(masterVolume * 100)}%</span>
-                </span>
+              <div className="sheet-row sheet-volume-row">
+                <div className="sheet-volume-header">
+                  <span className="sheet-label">
+                    {t('master_volume')}{' '}
+                    <span className="sheet-val">{Math.round(masterVolume * 100)}%</span>
+                  </span>
+                  {onToggleMute && (
+                    <button
+                      type="button"
+                      className="sheet-mute-btn"
+                      onClick={onToggleMute}
+                      aria-pressed={masterVolume === 0}
+                      aria-label={masterVolume === 0 ? t('unmute_audio') : t('mute_audio')}
+                    >
+                      <span aria-hidden="true">{masterVolume === 0 ? '🔇' : '🔊'}</span>
+                      <span>{masterVolume === 0 ? t('unmute') : t('mute')}</span>
+                    </button>
+                  )}
+                </div>
                 <input
                   aria-label={t('master_volume')}
                   type="range"
@@ -154,7 +168,7 @@ export default function HUD({
                   value={Math.round(masterVolume * 100)}
                   onChange={(e) => onVolumeChange(Number(e.target.value) / 100)}
                 />
-              </label>
+              </div>
 
               <div className="sheet-row">
                 <span className="sheet-label">{t('sound_level')}</span>

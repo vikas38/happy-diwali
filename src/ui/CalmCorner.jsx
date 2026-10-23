@@ -63,7 +63,7 @@ function BreathingCircle() {
   )
 }
 
-export default function CalmCorner({ onResume }) {
+export default function CalmCorner({ onResume, isMuted = false, onToggleMute }) {
   useEffect(() => {
     const handleKey = (e) => {
       if (e.key === 'Escape') onResume()
@@ -96,14 +96,28 @@ export default function CalmCorner({ onResume }) {
         </h2>
         <p className="calm-corner__subtitle">{t('calm_corner_subtitle')}</p>
         <BreathingCircle />
-        <button
-          className="btn btn--primary calm-corner__resume"
-          onClick={onResume}
-          autoFocus
-          aria-label={t('calm_corner_resume_aria')}
-        >
-          {t('calm_corner_resume')}
-        </button>
+        <div className="calm-corner__controls">
+          {onToggleMute && (
+            <button
+              type="button"
+              className="btn btn--secondary calm-corner__mute"
+              onClick={onToggleMute}
+              aria-pressed={isMuted}
+              aria-label={isMuted ? t('unmute_audio') : t('mute_audio')}
+            >
+              <span aria-hidden="true">{isMuted ? '🔇' : '🔊'}</span>{' '}
+              <span>{isMuted ? t('unmute') : t('mute')}</span>
+            </button>
+          )}
+          <button
+            className="btn btn--primary calm-corner__resume"
+            onClick={onResume}
+            autoFocus
+            aria-label={t('calm_corner_resume_aria')}
+          >
+            {t('calm_corner_resume')}
+          </button>
+        </div>
       </div>
     </div>
   )

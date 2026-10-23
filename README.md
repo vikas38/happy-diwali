@@ -14,7 +14,11 @@ Real fireworks must only be handled by responsible adults with children at a saf
 
 ## Privacy and offline behaviour
 
-Progress and sound preferences are stored locally under the legacy key `chhotu_diwali_save_v1` so existing progress is preserved. No accounts, analytics or progress uploads are implemented. Loading the website makes normal requests to its hosting provider. If storage is blocked, play continues in memory.
+- Nothing leaves your device.
+- Progress is saved only in this browser.
+- There is no tracking, no analytics, and no accounts.
+
+Progress and sound preferences are stored locally under the legacy key `chhotu_diwali_save_v1` so existing progress is preserved. Loading the website makes normal requests to its hosting provider. If storage is blocked, play continues in memory.
 
 The site bundles local character PNG images in `public/assets/characters/` and generates canvas/SVG scenery and Web Audio sound. There are no external network asset downloads; all assets are served directly from `public/` or synthesized procedurally in the browser. It does **not** promise offline reloads: there is no service worker. The manifest provides home-screen metadata, not an offline guarantee.
 

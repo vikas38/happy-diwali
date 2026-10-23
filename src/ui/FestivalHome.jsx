@@ -666,11 +666,11 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
                   onChange={(e) => setMasterVolume(Number(e.target.value))}
                 />
               </label>
-              <p className="privacy-note">
-                Progress and sound settings stay in this browser. No accounts, analytics, or
-                progress uploads. Loading the site sends normal web requests to our hosting
-                provider.
-              </p>
+              <div className="privacy-note" role="region" aria-label="Privacy notice">
+                <p>Nothing leaves your device.</p>
+                <p>Progress is saved only in this browser.</p>
+                <p>There is no tracking, no analytics, and no accounts.</p>
+              </div>
             </>
           )}
         </Modal>

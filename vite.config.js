@@ -12,5 +12,16 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     include: ['test/**/*.test.{js,jsx}'],
+    coverage: {
+      provider: 'v8',
+      include: ['src/fsm/**', 'src/store/**'],
+      reporter: ['text', 'json-summary', 'html'],
+      thresholds: {
+        statements: 80,
+        branches: 75,
+        functions: 65,
+        lines: 85,
+      },
+    },
   },
 })

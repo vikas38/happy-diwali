@@ -1,6 +1,6 @@
 # Chhotu Champ's Diwali Glow — Requirements Specification
 
-> A therapeutic, playful, touch-first HTML5 game for children ages 5–8 to overcome fear of firecrackers (phonophobia) through predictable routines, gradual sensory exposure, visual sound-taming, and user-controlled audio dynamics.
+> A gentle, sensory-friendly, playful, touch-first HTML5 game for children ages 5–8 to celebrate Diwali firecrackers through predictable routines, gradual sensory exposure, visual sound-taming, and user-controlled audio dynamics.
 
 ---
 

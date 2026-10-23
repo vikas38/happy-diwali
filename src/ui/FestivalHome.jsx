@@ -627,7 +627,7 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
                 <Icon name="shield" />
                 <p>
                   Fireworks here are pretend. Real fireworks need responsible adult supervision and a safe distance.
-                  This is a pretend celebration, not a medical tool. For persistent distress, consider speaking with
+                  This is a playful experience, not a treatment. For persistent distress, consider speaking with
                   a paediatric professional.
                 </p>
               </div>

@@ -25,7 +25,7 @@ export function StepIndicator({ step = 1, totalSteps = 5 }) {
   const stepLabels = [
     'Select sparkle',
     'Place on street',
-    'Light the fuse',
+    'Grown-up lights fuse',
     'Step back & count',
     'Celebrate',
   ]

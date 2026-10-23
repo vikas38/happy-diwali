@@ -1,6 +1,6 @@
 # Little Lights — Your Diwali Adventure
 
-A gentle virtual Diwali celebration. Light diyas, create rangoli, and discover pretend fireworks at your own pace. This is a game, not a medical tool or real-world firework instruction.
+A gentle, sensory-friendly virtual Diwali celebration. Light diyas, create rangoli, and discover pretend fireworks at your own pace. This is a game, not a medical tool or real-world firework instruction.
 
 [Play Little Lights](https://happy-diwali-alpha-mauve.vercel.app/)
 

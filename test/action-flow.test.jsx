@@ -163,7 +163,7 @@ describe('T02 — Contextual Action Button, Step Dots, Tap Targets & Breath Paus
 
     it('renders accessible text equivalent "Step X of 5"', () => {
       render(<StepIndicator step={3} totalSteps={5} />)
-      expect(screen.getByText('Step 3 of 5: Light the fuse')).toBeTruthy()
+      expect(screen.getByText('Step 3 of 5: Grown-up lights fuse')).toBeTruthy()
       expect(screen.getByText('Step 3 of 5')).toBeTruthy()
     })
   })

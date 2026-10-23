@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "A gentle virtual Diwali celebration. Light diyas, create rangoli, and discover pretend fireworks at your own pace.",
+  "description": "A gentle, sensory-friendly virtual Diwali celebration. Light diyas, create rangoli, and discover pretend fireworks at your own pace.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

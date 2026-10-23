@@ -51,7 +51,7 @@ describe('T05 — First paint, favicon, noscript, and share metadata', () => {
 
   it('agrees on title and meta description with Little Lights branding', () => {
     expect(indexHtml).toContain('<title>Little Lights — Your Diwali Adventure</title>')
-    expect(indexHtml).toContain('name="description" content="A gentle virtual Diwali celebration.')
+    expect(indexHtml).toContain('name="description" content="A gentle, sensory-friendly virtual Diwali celebration.')
   })
 
   it('first-paint.css honours prefers-reduced-motion: reduce', () => {

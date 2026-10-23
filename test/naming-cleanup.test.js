@@ -13,7 +13,7 @@ describe('T08 — Naming, README and public/ cleanup', () => {
   })
 
   it('aligns description across package.json, README, and index.html meta description', () => {
-    const canonicalDesc = 'A gentle virtual Diwali celebration. Light diyas, create rangoli, and discover pretend fireworks at your own pace.'
+    const canonicalDesc = 'A gentle, sensory-friendly virtual Diwali celebration. Light diyas, create rangoli, and discover pretend fireworks at your own pace.'
     expect(packageJson.description).toBe(canonicalDesc)
     expect(indexHtml).toContain(`<meta name="description" content="${canonicalDesc}" />`)
     expect(readme).toContain(canonicalDesc)

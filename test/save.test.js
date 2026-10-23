@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import {
   createDefaultSave,
   validateSave,
+  migrateSave,
   loadSave,
   writeSave,
   clearSave,
@@ -187,6 +188,85 @@ describe('save.js', () => {
       expect(raw.version).toBe(SAVE_VERSION)
       expect(raw.unlocked).toContain(0) // always includes cracker 0
       expect(raw.extraField).toBeUndefined()
+    })
+
+    describe('T14 — localStorage guards and migration', () => {
+      it('handles storage completely disabled (SecurityError on access) gracefully', () => {
+        const disabledStorage = {
+          getItem: () => {
+            throw new Error('SecurityError: The operation is insecure.')
+          },
+          setItem: () => {
+            throw new Error('SecurityError: The operation is insecure.')
+          },
+          removeItem: () => {
+            throw new Error('SecurityError: The operation is insecure.')
+          },
+        }
+
+        // loadSave returns defaults without throwing
+        expect(() => loadSave(disabledStorage)).not.toThrow()
+        expect(loadSave(disabledStorage)).toEqual(createDefaultSave())
+
+        // writeSave silently catches without crashing
+        expect(() => writeSave({ unlocked: [0, 1] }, disabledStorage)).not.toThrow()
+      })
+
+      it('handles storage quota exceeded error (QuotaExceededError) gracefully', () => {
+        const fullStorage = {
+          getItem: () => null,
+          setItem: () => {
+            const err = new Error('QuotaExceededError: Setting the value exceeded the quota.')
+            err.name = 'QuotaExceededError'
+            throw err
+          },
+          removeItem: () => {},
+        }
+
+        expect(() => writeSave({ unlocked: [0, 1, 2] }, fullStorage)).not.toThrow()
+      })
+
+      it('migrates unversioned legacy save (v0) to v1', () => {
+        const legacyV0 = {
+          unlocked: [0, 1],
+          stickers: [0],
+          stars: 3,
+        }
+        const migrated = migrateSave(legacyV0)
+        expect(migrated.version).toBe(1)
+        expect(migrated.unlocked).toEqual([0, 1])
+        expect(migrated.stickers).toEqual([0])
+
+        const validated = validateSave(migrated)
+        expect(validated.version).toBe(1)
+        expect(validated.unlocked).toEqual([0, 1])
+      })
+
+      it('is ready for future v2 schema migration', () => {
+        const v1Fixture = {
+          version: 1,
+          unlocked: [0, 1, 2],
+          stickers: [0, 1],
+        }
+        // In current SAVE_VERSION=1, v1 to v1 is a clean no-op
+        const migrated = migrateSave(v1Fixture)
+        expect(migrated.version).toBe(1)
+        expect(migrated.unlocked).toEqual([0, 1, 2])
+      })
+
+      it('migrates and loads an old-shape save from storage', () => {
+        const oldShape = JSON.stringify({
+          unlocked: [1, 2], // missing 0, missing version
+          extraLegacyKey: 'deprecated_value',
+        })
+        storage.setItem(SAVE_KEY, oldShape)
+
+        const loaded = loadSave(storage)
+        expect(loaded.version).toBe(1)
+        expect(loaded.unlocked).toContain(0) // restored 0
+        expect(loaded.unlocked).toContain(1)
+        expect(loaded.extraLegacyKey).toBeUndefined()
+      })
     })
   })
 

@@ -35,6 +35,37 @@ export function createDefaultSave() {
 }
 
 /**
+ * Multi-version migration pipeline keyed on the version field.
+ * Migrates older/legacy shapes up to the current SAVE_VERSION,
+ * with structured pipelines for v0 -> v1 and readiness for future v2 schema.
+ * @param {any} raw
+ * @returns {object} migrated state
+ */
+export function migrateSave(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return createDefaultSave()
+  }
+
+  let state = { ...raw }
+  const currentVersion = Number(state.version) || 0
+
+  // Migration step: v0 (legacy unversioned) -> v1
+  if (currentVersion < 1) {
+    state.version = 1
+    if (!Array.isArray(state.unlocked)) state.unlocked = [0]
+    if (!Array.isArray(state.stickers)) state.stickers = []
+    if (!Array.isArray(state.seenIntros)) state.seenIntros = []
+  }
+
+  // Future migration handler ready for v2
+  if (currentVersion === 1 && SAVE_VERSION === 2) {
+    state.version = 2
+  }
+
+  return state
+}
+
+/**
  * Validate and normalise a raw parsed object into a proper save state.
  * Fills missing fields with defaults and clamps values to safe ranges.
  * @param {any} raw - the parsed JSON object (may be malformed/incomplete)
@@ -112,10 +143,11 @@ export function loadSave(storage) {
     const raw = store.getItem(SAVE_KEY)
     if (!raw) return createDefaultSave()
     const parsed = JSON.parse(raw)
-    return validateSave(parsed)
+    const migrated = migrateSave(parsed)
+    return validateSave(migrated)
   } catch (e) {
-    // Corrupt data — fall back to a fresh save without destroying the bad data
-    // (so a parent doesn't lose progress due to a transient parse error).
+    // Corrupt data, storage disabled, or SecurityError — fall back to a fresh save
+    // without destroying the bad data (so in-memory play continues uninterrupted).
     return createDefaultSave()
   }
 }

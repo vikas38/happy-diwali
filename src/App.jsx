@@ -398,6 +398,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             selectedCracker={selectedCracker ?? 0}
             countdownNumber={uiData.countdownNumber}
             canSkipWalk={Boolean(saveState.hasCompletedFirst || saveState.stickers.length > 0)}
+            hasDock={showCarousel}
             onPlaceOnStreet={
               fsmState === STATES.CRACKER_INTRO_CARD ? handlePutOnStreet : handleContextualPlace
             }

@@ -10,7 +10,22 @@ export const STAGE = {
   pipStartY: 0.77,
   streetTop: 0.59,
 }
-export const propScale = (w, h) => Math.max(1, Math.min(1.8, w / 700, h / 460))
+export function isPortraitLayout(w, h) {
+  return h > w
+}
+
+export function getGroundY(w, h) {
+  return isPortraitLayout(w, h) ? h * 0.44 : h * 0.6
+}
+
+export const propScale = (w, h) => {
+  if (isPortraitLayout(w, h)) {
+    // Portrait layout keeps props large for children (ages 4 to 8, D3)
+    return Math.max(1.35, Math.min(2.0, w / 260))
+  }
+  // Landscape-first layout
+  return Math.max(1.0, Math.min(1.8, w / 700, h / 460))
+}
 export function effectOrigin(index, w, h) {
   const s = propScale(w, h)
   const tips = [
@@ -70,7 +85,8 @@ function lamp(c, x, y, s, t) {
 }
 export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
   const effectiveT = reducedMotion ? t * 0.15 : t
-  const ground = h * 0.6
+  const isPortrait = isPortraitLayout(w, h)
+  const ground = getGroundY(w, h)
   // Backdrop: slightly desaturated nocturnal gradient so foreground pops
   const sky = c.createLinearGradient(0, 0, 0, h)
   sky.addColorStop(0, '#080f20')
@@ -81,7 +97,7 @@ export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
   halo(c, w * 0.55, ground, w * 0.65, '#9a633824')
   for (let i = 0; i < 70; i++) {
     const x = (((i * 7919) % 997) / 997) * w,
-      y = (((i * 3571) % 991) / 991) * h * 0.5
+      y = (((i * 3571) % 991) / 991) * (ground * 0.85)
     ellipse(
       c,
       x,
@@ -91,13 +107,13 @@ export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
       `rgba(239,229,204,${0.22 + Math.sin(effectiveT * 0.4 + i) * 0.12})`
     )
   }
-  halo(c, w * 0.78, h * 0.18, 75, '#c9d7eb18')
-  ellipse(c, w * 0.78, h * 0.18, 18, 18, '#e8e6d4')
-  ellipse(c, w * 0.78 + 6, h * 0.18 - 5, 17, 17, '#151f30')
+  halo(c, w * 0.78, ground * 0.35, 75, '#c9d7eb18')
+  ellipse(c, w * 0.78, ground * 0.35, 18, 18, '#e8e6d4')
+  ellipse(c, w * 0.78 + 6, ground * 0.35 - 5, 17, 17, '#151f30')
   // Distant terraces give depth with lowered contrast to prevent visual competition
   for (let i = 0; i < 17; i++) {
     const x = (i * w) / 16,
-      bh = h * (0.065 + ((i * 37) % 11) / 95)
+      bh = (isPortrait ? ground * 0.25 : h * 0.065) + (((i * 37) % 11) / 95) * (ground * 0.3)
     c.fillStyle = i % 2 ? '#20252e' : '#1c212a'
     c.fillRect(x, ground - bh, w / 15, bh)
     if (i % 3 === 0) {
@@ -110,7 +126,7 @@ export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
   for (const side of [0, 1]) {
     const bw = Math.min(w * 0.21, 270),
       x = side ? w - bw : 0,
-      top = ground - h * 0.31
+      top = ground - (isPortrait ? ground * 0.55 : h * 0.31)
     const wall = c.createLinearGradient(x, 0, x + bw, 0)
     wall.addColorStop(0, side ? '#473d3b' : '#2d2b30')
     wall.addColorStop(1, side ? '#2b292e' : '#4a3e3c')

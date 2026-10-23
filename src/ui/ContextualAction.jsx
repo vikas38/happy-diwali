@@ -64,12 +64,17 @@ export default function ContextualAction({
   onNextCracker,
   onLightAgain,
   isLastCracker = false,
+  hasDock = true,
 }) {
   const cracker = CRACKERS[selectedCracker] || CRACKERS[0]
   const step = getStepFromState(fsmState)
 
   return (
-    <div className="contextual-action-bar" role="region" aria-label="Next action">
+    <div
+      className={`contextual-action-bar ${hasDock ? 'has-dock' : ''}`}
+      role="region"
+      aria-label="Next action"
+    >
       <StepIndicator step={step} />
 
       <div className="action-button-group">

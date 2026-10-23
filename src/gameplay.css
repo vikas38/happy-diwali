@@ -16,13 +16,15 @@
   background: #0c1422;
 }
 .game-navbar {
-  height: 48px;
+  height: calc(48px + var(--sat, 0px));
+  padding-top: var(--sat, 0px);
+  padding-left: calc(16px + var(--sal, 0px));
+  padding-right: calc(16px + var(--sar, 0px));
   background: #0b1320;
   border-bottom: 1px solid #ffffff12;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
   gap: 16px;
   z-index: 30;
   position: relative;
@@ -415,10 +417,11 @@
 .firework-dock {
   position: absolute;
   z-index: 20;
-  bottom: 16px;
+  bottom: calc(16px + var(--sab, 0px));
   left: 50%;
   transform: translateX(-50%);
   width: min(840px, calc(100% - 32px));
+  max-width: calc(100% - 32px - var(--sal, 0px) - var(--sar, 0px));
   padding: 12px 16px;
   background: linear-gradient(150deg, #17202df5, #111a26f5);
   border: 1px solid #b5a28330;
@@ -527,16 +530,21 @@
 /* Contextual Action Bar — single visually dominant action in lower half */
 .contextual-action-bar {
   position: absolute;
-  bottom: 144px;
+  bottom: calc(24px + var(--sab, 0px));
   left: 50%;
   transform: translateX(-50%);
   width: min(500px, calc(100% - 32px));
+  max-width: calc(100% - 32px - var(--sal, 0px) - var(--sar, 0px));
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
   z-index: 22;
   pointer-events: none;
+  transition: bottom 0.25s ease;
+}
+.contextual-action-bar.has-dock {
+  bottom: calc(220px + var(--sab, 0px));
 }
 .contextual-action-bar > * {
   pointer-events: auto;
@@ -1445,8 +1453,8 @@ input:focus-visible,
 }
 @media (max-width: 760px) {
   .game-navbar {
-    flex-wrap: wrap;
-    gap: 2px;
+    flex-wrap: nowrap;
+    gap: 4px;
   }
   .game-settings {
     gap: 5px;
@@ -1456,5 +1464,102 @@ input:focus-visible,
   }
   .motion-control {
     font-size: 10px;
+  }
+}
+
+/* T19 — Responsive stage landscape-first adaptations & safe areas */
+@media (orientation: landscape) and (max-height: 520px) {
+  .game-navbar {
+    height: calc(40px + var(--sat, 0px));
+    padding-top: var(--sat, 0px);
+    padding-left: calc(12px + var(--sal, 0px));
+    padding-right: calc(12px + var(--sar, 0px));
+    gap: 8px;
+  }
+  .game-navbar .back-home {
+    min-height: 36px;
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+  .game-navbar .hud-mute-btn,
+  .game-navbar .game-settings-btn,
+  .game-navbar .game-pause,
+  .game-navbar .game-collection {
+    min-height: 36px;
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+  .scene-caption {
+    top: 6px;
+    padding: 0 12px;
+  }
+  .scene-caption h1 {
+    font-size: 16px;
+    margin: 2px 0;
+  }
+  .scene-caption p {
+    font-size: 9px;
+  }
+  .firework-dock {
+    bottom: calc(6px + var(--sab, 0px));
+    padding: 4px 10px;
+    border-radius: 12px;
+    width: min(720px, calc(100% - 24px));
+    max-width: calc(100% - 24px - var(--sal, 0px) - var(--sar, 0px));
+  }
+  .dock-heading {
+    display: none;
+  }
+  .firework-tray {
+    padding: 2px 2px 4px;
+    gap: 8px;
+  }
+  .firework-choice {
+    min-width: 58px;
+    min-height: 48px;
+    padding: 3px 2px 4px;
+    border-radius: 8px;
+  }
+  .cracker-art {
+    width: 30px;
+    height: 30px;
+  }
+  .firework-choice strong {
+    font-size: 8px;
+    margin-top: 1px;
+  }
+  .firework-choice small {
+    display: none;
+  }
+  .contextual-action-bar {
+    bottom: calc(12px + var(--sab, 0px));
+    gap: 4px;
+    width: min(440px, calc(100% - 24px));
+    max-width: calc(100% - 24px - var(--sal, 0px) - var(--sar, 0px));
+  }
+  .contextual-action-bar.has-dock {
+    bottom: calc(84px + var(--sab, 0px));
+  }
+  .flow-step-tracker {
+    padding: 2px 8px;
+    gap: 6px;
+    border-radius: 12px;
+  }
+  .flow-step-dot {
+    width: 6px;
+    height: 6px;
+  }
+  .flow-step-dot.is-current {
+    width: 9px;
+    height: 9px;
+  }
+  .flow-step-text {
+    font-size: 9px;
+  }
+  .contextual-primary-btn {
+    min-height: 44px;
+    height: 44px;
+    padding: 6px 14px;
+    font-size: 13px;
   }
 }

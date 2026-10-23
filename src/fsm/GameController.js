@@ -70,6 +70,7 @@ export class GameController {
     this._prevCountdownBeat = 0
     this._activeShowToken = null
     this._showCompleted = false
+    this._interruptionSnapshot = null
   }
 
   // -----------------------------------------------------------------
@@ -530,11 +531,20 @@ export class GameController {
     if (this.state === STATES.CALM_CORNER_OVERLAY) return
     if (this.state === STATES.SAFETY_SPLASH) return // don't interrupt the safety splash
 
-    this._activeShowToken = null
+    // Interruption snapshot contract: preserve complete resumable state and UI payload
+    this._interruptionSnapshot = {
+      returnState: this.state,
+      selectedCracker: this.selectedCracker,
+      uiData: { ...this._uiData },
+      currentCountdownBeat: this._currentCountdownBeat ?? 0,
+      timestamp: Date.now(),
+    }
     this._prevState = this.state
     this._prevSelectedCracker = this.selectedCracker
     this._prevCountdownBeat = this._currentCountdownBeat ?? 0
 
+    // Invalidate active show token so abandoned show callbacks cannot grant awards
+    this._activeShowToken = null
     this._cancelShow?.()
     this._cancelShow = null
     this._stopFuse?.()
@@ -576,31 +586,68 @@ export class GameController {
     }
 
     this._paused = false
+    const snapshot = this._interruptionSnapshot
+    this._interruptionSnapshot = null
     const prev = this._prevState
     this._prevState = null
+    this._prevSelectedCracker = null
 
-    // Resume the previous state's sequence
-    switch (prev) {
-      case STATES.STEPPING_BACK_SAFE_ROUTINE:
-        this._startStepBack()
+    if (!snapshot) {
+      this._setState(prev || STATES.IDLE)
+      return
+    }
+
+    const { returnState, selectedCracker, uiData } = snapshot
+    this.selectedCracker = selectedCracker
+
+    // Resume contract by interrupted phase
+    switch (returnState) {
+      case STATES.IDLE:
+        this._setState(STATES.IDLE, { ...uiData })
         break
-      case STATES.COUNTDOWN_3_2_1:
-        this._startCountdown(this._prevCountdownBeat ?? 0)
-        break
-      case STATES.CRACKER_SHOW_ACTIVE:
-        // Restart the cracker show from the beginning
-        this._startCountdown()
-        break
-      case STATES.READY_ON_STREET:
-        this._gotoReady(this.selectedCracker)
-        break
-      case STATES.REWARD_CELEBRATION:
-        this._setState(STATES.REWARD_CELEBRATION, {
-          cracker: getCracker(this.selectedCracker),
+
+      case STATES.CRACKER_INTRO_CARD: {
+        const cracker =
+          uiData?.cracker || (selectedCracker !== null ? getCracker(selectedCracker) : null)
+        this._setState(STATES.CRACKER_INTRO_CARD, {
+          ...uiData,
+          cracker,
         })
         break
+      }
+
+      case STATES.READY_ON_STREET:
+        this._gotoReady(selectedCracker)
+        break
+
+      case STATES.STEPPING_BACK_SAFE_ROUTINE:
+        // Restart the visible preparation sequence safely
+        this._startStepBack()
+        break
+
+      case STATES.COUNTDOWN_3_2_1:
+        // Resume visible countdown from current beat
+        this._startCountdown(snapshot.currentCountdownBeat ?? 0)
+        break
+
+      case STATES.CRACKER_SHOW_ACTIVE:
+        // Active show restarts through complete visible countdown; no award from abandoned run
+        this._startCountdown(0)
+        break
+
+      case STATES.REWARD_CELEBRATION: {
+        // Restore identical reward payload: cracker, isNewSticker, starsEarned
+        const cracker =
+          uiData?.cracker || (selectedCracker !== null ? getCracker(selectedCracker) : null)
+        this._setState(STATES.REWARD_CELEBRATION, {
+          ...uiData,
+          cracker,
+        })
+        break
+      }
+
       default:
-        this._setState(prev || STATES.IDLE)
+        this._setState(returnState || STATES.IDLE, { ...uiData })
     }
   }
 
@@ -626,13 +673,15 @@ export class GameController {
 
   dispose() {
     this._disposed = true
+    this._interruptionSnapshot = null
     this._activeShowToken = null
     this._cancelShow?.()
     this._cancelShow = null
     this._stopFuse?.()
     this._stopFuse = null
-    this._engines?.sound.stopMusic()
-    this._engines?.sound.stopCrackerAudio()
+    this._engines?.sound?.stopMusic?.()
+    this._engines?.sound?.stopCrackerAudio?.()
+    this._engines?.sound?.stopCalmPad?.()
     this._clearTimers()
     this._listeners.clear()
   }

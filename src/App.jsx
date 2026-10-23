@@ -213,6 +213,28 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
     gc.setIntensity(mode)
   }, [gc])
 
+  const lastNonZeroVolumeRef = useRef(saveState.masterVolume || 0.7)
+  if (saveState.masterVolume > 0) {
+    lastNonZeroVolumeRef.current = saveState.masterVolume
+  }
+
+  const handleToggleMute = useCallback(() => {
+    if (saveState.masterVolume > 0) {
+      lastNonZeroVolumeRef.current = saveState.masterVolume
+      gc.setMasterVolume(0)
+    } else {
+      const restoreVol = lastNonZeroVolumeRef.current || 0.7
+      gc.setMasterVolume(restoreVol)
+    }
+  }, [saveState.masterVolume, gc])
+
+  const handleTestSound = useCallback(() => {
+    const sound = getSoundEngine()
+    sound.setIntensity(saveState.intensity)
+    sound.setMasterVolume(saveState.masterVolume)
+    sound.playTestChime()
+  }, [saveState.intensity, saveState.masterVolume])
+
   // ---- Derived state ----
 
   const showHUD = fsmState !== STATES.SAFETY_SPLASH
@@ -241,6 +263,8 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
         stars={saveState.stars}
         onVolumeChange={handleVolumeChange}
         onIntensityChange={handleIntensityChange}
+        onToggleMute={handleToggleMute}
+        onTestSound={handleTestSound}
         onOpenStickerBook={() => setShowStickerBook(true)}
         onCalmCorner={handleCalmCorner}
       />

@@ -12,6 +12,8 @@ export default function HUD({
   stars,
   onVolumeChange,
   onIntensityChange,
+  onToggleMute,
+  onTestSound,
   onOpenStickerBook,
   onCalmCorner,
 }) {
@@ -53,6 +55,18 @@ export default function HUD({
             aria-label="Open Sticker Book"
           >
             ✧ <span>{stars}</span>
+          </button>
+
+          <button
+            type="button"
+            className="game-mute-btn"
+            onClick={onToggleMute}
+            aria-label={masterVolume === 0 ? "Unmute audio" : "Mute audio"}
+            aria-pressed={masterVolume === 0}
+            title={masterVolume === 0 ? "Unmute audio" : "Mute audio"}
+          >
+            <span aria-hidden="true">{masterVolume === 0 ? '🔇' : '🔊'}</span>
+            <span>{masterVolume === 0 ? 'Unmute' : 'Mute'}</span>
           </button>
 
           <button
@@ -133,20 +147,34 @@ export default function HUD({
                 <span className="sheet-label">Sound Level</span>
                 <div className="game-sound-modes" role="group" aria-label="Sound Level">
                   {[
-                    { id: 'SOFT', label: 'Gentle', hint: 'Soft & gentle' },
-                    { id: 'NORMAL', label: 'Natural', hint: 'Standard' },
-                    { id: 'LOUD', label: 'Full', hint: 'Festive' },
+                    { id: 'SOFT', icon: '🔈', label: 'Gentle', hint: 'Soft & gentle' },
+                    { id: 'NORMAL', icon: '🔉', label: 'Natural', hint: 'Standard' },
+                    { id: 'LOUD', icon: '🔊', label: 'Full', hint: 'Festive' },
                   ].map((mode) => (
                     <button
                       key={mode.id}
                       aria-pressed={intensity === mode.id}
                       className={intensity === mode.id ? 'active' : ''}
                       onClick={() => onIntensityChange(mode.id)}
+                      aria-label={`${mode.label} sound mode`}
                     >
-                      {mode.label}
+                      <span aria-hidden="true">{mode.icon}</span> {mode.label}
                     </button>
                   ))}
                 </div>
+              </div>
+
+              <div className="sheet-row sheet-test-row">
+                <span className="sheet-label">Test Volume</span>
+                <button
+                  type="button"
+                  className="btn btn--secondary sheet-test-btn"
+                  onClick={onTestSound}
+                  aria-label="Play test chime"
+                >
+                  <span aria-hidden="true">🔔</span> Test sound
+                </button>
+                <small className="sheet-row-hint">Plays a soft chime at your selected sound level.</small>
               </div>
 
               <div className="sheet-row">

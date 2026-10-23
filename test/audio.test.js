@@ -1,9 +1,13 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import {
   SoundEngine,
   INTENSITY_PROFILES,
   COMPRESSOR_SETTINGS,
+  MASTER_CEILING_DB,
+  MASTER_CEILING_LINEAR,
 } from '../src/audio/SoundEngine.js'
+import { createDefaultSave, validateSave } from '../src/store/save.js'
+import { limiterCurve } from '../src/safety/limits.js'
 
 describe('SoundEngine — intensity profiles', () => {
   describe('INTENSITY_PROFILES', () => {
@@ -143,5 +147,81 @@ describe('SoundEngine — music definitions', () => {
     for (const chord of SoundEngine.CALM_CHORDS) {
       expect(chord.length).toBe(4)
     }
+  })
+})
+
+describe('T04 — Audio ceiling, unlock, and test chime', () => {
+  it('exposes MASTER_CEILING_DB as -6.0 dBFS', () => {
+    expect(MASTER_CEILING_DB).toBe(-6.0)
+    expect(MASTER_CEILING_LINEAR).toBeCloseTo(Math.pow(10, -6 / 20), 4)
+  })
+
+  it('proves Gentle (SOFT) mode gain stays strictly below the -6 dBFS ceiling', () => {
+    const gentleGain = INTENSITY_PROFILES.SOFT.gain
+    const gentleDb = 20 * Math.log10(gentleGain)
+    expect(gentleGain).toBeLessThan(MASTER_CEILING_LINEAR)
+    expect(gentleDb).toBeLessThanOrEqual(MASTER_CEILING_DB)
+    expect(gentleDb).toBeCloseTo(-13.15, 1)
+  })
+
+  it('proves wave-shaper limiter curve peak stays at or below the -6 dBFS ceiling for all inputs', () => {
+    const curve = limiterCurve()
+    let maxAbs = 0
+    for (let i = 0; i < curve.length; i++) {
+      const absVal = Math.abs(curve[i])
+      if (absVal > maxAbs) maxAbs = absVal
+    }
+    expect(maxAbs).toBeLessThanOrEqual(MASTER_CEILING_LINEAR)
+    const peakDb = 20 * Math.log10(maxAbs)
+    expect(peakDb).toBeLessThanOrEqual(MASTER_CEILING_DB)
+  })
+
+  it('fresh save defaults to Gentle (SOFT) and persists intensity selection', () => {
+    const fresh = createDefaultSave()
+    expect(fresh.intensity).toBe('SOFT')
+    const saved = validateSave({ intensity: 'NORMAL' })
+    expect(saved.intensity).toBe('NORMAL')
+    const loud = validateSave({ intensity: 'LOUD' })
+    expect(loud.intensity).toBe('LOUD')
+  })
+
+  it('playTestChime works and schedules tone through the intensity gain chain', () => {
+    const mockGainNode = {
+      gain: {
+        setValueAtTime: vi.fn(),
+        linearRampToValueAtTime: vi.fn(),
+        exponentialRampToValueAtTime: vi.fn(),
+      },
+      connect: vi.fn(),
+    }
+    const mockOscNode = {
+      type: 'sine',
+      frequency: {
+        setValueAtTime: vi.fn(),
+        exponentialRampToValueAtTime: vi.fn(),
+      },
+      connect: vi.fn(),
+      start: vi.fn(),
+      stop: vi.fn(),
+    }
+    const mockCtx = {
+      currentTime: 1.5,
+      state: 'running',
+      createOscillator: vi.fn(() => mockOscNode),
+      createGain: vi.fn(() => mockGainNode),
+    }
+
+    const se = new SoundEngine()
+    se.ctx = mockCtx
+    se._initialized = true
+    se._supported = true
+    se.intensityGain = { connect: vi.fn() }
+
+    const osc = se.playTestChime()
+    expect(osc).toBe(mockOscNode)
+    expect(mockOscNode.connect).toHaveBeenCalledWith(mockGainNode)
+    expect(mockGainNode.connect).toHaveBeenCalledWith(se.intensityGain)
+    expect(mockOscNode.start).toHaveBeenCalledWith(1.5)
+    expect(mockOscNode.stop).toHaveBeenCalled()
   })
 })

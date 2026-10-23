@@ -47,7 +47,7 @@ The JavaScript budget is 150 KiB gzipped. Canvas DPR is capped at 2; particles u
 
 ## Sound and flashes
 
-All production audio passes through a final bounded WaveShaper after the mixer and compressor. Its transfer function stays within ±0.25 normalized digital amplitude (approximately −12 dBFS). This is **not** an acoustic dB SPL guarantee: speaker, headphone and device volume determine listening loudness. Browser tests render every synthesized effect in each intensity mode to check the digital cap.
+All production audio passes through a final bounded WaveShaper after the mixer and compressor. Its transfer function stays within ±0.25 normalized digital amplitude (approximately −12 dBFS). The master limiter ceiling is exposed as `MASTER_CEILING_DB = -6.0` dBFS (with Gentle defaults operating well below this ceiling at approximately −13.15 dBFS, clamped by the wave-shaper peak of ±0.25 / −12 dBFS). This is **not** an acoustic dB SPL guarantee: speaker, headphone and device volume determine listening loudness. Browser tests render every synthesized effect in each intensity mode to check the digital cap.
 
 Localized flash overlays are limited to a 100 CSS-pixel radius and at least 400 ms apart. Gentle visuals disables them completely. This controls the explicit overlays; full photosensitivity assessment of complete rendered videos remains pending.
 

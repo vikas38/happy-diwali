@@ -1,4 +1,5 @@
-import { limiterCurve } from '../safety/limits.js'
+import { limiterCurve, MASTER_CEILING_DB, MASTER_CEILING_LINEAR } from '../safety/limits.js'
+export { MASTER_CEILING_DB, MASTER_CEILING_LINEAR } from '../safety/limits.js'
 // ===================================================================
 // SoundEngine — Web Audio API DSP & Fear-Reduction Engine
 // ===================================================================
@@ -339,6 +340,31 @@ export class SoundEngine {
     gain.connect(this.intensityGain)
     osc.start(now)
     osc.stop(now + duration + 0.05)
+  }
+
+  /**
+   * Play a soft chime at the active intensity level through the master limiter.
+   * Useful for testing sound in the settings sheet.
+   */
+  playTestChime() {
+    if (!this.ctx || !this._supported) return null
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume().catch(() => {})
+    }
+    const now = this.ctx.currentTime
+    const osc = this.ctx.createOscillator()
+    const gain = this.ctx.createGain()
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(523.25, now) // C5
+    osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.12) // E5
+    gain.gain.setValueAtTime(0.001, now)
+    gain.gain.linearRampToValueAtTime(0.25, now + 0.03)
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6)
+    osc.connect(gain)
+    gain.connect(this.intensityGain)
+    osc.start(now)
+    osc.stop(now + 0.65)
+    return osc
   }
 
   // -----------------------------------------------------------------

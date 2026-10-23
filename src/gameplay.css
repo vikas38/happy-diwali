@@ -327,6 +327,31 @@
 .game-pause {
   color: #d3d6d4;
 }
+.game-mute-btn {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(26, 38, 51, 0.7);
+  color: #f0deb8;
+  border-radius: 30px;
+  min-height: 48px;
+  min-width: 48px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font: 12px 'Segoe UI', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: all .15s ease;
+}
+.game-mute-btn[aria-pressed=true] {
+  background: rgba(220, 70, 70, 0.22);
+  border-color: rgba(248, 113, 113, 0.45);
+  color: #fca5a5;
+}
+.game-mute-btn:hover {
+  background: rgba(37, 53, 71, 0.85);
+  border-color: rgba(255, 255, 255, 0.3);
+}
 .game-collection:hover,
 .game-pause:hover {
   background: #253547cc;
@@ -965,6 +990,30 @@
   min-height: 44px;
   font-size: 13px;
   margin-top: 6px;
+}
+.sheet-test-row {
+  margin-top: 4px;
+}
+.sheet-test-btn {
+  min-height: 48px;
+  min-width: 140px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f7eedf;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all .15s ease;
+}
+.sheet-test-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.35);
 }
 .game-stage[data-state=REWARD_CELEBRATION] .firework-dock {
   display: none;

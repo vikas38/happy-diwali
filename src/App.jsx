@@ -18,6 +18,7 @@ import { getLaunchPoint } from './render/layers/Background.js'
 import { CRACKERS } from './crackers/crackerDefs.js'
 import FestivalHome from './ui/FestivalHome.jsx'
 import ContextualAction from './ui/ContextualAction.jsx'
+import { t } from './i18n/index.js'
 
 // ===================================================================
 // Inner app — uses game store context
@@ -149,12 +150,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
   const handleStart = useCallback(() => {
     gc.startGame()
     setTimeout(
-      () =>
-        setAudioState(
-          getSoundEngine().ctx?.state === 'running'
-            ? ''
-            : 'Sound is paused. Play silently or enable it.'
-        ),
+      () => setAudioState(getSoundEngine().ctx?.state === 'running' ? '' : t('audio_paused_hint')),
       250
     )
   }, [gc])
@@ -277,10 +273,10 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
   if (canvasFailed)
     return (
       <main className="recovery-card" role="alert">
-        <h1>The courtyard needs a little rest.</h1>
-        <p>Your browser could not draw the scene. Your saved progress is unchanged.</p>
+        <h1>{t('canvas_fail_title')}</h1>
+        <p>{t('canvas_fail_desc_progress')}</p>
         <button className="sun-button" onClick={onBack}>
-          Back to festival
+          {t('back_to_festival')}
         </button>
       </main>
     )
@@ -315,14 +311,10 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             onClick={async () => {
               const sound = getSoundEngine()
               await sound.resume()
-              setAudioState(
-                sound.ctx?.state === 'running'
-                  ? ''
-                  : 'Sound is unavailable. You can still play silently.'
-              )
+              setAudioState(sound.ctx?.state === 'running' ? '' : t('audio_unavailable_hint'))
             }}
           >
-            Enable sound
+            {t('enable_sound')}
           </button>
         </div>
       )}
@@ -332,12 +324,12 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             <span className="hint-star" aria-hidden="true">
               ✦
             </span>
-            <span className="hint-text">Choose a sparkle below to begin your celebration.</span>
+            <span className="hint-text">{t('hint_choose_sparkle')}</span>
             <button
               type="button"
               className="hint-close-btn"
               onClick={() => store.dismissHint()}
-              aria-label="Dismiss hint"
+              aria-label={t('hint_dismiss')}
             >
               ✕
             </button>
@@ -345,24 +337,24 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
         )}
         {showHUD && (
           <div className="scene-caption" aria-live="polite">
-            <span>AN EVENING IN THE COURTYARD</span>
+            <span>{t('scene_evening')}</span>
             <h1>
               {fsmState === STATES.IDLE
-                ? 'A little spark. A sky of possibilities.'
-                : CRACKERS[selectedCracker]?.name || 'Your Diwali, your pace.'}
+                ? t('scene_spark_possibilities')
+                : CRACKERS[selectedCracker]?.name || t('scene_default_title')}
             </h1>
             <p>
               {fsmState === STATES.IDLE
-                ? 'Choose a firework from your box below.'
+                ? t('scene_idle_desc')
                 : fsmState === STATES.READY_ON_STREET
-                  ? 'Your spark is ready. Let’s bring it to life.'
+                  ? t('scene_ready_desc')
                   : fsmState === STATES.STEPPING_BACK_SAFE_ROUTINE
-                    ? 'Chhotu and Pip move to their watching spot.'
+                    ? t('scene_stepping_desc')
                     : fsmState === STATES.CRACKER_SHOW_ACTIVE
-                      ? 'Stay a little. Watch the last embers fall.'
+                      ? t('scene_active_desc')
                       : fsmState === STATES.REWARD_CELEBRATION
-                        ? 'One more bright memory for your collection.'
-                        : 'A moment of anticipation.'}
+                        ? t('scene_reward_desc')
+                        : t('scene_anticipation_desc')}
             </p>
           </div>
         )}
@@ -415,11 +407,9 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
           <div
             className="ready-street-banner"
             role="region"
-            aria-label="Adult supervision reminder"
+            aria-label={t('ready_street_banner_aria')}
           >
-            <p className="ready-street-hint">
-              Chhotu and Pip watch from a safe distance. A grown-up handles the pretend fuse.
-            </p>
+            <p className="ready-street-hint">{t('ready_street_hint')}</p>
           </div>
         )}
 

@@ -4,6 +4,7 @@ import Diya from './Diya.jsx'
 import CrackerArt from './CrackerArt.jsx'
 import FestivalSparkles from './FestivalSparkles.jsx'
 import { CRACKERS } from '../crackers/crackerDefs.js'
+import { t } from '../i18n/index.js'
 
 function Icon({ name, size = 22 }) {
   const paths = {
@@ -176,7 +177,7 @@ function Modal({ title, onClose, children }) {
         if (e.target === e.currentTarget) onClose()
       }}
     >
-      <button className="modal-close" aria-label="Close dialog" onClick={onClose}>
+      <button className="modal-close" aria-label={t('close_dialog')} onClick={onClose}>
         ×
       </button>
       <h2>{title}</h2>
@@ -252,7 +253,7 @@ function GrownUpsNavButton({ onOpen }) {
       onPointerLeave={cancelHold}
       onKeyDown={handleKeyDown}
       onClick={(e) => e.preventDefault()}
-      aria-label="For grown-ups (press and hold, or press Enter)"
+      aria-label={t('grownups_nav_label')}
     >
       <div className="grown-ups-icon-wrap">
         <Icon name="heart" />
@@ -269,9 +270,9 @@ function GrownUpsNavButton({ onOpen }) {
           </svg>
         )}
       </div>
-      <span>For grown-ups</span>
+      <span>{t('grownups_nav_text')}</span>
       <span className="grown-ups-hold-hint" aria-hidden="true">
-        {holding ? 'Hold…' : 'Hold'}
+        {holding ? t('grownups_hold_active') : t('grownups_hold_idle')}
       </span>
       <span className="nav-arrow" aria-hidden="true">
         ↗
@@ -297,56 +298,64 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
   const explore = () =>
     document.getElementById('activities')?.scrollIntoView({ behavior: 'smooth' })
 
+  const swatches = [
+    [t('swatch_rose'), '#dd796d'],
+    [t('swatch_purple'), '#9276b3'],
+    [t('swatch_ocean'), '#58a7a5'],
+    [t('swatch_marigold'), '#dc922e'],
+  ]
+
   return (
     <div className={`festival-app ${motion ? '' : 'motion-paused'}`}>
       <a className="skip-link" href="#activities">
-        Skip to activities
+        {t('skip_to_activities')}
       </a>
       <aside className="sidebar">
         <a className="brand" href="#">
           <span className="brand-mark">✳</span>
           <span>
-            little lights<small>A LITTLE WONDER. A LOT OF JOY.</small>
+            {t('brand_name_lower')}
+            <small>{t('brand_sidebar_sub')}</small>
           </span>
         </a>
-        <div className="sidebar-label">YOUR FESTIVAL SPACE</div>
-        <nav aria-label="Main navigation">
+        <div className="sidebar-label">{t('sidebar_space')}</div>
+        <nav aria-label={t('main_nav_aria')}>
           <button
             className="nav-item active"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            <Icon name="home" /> My Diwali <span className="nav-dot" />
+            <Icon name="home" /> {t('nav_my_diwali')} <span className="nav-dot" />
           </button>
           <button className="nav-item" onClick={explore}>
-            <Icon name="spark" /> Play & discover
+            <Icon name="spark" /> {t('nav_play_discover')}
           </button>
           <button className="nav-item" onClick={() => setModal('stickers')}>
-            <Icon name="book" /> My sticker book{' '}
+            <Icon name="book" /> {t('nav_sticker_book')}{' '}
             <span className="nav-count">{state.stickers.length}</span>
           </button>
           <button className="nav-item" onClick={() => setModal('calm')}>
-            <Icon name="moon" /> Calm corner
+            <Icon name="moon" /> {t('nav_calm_corner')}
           </button>
         </nav>
         <div className="sidebar-bottom">
           <div className="little-note">
             <span>✧</span>
-            <h3>Your own kind of bright.</h3>
+            <h3>{t('sidebar_note_title')}</h3>
             <p>
-              Big celebrations.
+              {t('sidebar_note_body1')}
               <br />
-              Little steps. Your pace.
+              {t('sidebar_note_body2')}
             </p>
           </div>
           <GrownUpsNavButton onOpen={() => setModal('parents')} />
-          <p className="made-with">Made for little moments of wonder.</p>
+          <p className="made-with">{t('sidebar_made_for')}</p>
         </div>
       </aside>
 
       <main className="festival-main">
         <header className="festival-topbar">
           <div>
-            <span className="season-dot" /> THE FESTIVAL OF LIGHTS
+            <span className="season-dot" /> {t('festival_title')}
           </div>
           <div className="topbar-actions">
             <button
@@ -355,17 +364,17 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
               onClick={() => setMotion((v) => !v)}
             >
               <Icon name="spark" size={16} />
-              <span>Motion {motion ? 'on' : 'off'}</span>
+              <span>{t('motion_toggle_label', { state: motion ? 'on' : 'off' })}</span>
             </button>
             <button
               onClick={() => setMasterVolume(state.masterVolume ? 0 : 0.35)}
-              aria-label={state.masterVolume ? 'Mute sound' : 'Enable sound'}
+              aria-label={state.masterVolume ? t('sound_mute_aria') : t('sound_enable_aria')}
             >
               <Icon name="sound" size={18} />
-              <span>Sound {state.masterVolume ? 'on' : 'off'}</span>
+              <span>{t('sound_toggle_label', { state: state.masterVolume ? 'on' : 'off' })}</span>
             </button>
-            <span className="star-bank">✧ {state.stars} stars</span>
-            <span className="avatar" aria-label="Little explorer">
+            <span className="star-bank">{t('stars_bank', { count: state.stars })}</span>
+            <span className="avatar" aria-label={t('little_explorer')}>
               V
             </span>
           </div>
@@ -374,16 +383,17 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
         <div className="home-content">
           <section className="welcome">
             <div>
-              <p className="eyebrow">A LITTLE LIGHT GOES A LONG WAY</p>
+              <p className="eyebrow">{t('welcome_eyebrow')}</p>
               <h1>
-                Let your Diwali glow<span> ✦</span>
+                {t('welcome_title')}
+                <span> ✦</span>
               </h1>
-              <p>A world of wonder, warmth, and tiny brave moments.</p>
+              <p>{t('welcome_subtitle')}</p>
             </div>
             <span className="festival-stamp">
-              Made of
+              {t('stamp_made_of')}
               <br />
-              <strong>little joys</strong>
+              <strong>{t('stamp_little_joys')}</strong>
               <span>✧</span>
             </span>
           </section>
@@ -392,51 +402,52 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
             <FestivalSparkles />
             <div className="hero-copy">
               <span className="hero-tag">
-                <span /> YOUR DIWALI ADVENTURE
+                <span /> {t('hero_tag')}
               </span>
               <h2>
-                Small sparks.
+                {t('hero_title_line1')}
                 <br />
-                Big <em>smiles.</em>
+                {t('hero_title_line2')} <em>{t('hero_title_smiles')}</em>
               </h2>
               <p>
-                Join Chhotu and Pip for a magical celebration.
-                <br className="desktop-break" /> Discover the lights, find your brave, and play
-                <br className="desktop-break" /> at your own pace.
+                {t('hero_desc_line1')}
+                <br className="desktop-break" /> {t('hero_desc_line2')}
+                <br className="desktop-break" /> {t('hero_desc_line3')}
               </p>
               <button
                 className="sun-button play-dominant-btn"
                 onClick={onPlay}
-                aria-label="Play Little Lights"
+                aria-label={t('play_little_lights')}
               >
                 <span className="play-btn-spark" aria-hidden="true">
                   ✦
                 </span>
-                <span>Play Little Lights</span>
+                <span>{t('play_little_lights')}</span>
                 <Icon name="arrow" size={24} />
               </button>
               <div className="hero-footnote">
-                <Icon name="shield" size={15} /> All the magic. A gentle place to play.
+                <Icon name="shield" size={15} /> {t('hero_footnote')}
               </div>
             </div>
             <FestivalArt />
             <div className="hero-keepsake">
               <span>✧</span>
               <div>
-                A little magic, every day<small>YOUR OWN FESTIVAL OF WONDER</small>
+                {t('hero_keepsake_title')}
+                <small>{t('hero_keepsake_sub')}</small>
               </div>
             </div>
-            <span className="hero-caption">a little spark of happiness ✧</span>
+            <span className="hero-caption">{t('hero_caption')}</span>
           </section>
 
           <section id="activities" className="activities">
             <div className="section-heading">
               <div>
-                <h2>A little something for every mood</h2>
-                <p>Follow your curiosity. There’s no right place to start.</p>
+                <h2>{t('activities_title')}</h2>
+                <p>{t('activities_desc')}</p>
               </div>
               <span>
-                EXPLORE & PLAY <span>↙</span>
+                {t('activities_explore_tag')} <span>↙</span>
               </span>
             </div>
             <div className="activity-grid">
@@ -448,47 +459,47 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
                 }}
               >
                 <div className="activity-art diya-art">
-                  <span className="activity-tag">SLOW & GLOW</span>
+                  <span className="activity-tag">{t('activity_diya_tag')}</span>
                   <Diya />
                   <span className="art-spark">✧</span>
                 </div>
                 <div className="activity-copy">
                   <h3>
-                    Light a little joy <span>↗</span>
+                    {t('activity_diya_title')} <span>↗</span>
                   </h3>
-                  <p>One diya. A whole lot of warmth.</p>
+                  <p>{t('activity_diya_desc')}</p>
                   <small>
-                    LIGHT THE DIYAS <span>·</span> TAKE YOUR TIME
+                    {t('activity_diya_meta1')} <span>·</span> {t('activity_diya_meta2')}
                   </small>
                 </div>
               </button>
               <button className="activity-card" onClick={() => setModal('rangoli')}>
                 <div className="activity-art rangoli-art">
-                  <span className="activity-tag">MAKE IT YOURS</span>
+                  <span className="activity-tag">{t('activity_rangoli_tag')}</span>
                   <Rangoli />
                 </div>
                 <div className="activity-copy">
                   <h3>
-                    A splash of happy <span>↗</span>
+                    {t('activity_rangoli_title')} <span>↗</span>
                   </h3>
-                  <p>Let your colours tell a little story.</p>
+                  <p>{t('activity_rangoli_desc')}</p>
                   <small>
-                    RANGOLI STUDIO <span>·</span> CREATE & KEEP
+                    {t('activity_rangoli_meta1')} <span>·</span> {t('activity_rangoli_meta2')}
                   </small>
                 </div>
               </button>
               <button className="activity-card" onClick={onPlay}>
                 <div className="activity-art spark-art">
-                  <span className="activity-tag">FIND YOUR BRAVE</span>
+                  <span className="activity-tag">{t('activity_spark_tag')}</span>
                   <CrackerArt index={0} />
                 </div>
                 <div className="activity-copy">
                   <h3>
-                    A sky full of wonder <span>↗</span>
+                    {t('activity_spark_title')} <span>↗</span>
                   </h3>
-                  <p>Little sparkles. Big brave moments.</p>
+                  <p>{t('activity_spark_desc')}</p>
                   <small>
-                    SPARKLE PLAY <span>·</span> 6 THINGS TO DISCOVER
+                    {t('activity_spark_meta1')} <span>·</span> {t('activity_spark_meta2')}
                   </small>
                 </div>
               </button>
@@ -499,29 +510,29 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
             <button className="journey-card" onClick={() => setModal('stickers')}>
               <span className="journey-icon">✧</span>
               <div>
-                <h3>Every little step is a bright one</h3>
-                <p>Your collection is growing, one discovery at a time.</p>
+                <h3>{t('journey_card_title')}</h3>
+                <p>{t('journey_card_desc')}</p>
                 <div className="collection-progress">
                   <span style={{ width: `${(state.stickers.length / 6) * 100}%` }} />
                 </div>
-                <small>{state.stickers.length} of 6 stickers collected</small>
+                <small>{t('journey_card_count', { count: state.stickers.length })}</small>
               </div>
               <span className="journey-arrow">→</span>
             </button>
             <button className="calm-card" onClick={() => setModal('calm')}>
               <span className="calm-moon">☾</span>
               <div>
-                <h3>A softer kind of sparkle</h3>
-                <p>A deep breath. A quiet moment. Just for you.</p>
+                <h3>{t('calm_card_title')}</h3>
+                <p>{t('calm_card_desc')}</p>
                 <strong>
-                  Visit the calm corner <span>→</span>
+                  {t('calm_card_link')} <span>→</span>
                 </strong>
               </div>
             </button>
           </section>
           <footer className="festival-footer">
-            <span>✳ &nbsp; A little light. A little courage. A very happy Diwali.</span>
-            <span>PLAY GENTLY. SHINE BRIGHTLY.</span>
+            <span>✳ &nbsp; {t('footer_text')}</span>
+            <span>{t('footer_tag')}</span>
           </footer>
         </div>
       </main>
@@ -530,23 +541,23 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
         <Modal
           title={
             {
-              diyas: 'A little light, a little joy',
-              rangoli: 'Your colour. Your celebration.',
-              stickers: 'Your little book of bright moments',
-              calm: 'Let the world slow down.',
-              parents: 'Little moments, thoughtfully made.',
+              diyas: t('modal_diyas_title'),
+              rangoli: t('modal_rangoli_title'),
+              stickers: t('modal_stickers_title'),
+              calm: t('modal_calm_title'),
+              parents: t('modal_parents_title'),
             }[modal]
           }
           onClose={() => setModal(null)}
         >
           {modal === 'diyas' && (
             <>
-              <p>Tap each diya to fill your little corner with light.</p>
+              <p>{t('modal_diyas_intro')}</p>
               <div className="diya-row">
                 {[0, 1, 2, 3, 4].map((i) => (
                   <button
                     key={i}
-                    aria-label={`Light diya ${i + 1}`}
+                    aria-label={t('modal_diyas_aria', { num: i + 1 })}
                     aria-pressed={lit.includes(i)}
                     onClick={() => setLit((s) => (s.includes(i) ? s : [...s, i]))}
                   >
@@ -556,27 +567,22 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
               </div>
               <p className="activity-result" aria-live="polite">
                 {lit.length === 5
-                  ? 'Look at all that warmth. Happy Diwali!'
-                  : `${lit.length} of 5 little lights are glowing`}
+                  ? t('modal_diyas_full')
+                  : t('modal_diyas_count', { count: lit.length })}
               </p>
               <button className="sun-button" onClick={() => setLit([])}>
-                Start again
+                {t('modal_diyas_reset')}
               </button>
             </>
           )}
           {modal === 'rangoli' && (
             <>
-              <p>Choose a colour, then keep your creation as a little Diwali gift.</p>
+              <p>{t('modal_rangoli_intro')}</p>
               <div className="rangoli-preview">
                 <Rangoli color={color} />
               </div>
               <div className="swatches">
-                {[
-                  ['Rose', '#dd796d'],
-                  ['Purple', '#9276b3'],
-                  ['Ocean', '#58a7a5'],
-                  ['Marigold', '#dc922e'],
-                ].map(([name, c]) => (
+                {swatches.map(([name, c]) => (
                   <button
                     key={c}
                     style={{ background: c }}
@@ -603,60 +609,54 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
                   setTimeout(() => URL.revokeObjectURL(url), 1000)
                 }}
               >
-                Keep my rangoli ↓
+                {t('modal_rangoli_keep')}
               </button>
             </>
           )}
           {modal === 'stickers' && (
             <>
-              <p>Discover the six sparkles in the adventure to collect your stickers.</p>
+              <p>{t('modal_stickers_intro')}</p>
               <div className="home-stickers">
                 {CRACKERS.map((c) => (
                   <div key={c.id} className={state.stickers.includes(c.id) ? 'collected' : ''}>
                     <span>{state.stickers.includes(c.id) ? c.emoji : '✧'}</span>
                     <strong>{c.name}</strong>
                     <small>
-                      {state.stickers.includes(c.id) ? 'Collected' : 'Waiting to be discovered'}
+                      {state.stickers.includes(c.id)
+                        ? t('modal_stickers_collected')
+                        : t('modal_stickers_waiting')}
                     </small>
                   </div>
                 ))}
               </div>
               <button className="sun-button" onClick={onPlay}>
-                Go on an adventure <Icon name="arrow" />
+                {t('modal_stickers_go')} <Icon name="arrow" />
               </button>
             </>
           )}
           {modal === 'calm' && (
             <>
-              <p>Get comfortable. Follow the circle, at your own pace.</p>
+              <p>{t('modal_calm_intro')}</p>
               <div className={`home-breathing ${breath ? 'exhale' : ''}`}>
                 <span>☾</span>
               </div>
               <p className="activity-result" aria-live="polite">
-                {breath ? 'Breathe out, softly.' : 'Take a gentle breath in.'}
+                {breath ? t('modal_calm_out') : t('modal_calm_in')}
               </p>
               <button className="sun-button" onClick={() => setModal(null)}>
-                I'm ready to return
+                {t('modal_calm_ready')}
               </button>
             </>
           )}
           {modal === 'parents' && (
             <>
-              <p>
-                Little Lights is a playful, virtual Diwali celebration. Children can explore at
-                their own pace, start with soft sound, and take a breathing break whenever they
-                like.
-              </p>
+              <p>{t('modal_parents_desc')}</p>
               <div className="parent-note">
                 <Icon name="shield" />
-                <p>
-                  Fireworks here are pretend. Real fireworks need responsible adult supervision and
-                  a safe distance. This is a playful experience, not a treatment. For persistent
-                  distress, consider speaking with a paediatric professional.
-                </p>
+                <p>{t('modal_parents_safety')}</p>
               </div>
               <label className="parent-volume">
-                Adventure volume{' '}
+                {t('modal_parents_volume')}{' '}
                 <input
                   type="range"
                   min="0"
@@ -666,10 +666,10 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
                   onChange={(e) => setMasterVolume(Number(e.target.value))}
                 />
               </label>
-              <div className="privacy-note" role="region" aria-label="Privacy notice">
-                <p>Nothing leaves your device.</p>
-                <p>Progress is saved only in this browser.</p>
-                <p>There is no tracking, no analytics, and no accounts.</p>
+              <div className="privacy-note" role="region" aria-label={t('privacy_notice_region')}>
+                <p>{t('privacy_line1')}</p>
+                <p>{t('privacy_line2')}</p>
+                <p>{t('privacy_line3')}</p>
               </div>
             </>
           )}

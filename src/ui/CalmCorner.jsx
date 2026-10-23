@@ -1,5 +1,6 @@
 import Diya from './Diya.jsx'
 import React, { useEffect, useRef } from 'react'
+import { t } from '../i18n/index.js'
 
 // ===================================================================
 // CalmCorner — CALM_CORNER_OVERLAY breathing guide
@@ -25,14 +26,14 @@ function BreathingCircle() {
       // Inhale — 4s expand
       el.style.transition = 'transform 4s cubic-bezier(0.4, 0, 0.2, 1)'
       el.style.transform = 'scale(1.32)'
-      txt.textContent = 'Breathe in slowly… ☾'
+      txt.textContent = t('breathe_in')
 
       timerRef.current = setTimeout(() => {
         if (!running) return
         // Exhale — 4s contract
         el.style.transition = 'transform 4s cubic-bezier(0.4, 0, 0.2, 1)'
         el.style.transform = 'scale(1.0)'
-        txt.textContent = 'Breathe out gently… ✧'
+        txt.textContent = t('breathe_out')
 
         timerRef.current = setTimeout(() => {
           if (running) runCycle()
@@ -56,7 +57,7 @@ function BreathingCircle() {
         </div>
       </div>
       <p className="breathing-text" ref={textRef}>
-        Breathe in slowly… ☾
+        {t('breathe_in')}
       </p>
     </div>
   )
@@ -72,28 +73,36 @@ export default function CalmCorner({ onResume }) {
   }, [onResume])
 
   return (
-    <div className="overlay overlay--calm" role="dialog" aria-modal="true" aria-label="Calm Corner">
+    <div
+      className="overlay overlay--calm"
+      role="dialog"
+      aria-modal="true"
+      aria-label={t('calm_corner_dialog')}
+    >
       <div className="calm-corner">
-        <button className="calm-corner__close" onClick={onResume} aria-label="Close Calm Corner">
+        <button
+          className="calm-corner__close"
+          onClick={onResume}
+          aria-label={t('calm_corner_close')}
+        >
           ×
         </button>
         <span className="calm-corner__tag" aria-hidden="true">
-          A QUIET MOMENT
+          {t('calm_corner_tag')}
         </span>
         <h2 className="calm-corner__title">
-          Calm <span className="title-accent">Corner</span>
+          {t('calm_corner_title_prefix')}{' '}
+          <span className="title-accent">{t('calm_corner_title_accent')}</span>
         </h2>
-        <p className="calm-corner__subtitle">
-          Take a gentle breath with Pip. Everything is peaceful here.
-        </p>
+        <p className="calm-corner__subtitle">{t('calm_corner_subtitle')}</p>
         <BreathingCircle />
         <button
           className="btn btn--primary calm-corner__resume"
           onClick={onResume}
           autoFocus
-          aria-label="Step back into the courtyard"
+          aria-label={t('calm_corner_resume_aria')}
         >
-          Step back into the courtyard →
+          {t('calm_corner_resume')}
         </button>
       </div>
     </div>

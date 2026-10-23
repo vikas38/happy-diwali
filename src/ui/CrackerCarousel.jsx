@@ -1,17 +1,18 @@
 import React from 'react'
 import { CRACKERS } from '../crackers/crackerDefs.js'
 import CrackerArt from './CrackerArt.jsx'
-
-const labels = [
-  'A gentle shimmer',
-  'A golden fountain',
-  'A whirling glow',
-  'A skyward burst',
-  'A rhythm of sparks',
-  'A glowing finale',
-]
+import { t } from '../i18n/index.js'
 
 export default function CrackerCarousel({ unlocked, selectedCracker, onSelect }) {
+  const labels = [
+    t('tagline_phuljhari'),
+    t('tagline_anar'),
+    t('tagline_chakri'),
+    t('tagline_rocket'),
+    t('tagline_ladi'),
+    t('tagline_sutli'),
+  ]
+
   const handleKeyDown = (e, i) => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       e.preventDefault()
@@ -27,12 +28,12 @@ export default function CrackerCarousel({ unlocked, selectedCracker, onSelect })
   }
 
   return (
-    <nav className="firework-dock" aria-label="Cracker selection">
+    <nav className="firework-dock" aria-label={t('dock_aria')}>
       <div className="dock-heading">
-        <span>YOUR BOX OF WONDER</span>
-        <small>Discover one. Unlock the next.</small>
+        <span>{t('dock_heading')}</span>
+        <small>{t('dock_subheading')}</small>
       </div>
-      <div className="firework-tray" role="listbox" aria-label="Available fireworks">
+      <div className="firework-tray" role="listbox" aria-label={t('dock_tray_aria')}>
         {CRACKERS.map((c, i) => {
           const isUnlocked = unlocked.includes(c.id)
           const isSelected = selectedCracker === c.id
@@ -43,7 +44,7 @@ export default function CrackerCarousel({ unlocked, selectedCracker, onSelect })
               role="option"
               className={`firework-choice ${isSelected ? 'selected' : ''} ${!isUnlocked ? 'is-locked' : ''}`}
               disabled={!isUnlocked}
-              aria-label={`${c.name}${!isUnlocked ? ' — locked' : ''}`}
+              aria-label={isUnlocked ? c.name : `${c.name}${t('dock_locked_suffix')}`}
               aria-selected={isSelected}
               onClick={() => onSelect(c.id)}
               onKeyDown={(e) => handleKeyDown(e, i)}
@@ -58,7 +59,7 @@ export default function CrackerCarousel({ unlocked, selectedCracker, onSelect })
                 )}
               </div>
               <strong>{c.name}</strong>
-              <small>{isUnlocked ? labels[i] : 'Locked'}</small>
+              <small>{isUnlocked ? labels[i] : t('dock_locked')}</small>
             </button>
           )
         })}

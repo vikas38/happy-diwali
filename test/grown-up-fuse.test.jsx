@@ -67,12 +67,9 @@ describe('T09 — Grown-up lights the fuse, copy wording', () => {
     gc.dispose()
   })
 
-  it('includes "this is a playful experience, not a treatment" in the For Grown-ups panel', () => {
-    const festivalHome = fs.readFileSync(
-      path.join(rootDir, 'src', 'ui', 'FestivalHome.jsx'),
-      'utf8'
-    )
-    expect(festivalHome).toContain('This is a playful experience, not a treatment.')
+  it('includes "this is a playful experience, not a treatment" in the For Grown-ups panel copy', () => {
+    const copy = fs.readFileSync(path.join(rootDir, 'src', 'i18n', 'strings.en.js'), 'utf8')
+    expect(copy).toContain('This is a playful experience, not a treatment.')
   })
 
   it('indicates an adult handles the fuse in the Step 3 indicator', () => {

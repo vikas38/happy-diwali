@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { t } from '../i18n/index.js'
 
 // ===================================================================
 // Countdown — COUNTDOWN_3_2_1 overlay
@@ -18,7 +19,8 @@ export default function Countdown({ countdownNumber }) {
     }
   }, [countdownNumber])
 
-  const isGlow = countdownNumber === 'GLOW!'
+  const glowText = t('countdown_glow')
+  const isGlow = countdownNumber === 'GLOW!' || countdownNumber === glowText
 
   // Progress mapping: 3 -> 25%, 2 -> 50%, 1 -> 75%, 'GLOW!' -> 100%
   const progressMap = {
@@ -26,20 +28,24 @@ export default function Countdown({ countdownNumber }) {
     2: 0.5,
     1: 0.75,
     'GLOW!': 1.0,
+    [glowText]: 1.0,
   }
   const pct = progressMap[countdownNumber] ?? 0.25
   const radius = 64
   const circumference = 2 * Math.PI * radius // ~402.12
   const strokeDashoffset = circumference * (1 - pct)
 
+  const displayText = countdownNumber === 'GLOW!' ? glowText : countdownNumber
+  const ariaText = t('countdown_aria', { number: displayText })
+
   return (
     <div
       className="countdown-overlay countdown-overlay--fixed"
       role="status"
       aria-live="polite"
-      aria-label={`Countdown: ${countdownNumber}`}
+      aria-label={ariaText}
     >
-      <span className="sr-only">Countdown: {countdownNumber}</span>
+      <span className="sr-only">{ariaText}</span>
       <div className="countdown-wrap" aria-hidden="true">
         <svg className="countdown-progress-ring" viewBox="0 0 160 160">
           <circle cx="80" cy="80" r={radius} className="countdown-ring-bg" />
@@ -58,7 +64,7 @@ export default function Countdown({ countdownNumber }) {
           key={animKey}
           className={`countdown-number${isGlow ? ' countdown-number--glow' : ''} countdown-number--pop`}
         >
-          {countdownNumber}
+          {displayText}
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { CRACKERS } from '../crackers/crackerDefs.js'
 import { STATES } from '../fsm/GameController.js'
+import { t } from '../i18n/index.js'
 
 export function getStepFromState(fsmState) {
   switch (fsmState) {
@@ -23,16 +24,16 @@ export function getStepFromState(fsmState) {
 
 export function StepIndicator({ step = 1, totalSteps = 5 }) {
   const stepLabels = [
-    'Select sparkle',
-    'Place on street',
-    'Grown-up lights fuse',
-    'Step back & count',
-    'Celebrate',
+    t('step_1_label'),
+    t('step_2_label'),
+    t('step_3_label'),
+    t('step_4_label'),
+    t('step_5_label'),
   ]
   return (
-    <div className="flow-step-tracker" role="region" aria-label="Celebration steps">
+    <div className="flow-step-tracker" role="region" aria-label={t('steps_region')}>
       <span className="sr-only" aria-live="polite">
-        Step {step} of {totalSteps}: {stepLabels[step - 1]}
+        {t('step_announcement', { step, total: totalSteps, label: stepLabels[step - 1] })}
       </span>
       <div className="flow-step-dots" aria-hidden="true">
         {[1, 2, 3, 4, 5].map((i) => (
@@ -43,7 +44,7 @@ export function StepIndicator({ step = 1, totalSteps = 5 }) {
         ))}
       </div>
       <span className="flow-step-text" aria-hidden="true">
-        Step {step} of {totalSteps}
+        {t('step_display', { step, total: totalSteps })}
       </span>
     </div>
   )
@@ -73,7 +74,7 @@ export default function ContextualAction({
     <div
       className={`contextual-action-bar ${hasDock ? 'has-dock' : ''}`}
       role="region"
-      aria-label="Next action"
+      aria-label={t('next_action_region')}
     >
       <StepIndicator step={step} />
 
@@ -83,10 +84,10 @@ export default function ContextualAction({
             type="button"
             className="btn btn--primary contextual-primary-btn"
             onClick={onPlaceOnStreet}
-            aria-label={`Place ${cracker.name} on street`}
+            aria-label={t('place_cracker_on_street', { name: cracker.name })}
           >
             <span aria-hidden="true">✦</span>
-            <span>Place {cracker.name} on street</span>
+            <span>{t('place_cracker_on_street', { name: cracker.name })}</span>
             <span aria-hidden="true">→</span>
           </button>
         )}
@@ -96,10 +97,10 @@ export default function ContextualAction({
             type="button"
             className="btn btn--primary contextual-primary-btn"
             onClick={onPlaceOnStreet}
-            aria-label={`Place ${cracker.name} on street`}
+            aria-label={t('place_cracker_on_street', { name: cracker.name })}
           >
             <span aria-hidden="true">✦</span>
-            <span>Place on street</span>
+            <span>{t('place_on_street')}</span>
             <span aria-hidden="true">→</span>
           </button>
         )}
@@ -109,10 +110,10 @@ export default function ContextualAction({
             type="button"
             className="btn btn--primary contextual-primary-btn btn--bounce"
             onClick={onLightFuse}
-            aria-label="Ask a grown-up to light the fuse"
+            aria-label={t('ask_grownup_light_fuse_aria')}
           >
             <span aria-hidden="true">✦</span>
-            <span>Ask a grown-up to light fuse</span>
+            <span>{t('ask_grownup_light_fuse')}</span>
             <span aria-hidden="true">→</span>
           </button>
         )}
@@ -123,21 +124,21 @@ export default function ContextualAction({
               type="button"
               className="btn btn--primary contextual-primary-btn is-in-progress"
               disabled
-              aria-label="Stepping back safely to watching spot"
+              aria-label={t('stepping_back_aria')}
             >
               <span className="spinner-sparkle" aria-hidden="true">
                 ✧
               </span>
-              <span>Walking to safe spot…</span>
+              <span>{t('moving_to_safe_spot')}</span>
             </button>
             {canSkipWalk && (
               <button
                 type="button"
                 className="walk-skip-btn"
                 onClick={onSkipWalk}
-                aria-label="Skip walking to safe spot"
+                aria-label={t('skip_walk_aria')}
               >
-                Skip walk →
+                {t('skip_walk_btn')}
               </button>
             )}
           </div>
@@ -148,12 +149,12 @@ export default function ContextualAction({
             type="button"
             className="btn btn--primary contextual-primary-btn is-in-progress"
             disabled
-            aria-label={`Counting down: ${countdownNumber}`}
+            aria-label={t('countdown_action_aria', { number: countdownNumber })}
           >
             <span className="spinner-sparkle" aria-hidden="true">
               ✧
             </span>
-            <span>Get ready… {countdownNumber}</span>
+            <span>{t('get_ready_countdown', { number: countdownNumber })}</span>
           </button>
         )}
 
@@ -162,10 +163,10 @@ export default function ContextualAction({
             type="button"
             className="btn btn--primary contextual-primary-btn is-in-progress"
             disabled
-            aria-label="Watching the sparkle celebration"
+            aria-label={t('watching_celebration_aria')}
           >
             <span aria-hidden="true">✨</span>
-            <span>Enjoy the lights…</span>
+            <span>{t('enjoy_the_lights')}</span>
           </button>
         )}
 
@@ -175,17 +176,17 @@ export default function ContextualAction({
               type="button"
               className="btn btn--secondary contextual-secondary-btn"
               onClick={onLightAgain}
-              aria-label="Light this firework again"
+              aria-label={t('light_again_action_aria')}
             >
-              Light Again
+              {t('light_again')}
             </button>
             <button
               type="button"
               className="btn btn--primary contextual-primary-btn"
               onClick={isLastCracker ? onLightAgain : onNextCracker}
-              aria-label={isLastCracker ? 'Light this firework again' : 'Proceed to next firework'}
+              aria-label={isLastCracker ? t('light_again_action_aria') : t('proceed_next_aria')}
             >
-              <span>{isLastCracker ? 'Celebrate Again ✦' : 'Next Sparkle →'}</span>
+              <span>{isLastCracker ? t('celebrate_again') : t('next_sparkle')}</span>
             </button>
           </div>
         )}

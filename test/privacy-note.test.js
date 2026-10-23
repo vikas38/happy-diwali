@@ -5,7 +5,7 @@ import path from 'node:path'
 describe('T15 — Privacy note', () => {
   const rootDir = path.resolve(__dirname, '..')
   const readme = fs.readFileSync(path.join(rootDir, 'README.md'), 'utf8')
-  const festivalHome = fs.readFileSync(path.join(rootDir, 'src', 'ui', 'FestivalHome.jsx'), 'utf8')
+  const stringsEn = fs.readFileSync(path.join(rootDir, 'src', 'i18n', 'strings.en.js'), 'utf8')
 
   it('contains the three plain privacy lines in README.md', () => {
     expect(readme).toContain('Nothing leaves your device.')
@@ -13,10 +13,10 @@ describe('T15 — Privacy note', () => {
     expect(readme).toContain('There is no tracking, no analytics, and no accounts.')
   })
 
-  it('contains the three plain privacy lines in For Grown-ups panel in FestivalHome.jsx', () => {
-    expect(festivalHome).toContain('Nothing leaves your device.')
-    expect(festivalHome).toContain('Progress is saved only in this browser.')
-    expect(festivalHome).toContain('There is no tracking, no analytics, and no accounts.')
+  it('contains the three plain privacy lines in For Grown-ups panel / strings', () => {
+    expect(stringsEn).toContain('Nothing leaves your device.')
+    expect(stringsEn).toContain('Progress is saved only in this browser.')
+    expect(stringsEn).toContain('There is no tracking, no analytics, and no accounts.')
   })
 
   it('ensures zero network telemetry, tracking, or analytics calls exist in src/', () => {

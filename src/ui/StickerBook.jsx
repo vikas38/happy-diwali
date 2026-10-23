@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { CRACKERS } from '../crackers/crackerDefs.js'
+import { t } from '../i18n/index.js'
 
 // ===================================================================
 // StickerBook — Sticker collection overlay + Parent unlock-all
@@ -11,7 +12,11 @@ function StickerTile({ cracker, unlocked }) {
   return (
     <div
       className={`sticker-tile${unlocked ? ' sticker-tile--unlocked' : ' sticker-tile--locked'}`}
-      aria-label={unlocked ? `${cracker.name} sticker collected` : `${cracker.name} sticker locked`}
+      aria-label={
+        unlocked
+          ? t('sticker_collected_aria', { name: cracker.name })
+          : t('sticker_locked_aria', { name: cracker.name })
+      }
       role="img"
     >
       <span className="sticker-tile__emoji" aria-hidden="true">
@@ -71,21 +76,21 @@ export default function StickerBook({ stickers, onClose, onUnlockAll }) {
       className="overlay overlay--sticker"
       role="dialog"
       aria-modal="true"
-      aria-label="Sticker Book"
+      aria-label={t('sticker_book_dialog_aria')}
     >
       <div className="sticker-book">
         <div className="sticker-book__header">
-          <h2 className="sticker-book__title">Sticker Book 📖</h2>
+          <h2 className="sticker-book__title">{t('sticker_book_title')}</h2>
           <button
             className="btn btn--icon sticker-book__close"
             onClick={onClose}
-            aria-label="Close Sticker Book"
+            aria-label={t('sticker_book_close_aria')}
           >
             ✕
           </button>
         </div>
         <div className="sticker-book__count" aria-live="polite">
-          {stickers.length} / {CRACKERS.length} collected
+          {t('stickers_collected_count', { count: stickers.length, total: CRACKERS.length })}
         </div>
         <div className="sticker-grid">
           {CRACKERS.map((cracker) => (
@@ -97,16 +102,18 @@ export default function StickerBook({ stickers, onClose, onUnlockAll }) {
           ))}
         </div>
         <div className="sticker-book__parent">
-          <p className="sticker-book__parent-label">Parents: Hold to unlock all crackers</p>
+          <p className="sticker-book__parent-label">{t('parent_unlock_label')}</p>
           <button
             className="btn btn--secondary btn--parent-unlock"
             onPointerDown={startHold}
             onPointerUp={stopHold}
             onPointerLeave={stopHold}
-            aria-label="Parent Unlock All — hold for 2 seconds"
+            aria-label={t('parent_unlock_aria')}
             style={{ position: 'relative', overflow: 'hidden' }}
           >
-            {holding ? `Unlocking… ${Math.round(holdProgress * 100)}%` : '🔓 Parent Unlock All'}
+            {holding
+              ? t('parent_unlocking_progress', { pct: Math.round(holdProgress * 100) })
+              : t('parent_unlock_btn')}
             {holding && (
               <span
                 className="parent-unlock-progress"

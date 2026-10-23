@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { t } from '../i18n/index.js'
 
 // ===================================================================
 // RewardOverlay — REWARD_CELEBRATION screen
@@ -27,7 +28,7 @@ function StarRating({ count = 3 }) {
   }, [count])
 
   return (
-    <div className="star-rating" aria-label={`${count} stars earned`}>
+    <div className="star-rating" aria-label={t('stars_earned', { count })}>
       {Array.from({ length: count }, (_, i) => (
         <span key={i} className={`star${visible[i] ? ' star--visible' : ''}`} aria-hidden="true">
           ⭐
@@ -51,42 +52,44 @@ export default function RewardOverlay({
       className="overlay overlay--reward"
       role="dialog"
       aria-modal="true"
-      aria-label="You did it!"
+      aria-label={t('reward_dialog_aria')}
     >
       <div className="reward-card">
         <h2 className="reward-card__title">
-          A little more <span className="neon">wonder.</span>
+          {t('reward_title_prefix')} <span className="neon">{t('reward_title_accent')}</span>
         </h2>
         <StarRating count={isNewSticker ? 3 : 1} />
         {isNewSticker && (
           <div
             className="reward-card__sticker"
-            aria-label={`New sticker unlocked: ${cracker.name}`}
+            aria-label={t('new_sticker_unlocked', { name: cracker.name })}
           >
             <span className="reward-card__sticker-emoji" aria-hidden="true">
               {cracker.emoji}
             </span>
             <p className="reward-card__sticker-label">
-              New sticker unlocked:
+              {t('new_sticker_prefix')}
               <br />
               <strong>{cracker.name}</strong>!
             </p>
           </div>
         )}
         <div className="reward-card__actions">
-          <button className="btn btn--secondary" onClick={onLightAgain} aria-label="Light Again">
-            Light again ↻
+          <button
+            className="btn btn--secondary"
+            onClick={onLightAgain}
+            aria-label={t('reward_light_again_aria')}
+          >
+            {t('reward_light_again')}
           </button>
-          {
-            <button
-              className="btn btn--primary"
-              onClick={onNextCracker}
-              autoFocus
-              aria-label="Next Cracker"
-            >
-              {isLastCracker ? 'Back to your box →' : 'Discover the next →'}
-            </button>
-          }
+          <button
+            className="btn btn--primary"
+            onClick={onNextCracker}
+            autoFocus
+            aria-label={t('reward_next_aria')}
+          >
+            {isLastCracker ? t('reward_box') : t('reward_next')}
+          </button>
         </div>
       </div>
     </div>

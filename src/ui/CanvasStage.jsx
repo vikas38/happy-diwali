@@ -9,6 +9,7 @@ import { Particles } from '../render/Particles.js'
 import { JellySquash } from '../render/fx/JellySquash.js'
 import { ComicBubble } from '../render/fx/ComicBubble.js'
 import { getSoundEngine } from '../audio/SoundEngine.js'
+import { t } from '../i18n/index.js'
 
 /**
  * Mounts the <canvas> and runs the Renderer with all registered layers.
@@ -187,12 +188,9 @@ export default function CanvasStage({
   if (failed)
     return (
       <div className="recovery-card" role="alert">
-        <h2>The courtyard needs a little rest.</h2>
-        <p>
-          Your browser could not draw the scene. You can return to the festival or reload to try
-          again.
-        </p>
-        <button onClick={() => window.location.reload()}>Try again</button>
+        <h2>{t('canvas_fail_title')}</h2>
+        <p>{t('canvas_fail_desc')}</p>
+        <button onClick={() => window.location.reload()}>{t('try_again')}</button>
       </div>
     )
   return (
@@ -200,7 +198,7 @@ export default function CanvasStage({
       <canvas
         ref={canvasRef}
         className="game-canvas"
-        aria-label="Animated Diwali courtyard. Use the buttons to choose and start a pretend firework."
+        aria-label={t('canvas_stage_aria')}
         role="img"
       />
     </div>

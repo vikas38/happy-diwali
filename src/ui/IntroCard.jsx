@@ -1,5 +1,6 @@
 import React from 'react'
 import CrackerArt from './CrackerArt.jsx'
+import { t } from '../i18n/index.js'
 
 // ===================================================================
 // IntroCard — CRACKER_INTRO_CARD bounce-in modal
@@ -9,7 +10,7 @@ import CrackerArt from './CrackerArt.jsx'
 
 function IntensityDots({ count }) {
   return (
-    <div className="intensity-dots" aria-label={`Intensity level ${count} of 4`}>
+    <div className="intensity-dots" aria-label={t('intro_intensity_aria', { count })}>
       {[1, 2, 3, 4].map((i) => (
         <span
           key={i}
@@ -29,14 +30,14 @@ export default function IntroCard({ cracker, onPutOnStreet }) {
       className="overlay overlay--intro"
       role="dialog"
       aria-modal="true"
-      aria-label={`Meet ${cracker.name}!`}
+      aria-label={t('intro_meet_title', { name: cracker.name })}
     >
       <div className="intro-card intro-card--bounce-in">
         <div className="intro-card__emoji" aria-hidden="true">
           <CrackerArt index={cracker.id} />
         </div>
         <h2 className="intro-card__title">
-          Meet <span className="neon">{cracker.name}</span>!
+          {t('intro_meet_prefix')} <span className="neon">{cracker.name}</span>!
         </h2>
         <p className="intro-card__desc">{cracker.description}</p>
         <div className="intro-card__meta">
@@ -47,9 +48,9 @@ export default function IntroCard({ cracker, onPutOnStreet }) {
           className="btn btn--primary"
           onClick={onPutOnStreet}
           autoFocus
-          aria-label={`Watch ${cracker.name}`}
+          aria-label={t('intro_watch_aria', { name: cracker.name })}
         >
-          Watch this firework →
+          {t('intro_watch_btn')}
         </button>
       </div>
     </div>

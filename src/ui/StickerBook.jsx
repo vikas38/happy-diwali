@@ -51,19 +51,22 @@ export default function StickerBook({
 }) {
   const [holdProgress, setHoldProgress] = useState(0)
   const [holding, setHolding] = useState(false)
-  const holdTimerRef = React.useRef(null)
+  const [showConfirm, setShowConfirm] = useState(false)
   const holdStartRef = React.useRef(null)
   const rafRef = React.useRef(null)
+  const isUnlockedAll = stickers.length >= CRACKERS.length
 
-  React.useEffect(() => {
-    const handleKey = (e) => {
-      if (e.key === 'Escape') onClose()
+  const stopHold = React.useCallback(() => {
+    setHolding(false)
+    setHoldProgress(0)
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current)
+      rafRef.current = null
     }
-    window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
-  }, [onClose])
+  }, [])
 
-  function startHold() {
+  const startHold = React.useCallback(() => {
+    if (isUnlockedAll) return
     setHolding(true)
     holdStartRef.current = Date.now()
     function tick() {
@@ -73,18 +76,46 @@ export default function StickerBook({
       if (prog < 1) {
         rafRef.current = requestAnimationFrame(tick)
       } else {
-        onUnlockAll()
         stopHold()
+        onUnlockAll()
       }
     }
     rafRef.current = requestAnimationFrame(tick)
+  }, [isUnlockedAll, onUnlockAll, stopHold])
+
+  React.useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'Escape') {
+        if (showConfirm) {
+          setShowConfirm(false)
+        } else {
+          stopHold()
+          onClose()
+        }
+      }
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => {
+      window.removeEventListener('keydown', handleKey)
+      stopHold()
+    }
+  }, [onClose, showConfirm, stopHold])
+
+  const handleConfirmUnlock = () => {
+    setShowConfirm(false)
+    stopHold()
+    onUnlockAll()
   }
 
-  function stopHold() {
-    setHolding(false)
-    setHoldProgress(0)
-    cancelAnimationFrame(rafRef.current)
-    clearTimeout(holdTimerRef.current)
+  const handleCancelConfirm = () => {
+    setShowConfirm(false)
+    stopHold()
+  }
+
+  const handleClose = () => {
+    stopHold()
+    setShowConfirm(false)
+    onClose()
   }
 
   return (
@@ -112,7 +143,7 @@ export default function StickerBook({
             )}
             <button
               className="btn btn--icon sticker-book__close"
-              onClick={onClose}
+              onClick={handleClose}
               aria-label={t('sticker_book_close') || t('sticker_book_close_aria')}
             >
               ✕
@@ -133,25 +164,70 @@ export default function StickerBook({
         </div>
         <div className="sticker-book__parent">
           <p className="sticker-book__parent-label">{t('parent_unlock_label')}</p>
-          <button
-            className="btn btn--secondary btn--parent-unlock"
-            onPointerDown={startHold}
-            onPointerUp={stopHold}
-            onPointerLeave={stopHold}
-            aria-label={t('parent_unlock_aria')}
-            style={{ position: 'relative', overflow: 'hidden' }}
-          >
-            {holding
-              ? t('parent_unlocking_progress', { pct: Math.round(holdProgress * 100) })
-              : t('parent_unlock_btn')}
-            {holding && (
-              <span
-                className="parent-unlock-progress"
-                style={{ width: `${holdProgress * 100}%` }}
-                aria-hidden="true"
-              />
-            )}
-          </button>
+          {showConfirm ? (
+            <div
+              className="parent-confirm-box"
+              role="alertdialog"
+              aria-modal="true"
+              aria-label={t('parent_confirm_title')}
+            >
+              <p className="parent-confirm-desc">{t('parent_confirm_desc')}</p>
+              <div className="parent-confirm-actions">
+                <button
+                  type="button"
+                  className="btn btn--primary parent-confirm-btn"
+                  onClick={handleConfirmUnlock}
+                  autoFocus
+                >
+                  {t('parent_confirm_btn')}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn--secondary parent-cancel-btn"
+                  onClick={handleCancelConfirm}
+                >
+                  {t('parent_cancel_btn')}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className={`btn btn--secondary btn--parent-unlock ${holding ? 'is-holding' : ''}`}
+              onPointerDown={startHold}
+              onPointerUp={stopHold}
+              onPointerCancel={stopHold}
+              onPointerLeave={stopHold}
+              onBlur={stopHold}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  setShowConfirm(true)
+                }
+              }}
+              onClick={() => {
+                if (!holding && holdProgress === 0) {
+                  setShowConfirm(true)
+                }
+              }}
+              disabled={isUnlockedAll}
+              aria-label={isUnlockedAll ? t('parent_unlock_done') : t('parent_unlock_aria')}
+              style={{ position: 'relative', overflow: 'hidden' }}
+            >
+              {isUnlockedAll
+                ? t('parent_unlock_done')
+                : holding
+                  ? t('parent_unlocking_progress', { pct: Math.round(holdProgress * 100) })
+                  : t('parent_unlock_btn')}
+              {holding && (
+                <span
+                  className="parent-unlock-progress"
+                  style={{ width: `${holdProgress * 100}%` }}
+                  aria-hidden="true"
+                />
+              )}
+            </button>
+          )}
         </div>
       </div>
     </div>

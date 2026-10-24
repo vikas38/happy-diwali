@@ -160,11 +160,16 @@ export const STRINGS_EN = {
   sticker_collected_aria: '{name} sticker collected',
   sticker_locked_aria: '{name} sticker locked',
   parent_unlock_label: 'Parents: Hold to unlock all crackers',
-  parent_unlock_aria: 'Parent Unlock All — hold for 2 seconds',
+  parent_unlock_aria: 'Parent Unlock All — hold for 2 seconds or press Enter',
   parent_unlock_btn: '🔓 Parent Unlock All',
   parent_unlocking_progress: 'Unlocking… {pct}%',
   parent_unlock_hold: 'Hold 2s to unlock all',
   parent_unlock_done: 'Unlocked all!',
+  parent_confirm_title: 'Unlock All Fireworks',
+  parent_confirm_desc:
+    'Are you a grown-up? This will unlock all fireworks and stickers for this browser.',
+  parent_confirm_btn: 'Unlock everything',
+  parent_cancel_btn: 'Cancel',
 
   // Error Boundary & Stage Fallbacks
   error_pause_title: 'Let’s take a little pause.',

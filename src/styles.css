@@ -1786,6 +1786,43 @@ button:focus-visible,
   transition: width 0.1s linear;
 }
 
+.parent-confirm-box {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(245, 190, 108, 0.35);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+}
+
+.parent-confirm-desc {
+  font-size: 13px;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.parent-confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.parent-confirm-btn {
+  min-height: 44px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.parent-cancel-btn {
+  min-height: 44px;
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
 /* ---- Calm Corner ---- */
 .overlay--calm {
   z-index: 55;

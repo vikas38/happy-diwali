@@ -6,6 +6,9 @@ import {
   validateSave,
   INTENSITY,
   SPARKLE_PALETTES,
+  DIYA_ARRANGEMENTS,
+  RANGOLI_PATTERNS,
+  DEFAULT_RANGOLI_COLORS,
   TOTAL_CRACKERS,
   MOTION_POLICY,
   resolveEffectiveMotion,
@@ -237,6 +240,104 @@ export function GameStoreProvider({ children }) {
     })
   }, [updateStore])
 
+  // ---- Creative Activities (Diyas & Rangoli) ----
+
+  const setDiyaLit = useCallback(
+    (index) => {
+      updateStore((s) => {
+        const currentLit = s.diyas?.lit || []
+        const nextLit = currentLit.includes(index)
+          ? currentLit.filter((i) => i !== index)
+          : [...currentLit, index]
+        return {
+          ...s,
+          diyas: {
+            ...s.diyas,
+            lit: nextLit,
+          },
+        }
+      })
+    },
+    [updateStore]
+  )
+
+  const setDiyaArrangement = useCallback(
+    (arrangement) => {
+      if (!Object.values(DIYA_ARRANGEMENTS).includes(arrangement)) return
+      updateStore((s) => ({
+        ...s,
+        diyas: {
+          ...s.diyas,
+          arrangement,
+        },
+      }))
+    },
+    [updateStore]
+  )
+
+  const resetDiyas = useCallback(() => {
+    updateStore((s) => ({
+      ...s,
+      diyas: {
+        ...s.diyas,
+        lit: [],
+      },
+    }))
+  }, [updateStore])
+
+  const setRangoliPattern = useCallback(
+    (pattern) => {
+      if (!Object.values(RANGOLI_PATTERNS).includes(pattern)) return
+      updateStore((s) => ({
+        ...s,
+        rangoli: {
+          ...s.rangoli,
+          pattern,
+        },
+      }))
+    },
+    [updateStore]
+  )
+
+  const setRangoliRegionColor = useCallback(
+    (region, color) => {
+      updateStore((s) => ({
+        ...s,
+        rangoli: {
+          ...s.rangoli,
+          colors: {
+            ...s.rangoli?.colors,
+            [region]: color,
+          },
+        },
+      }))
+    },
+    [updateStore]
+  )
+
+  const setRangoliColors = useCallback(
+    (colors) => {
+      updateStore((s) => ({
+        ...s,
+        rangoli: {
+          ...s.rangoli,
+          colors: { ...colors },
+        },
+      }))
+    },
+    [updateStore]
+  )
+
+  const resetRangoli = useCallback(() => {
+    updateStore((s) => ({
+      ...s,
+      rangoli: {
+        pattern: s.rangoli?.pattern || RANGOLI_PATTERNS.LOTUS,
+        colors: { ...DEFAULT_RANGOLI_COLORS },
+      },
+    }))
+  }, [updateStore])
+
   const dismissHint = useCallback(() => {
     updateStore((s) => {
       if (s.seenHint) return s
@@ -271,6 +372,13 @@ export function GameStoreProvider({ children }) {
     setMotionPolicy,
     setSparklePalette,
     markSplashSeen,
+    setDiyaLit,
+    setDiyaArrangement,
+    resetDiyas,
+    setRangoliPattern,
+    setRangoliRegionColor,
+    setRangoliColors,
+    resetRangoli,
     unlockCracker,
     unlockAllCrackers,
     markIntroSeen,
@@ -292,4 +400,13 @@ export function useGameStore() {
   return ctx
 }
 
-export { INTENSITY, TOTAL_CRACKERS, MOTION_POLICY, SPARKLE_PALETTES, resolveEffectiveMotion }
+export {
+  INTENSITY,
+  TOTAL_CRACKERS,
+  MOTION_POLICY,
+  SPARKLE_PALETTES,
+  DIYA_ARRANGEMENTS,
+  RANGOLI_PATTERNS,
+  DEFAULT_RANGOLI_COLORS,
+  resolveEffectiveMotion,
+}

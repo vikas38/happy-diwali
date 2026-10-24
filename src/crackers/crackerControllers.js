@@ -2,7 +2,22 @@ import { effectOrigin, STAGE } from '../render/layers/Courtyard.js'
 import { playFireworkSound } from '../audio/FireworkSound.js'
 import { CALM_VISUALS_CONFIG } from '../safety/calmVisuals.js'
 export { fireRewardConfetti } from './rewardConfetti.js'
-export const SHOW_DURATIONS = { 0: 3000, 1: 3500, 2: 3500, 3: 4000, 4: 4500, 5: 5000 }
+export const SHOW_DURATIONS = {
+  0: 3000,
+  1: 3500,
+  2: 3500,
+  3: 4000,
+  4: 4500,
+  5: 5000,
+  6: 4500,
+  7: 4500,
+  8: 4000,
+  9: 4500,
+  10: 4000,
+  11: 4000,
+  12: 4500,
+  13: 5000,
+}
 const TAU = Math.PI * 2
 export const CRACKER_TEST_META = {
   0: { audioType: 'granular-crackle', particleShape: 'spark', durationMs: 3000 },
@@ -11,6 +26,14 @@ export const CRACKER_TEST_META = {
   3: { audioType: 'exhaust-impact', particleShape: 'spark', durationMs: 4000 },
   4: { audioType: 'noise-impact', particleShape: 'spark', durationMs: 4500 },
   5: { audioType: 'sub-drop', particleShape: 'spark', durationMs: 5000 },
+  6: { audioType: 'cascade-gold', particleShape: 'filament', durationMs: 4500 },
+  7: { audioType: 'arcing-sweep', particleShape: 'star', durationMs: 4500 },
+  8: { audioType: 'harmonic-ring', particleShape: 'halo', durationMs: 4000 },
+  9: { audioType: 'fluttering-fan', particleShape: 'feather', durationMs: 4500 },
+  10: { audioType: 'curling-trail', particleShape: 'spiral', durationMs: 4000 },
+  11: { audioType: 'radial-petals', particleShape: 'petal', durationMs: 4000 },
+  12: { audioType: 'twin-bloom', particleShape: 'flower', durationMs: 4500 },
+  13: { audioType: 'starlit-chime', particleShape: 'constellation', durationMs: 5000 },
 }
 
 /**

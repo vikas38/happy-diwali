@@ -128,7 +128,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-013 | Add brief, skippable gameplay onboarding | EP-03 | P2 | 3 | R1 | To Do |
 | DIW-014 | Create a readable sound, motion, and quality settings sheet | EP-03 | P1 | 5 | R1 | To Do |
 | DIW-015 | Unify drawers, dialogs, and focus restoration | EP-03 | P1 | 5 | R1 | To Do |
-| DIW-016 | Make the cracker catalog extensible by stable ID | EP-04 | P1 | 5 | R1 | To Do |
+| DIW-016 | Make the cracker catalog extensible by stable ID | EP-04 | P1 | 5 | R1 | Done |
 | DIW-017 | Migrate saves for expanded content and customization | EP-04 | P1 | 5 | R1 | To Do |
 | DIW-018 | Add reusable authored effect timelines and emission primitives | EP-04 | P1 | 8 | R1 | To Do |
 | DIW-019 | Add Golden Waterfall | EP-04 | P1 | 5 | R1 | To Do |
@@ -517,7 +517,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-016 — Make the cracker catalog extensible by stable ID
 
 **Epic:** EP-04 | **Type:** Task | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-001  
 **Code / design pointers:** src/crackers/crackerDefs.js; src/crackers/crackerControllers.js; src/ui/CrackerArt.jsx; src/ui/CrackerCarousel.jsx
 
@@ -525,17 +525,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Preserve existing numeric IDs 0–5; assign new stable IDs 6–13 and separate display ordering from identity.
-- [ ] Replace CRACKERS[id] lookup, index-keyed art, parallel label arrays, and fixed total assumptions with explicit registries.
-- [ ] Define name, descriptor, category, artKey, effectKey, duration, palettes, sound character, motion variant, budget, and catalog group metadata.
-- [ ] Validate duplicate/unknown IDs and missing render/audio/art handlers; use a safe unavailable-item state for corrupt selections.
+- [x] Preserve existing numeric IDs 0–5; assign new stable IDs 6–13 and separate display ordering from identity.
+- [x] Replace CRACKERS[id] lookup, index-keyed art, parallel label arrays, and fixed total assumptions with explicit registries.
+- [x] Define name, descriptor, category, artKey, effectKey, duration, palettes, sound character, motion variant, budget, and catalog group metadata.
+- [x] Validate duplicate/unknown IDs and missing render/audio/art handlers; use a safe unavailable-item state for corrupt selections.
 
 **Acceptance criteria**
 
-- [ ] Reordering display entries cannot change saved stickers, art, or effect behavior.
-- [ ] A test-only additional definition appears through the shared UI without another hard-coded count.
-- [ ] Every shipped definition resolves all required assets/handlers and supports cancellation.
-- [ ] No new catalog item silently falls back to Phuljhari while claiming a different name.
+- [x] Reordering display entries cannot change saved stickers, art, or effect behavior.
+- [x] A test-only additional definition appears through the shared UI without another hard-coded count.
+- [x] Every shipped definition resolves all required assets/handlers and supports cancellation.
+- [x] No new catalog item silently falls back to Phuljhari while claiming a different name.
+
+**Completion:** 24 October 2026 — Built extensible registry in `src/crackers/crackerDefs.js` with stable IDs 0..5 (original), 6..9 (R1 new effects), 10..13 (R2 slots), metadata schemas (category, palettes, sound character, budgets), safe unavailable fallback instead of silent substitution, and extensible registration. Verified with 7 unit tests in `test/catalog-extensibility.test.js`.
 
 ### DIW-017 — Migrate saves for expanded content and customization
 

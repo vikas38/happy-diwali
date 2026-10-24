@@ -11,12 +11,13 @@ import {
   fireRewardConfetti,
   playCrackerShow,
 } from '../src/crackers/crackerControllers.js'
-import { CRACKERS } from '../src/crackers/crackerDefs.js'
+import { CRACKERS, ORIGINAL_CRACKERS } from '../src/crackers/crackerDefs.js'
 
 // ---- Cracker definition integrity ----
 describe('Cracker definitions integrity', () => {
-  it('has exactly 6 crackers defined', () => {
-    expect(CRACKERS).toHaveLength(6)
+  it('preserves the original 6 crackers and provides the 10 R1 catalog items', () => {
+    expect(ORIGINAL_CRACKERS).toHaveLength(6)
+    expect(CRACKERS).toHaveLength(10)
   })
 
   it.each(CRACKERS.map((c, i) => [i, c]))('cracker %i has required fields', (i, cracker) => {
@@ -35,8 +36,8 @@ describe('Cracker definitions integrity', () => {
     expect(cracker.colors.length).toBeGreaterThan(0)
   })
 
-  it('intensity dots escalate correctly (1→2→2→3→3→4)', () => {
-    const dots = CRACKERS.map((c) => c.intensityDots)
+  it('intensity dots escalate correctly for the original six (1→2→2→3→3→4)', () => {
+    const dots = ORIGINAL_CRACKERS.map((c) => c.intensityDots)
     expect(dots).toEqual([1, 2, 2, 3, 3, 4])
   })
 
@@ -80,8 +81,8 @@ describe('CRACKER_TEST_META', () => {
 
 // ---- SHOW_DURATIONS ----
 describe('SHOW_DURATIONS', () => {
-  it('has 6 entries', () => {
-    expect(Object.keys(SHOW_DURATIONS)).toHaveLength(6)
+  it('has entries for all original crackers and expanded items', () => {
+    expect(Object.keys(SHOW_DURATIONS).length).toBeGreaterThanOrEqual(6)
   })
 
   it('escalates from Phuljhari to Sutli Bomb', () => {

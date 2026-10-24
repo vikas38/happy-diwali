@@ -98,4 +98,38 @@ describe('DIW-005 — Layered cinematic Diwali courtyard scenery', () => {
       drawCourtyard(ctx, 800, 600, 5.0, 'IDLE', true)
     }).not.toThrow()
   })
+
+  describe('DIW-006 — Scene lighting & tactile interaction polish', () => {
+    it('renders bounded local floor glow tied to effect light without full-screen wash', () => {
+      const bg = new Background()
+      bg.onResize(1000, 700)
+      bg.setGameState('READY_ON_STREET')
+      bg.illuminate(0.8)
+
+      const { ctx } = createMockCtx()
+      bg.draw(ctx, 1000, 700, 1.0)
+
+      // Radial gradient created for bounded floor glow at launch coordinates
+      const lx = 1000 * STAGE.launchX
+      const ly = 700 * STAGE.launchY
+      const glowR = Math.min(180, 1000 * 0.28)
+      expect(ctx.createRadialGradient).toHaveBeenCalledWith(lx, ly, 4, lx, ly, glowR)
+    })
+
+    it('suppresses floor glow when motion/visuals are paused or reduced', () => {
+      const bg = new Background()
+      bg.onResize(1000, 700)
+      bg.reducedMotion = true
+      bg.illuminate(0.8)
+
+      const { ctx } = createMockCtx()
+      bg.draw(ctx, 1000, 700, 1.0)
+
+      // No pulsing flash or floor glow created at launch coords under reduced motion
+      const lx = 1000 * STAGE.launchX
+      const ly = 700 * STAGE.launchY
+      const glowR = Math.min(180, 1000 * 0.28)
+      expect(ctx.createRadialGradient).not.toHaveBeenCalledWith(lx, ly, 4, lx, ly, glowR)
+    })
+  })
 })

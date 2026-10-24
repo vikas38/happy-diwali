@@ -507,9 +507,22 @@ export class Background {
     if (!this.hasInteractiveLayer) {
       this._drawCrackerOnLaunchpad(ctx, w, h, time)
     }
-    if (this.light > 0) {
-      ctx.fillStyle = `rgba(255,187,100,${this.light * 0.25})`
-      ctx.fillRect(0, h * 0.6, w, h * 0.4)
+    // DIW-006: Bounded local floor glow tied to effect intensity without reducing control contrast
+    if (this.light > 0 && !motionPaused) {
+      const lx = w * LAYOUT.launchX
+      const ly = h * LAYOUT.launchY
+      const glowR = Math.min(180, w * 0.28)
+      const clampedAlpha = Math.min(0.22, this.light * 0.2)
+      ctx.save()
+      const floorGlow = ctx.createRadialGradient(lx, ly, 4, lx, ly, glowR)
+      floorGlow.addColorStop(0, `rgba(255, 214, 130, ${clampedAlpha})`)
+      floorGlow.addColorStop(0.6, `rgba(243, 187, 86, ${clampedAlpha * 0.4})`)
+      floorGlow.addColorStop(1, 'rgba(243, 187, 86, 0)')
+      ctx.fillStyle = floorGlow
+      ctx.beginPath()
+      ctx.ellipse(lx, ly, glowR, glowR * 0.35, 0, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.restore()
     }
   }
 

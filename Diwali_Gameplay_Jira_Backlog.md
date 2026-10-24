@@ -118,7 +118,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-003 | Implement reusable gameplay design tokens and controls | EP-01 | P1 | 3 | R1 | Done |
 | DIW-004 | Rebuild the responsive stage and control layout | EP-02 | P1 | 8 | R1 | Done |
 | DIW-005 | Create a layered cinematic Diwali courtyard | EP-02 | P1 | 8 | R1 | Done |
-| DIW-006 | Add responsive scene lighting and tactile interaction polish | EP-02 | P2 | 5 | R1 | To Do |
+| DIW-006 | Add responsive scene lighting and tactile interaction polish | EP-02 | P2 | 5 | R1 | Done |
 | DIW-007 | Redesign cracker cards and the quick-access tray | EP-02 | P1 | 5 | R1 | To Do |
 | DIW-008 | Build a consistent illustrated cracker asset set | EP-02 | P1 | 8 | R1 | To Do |
 | DIW-009 | Simplify the HUD with permanent mute and pause | EP-03 | P1 | 3 | R1 | To Do |
@@ -283,7 +283,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-006 — Add responsive scene lighting and tactile interaction polish
 
 **Epic:** EP-02 | **Type:** Story | **Priority:** P2 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-003, DIW-005  
 **Code / design pointers:** src/render/layers/Courtyard.js; src/render/Particles.js; src/gameplay.css
 
@@ -291,16 +291,18 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Add bounded local floor glow and character/prop accents tied to the active effect envelope.
-- [ ] Use short card selection, button press, and panel transitions; keep text stable and avoid layout jumps.
-- [ ] In reduced mode, replace decorative movement with immediate state changes and static local accents.
+- [x] Add bounded local floor glow and character/prop accents tied to the active effect envelope.
+- [x] Use short card selection, button press, and panel transitions; keep text stable and avoid layout jumps.
+- [x] In reduced mode, replace decorative movement with immediate state changes and static local accents.
 
 **Acceptance criteria**
 
-- [ ] Lighting follows the selected effect palette without reducing control contrast.
-- [ ] Transition interruption leaves panels in a valid final state; rapid selection does not stack animations.
-- [ ] Reduced motion produces no pulsing full-screen illumination or snapping transforms.
-- [ ] Effects stay within the existing flash policy; lighting is profiled and reviewed with all effect families.
+- [x] Lighting follows the selected effect palette without reducing control contrast.
+- [x] Transition interruption leaves panels in a valid final state; rapid selection does not stack animations.
+- [x] Reduced motion produces no pulsing full-screen illumination or snapping transforms.
+- [x] Effects stay within the existing flash policy; lighting is profiled and reviewed with all effect families.
+
+**Completion:** 24 October 2026 — Implemented bounded radial floor glow anchored to the launch coordinates (`STAGE.launchX`, `STAGE.launchY`) with clamped flash-policy alpha ($\le 0.22$), immediate state updates without illumination wash in reduced-motion / calm-visuals mode, and short transitions in `src/render/layers/Background.js` and `src/gameplay.css`. Verified with unit tests in `test/courtyard-scenery.test.js`.
 
 ### DIW-007 — Redesign cracker cards and the quick-access tray
 

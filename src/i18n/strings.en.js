@@ -494,6 +494,20 @@ export const STRINGS_EN = {
   suggestion_decorations: 'Personalize your courtyard decorations!',
   suggestion_dismiss: 'Dismiss suggestion',
 
+  // Photo Mode & Postcards (DIW-035)
+  photo_mode_title: 'Festival Postcard',
+  photo_mode_subtitle: 'Capture and download a Diwali keepsake',
+  photo_mode_button: 'Postcard',
+  photo_aspect_landscape: 'Landscape (16:9)',
+  photo_aspect_portrait: 'Story (9:16)',
+  photo_frame_clean: 'Clean Scene',
+  photo_frame_framed: 'Happy Diwali Frame',
+  photo_preview_alt: 'Festival celebration postcard preview',
+  photo_download_png: 'Download Postcard (PNG)',
+  photo_download_success: 'Postcard saved to your device!',
+  photo_download_failed: 'Could not export picture. Please try again.',
+  photo_close: 'Close',
+
   // Swatches
   swatch_rose: 'Rose',
   swatch_purple: 'Purple',

@@ -42,6 +42,7 @@ describe('T20 — String Externalisation (i18n)', () => {
       '✦',
       '×',
       '✕',
+      '✓',
       '→',
       '←',
       '↗',
@@ -79,6 +80,7 @@ describe('T20 — String Externalisation (i18n)', () => {
       '☾',
       '▶',
       '⏱',
+      '📸',
       'V', // Avatar initial glyph
     ])
 

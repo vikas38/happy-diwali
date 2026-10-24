@@ -3440,6 +3440,170 @@ input:focus-visible,
   font-weight: 600;
 }
 
+/* ===================================================================
+   Photo Mode & Postcards (DIW-035)
+   =================================================================== */
+
+.hud-photo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  color: #fff4df;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.hud-photo-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: #f59e0b;
+}
+
+.photo-mode-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 0;
+}
+
+.photo-mode-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.photo-control-group {
+  display: flex;
+  gap: 6px;
+}
+
+.photo-option-btn {
+  min-height: 40px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.photo-option-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+}
+
+.photo-option-btn.is-selected {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+  color: #ffd87c;
+}
+
+.photo-preview-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 180px;
+  max-height: 320px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.photo-preview-img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  object-fit: contain;
+}
+
+.photo-preview-img.is-landscape {
+  max-height: 240px;
+}
+
+.photo-preview-img.is-portrait {
+  max-height: 300px;
+}
+
+.photo-status-msg {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.photo-status-msg.is-success {
+  background: rgba(52, 211, 153, 0.15);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  color: #34d399;
+}
+
+.photo-status-msg.is-error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+.photo-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.photo-cancel-btn {
+  min-height: 44px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  color: #cbd5e1;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.photo-cancel-btn:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+
+.photo-download-btn {
+  min-height: 44px;
+  padding: 8px 24px;
+  background: #f59e0b;
+  border: none;
+  border-radius: 999px;
+  color: #1a1a2e;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.photo-download-btn:hover {
+  background: #fbbf24;
+}
+
+.photo-download-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
 
 
 

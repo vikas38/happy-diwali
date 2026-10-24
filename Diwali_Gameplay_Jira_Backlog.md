@@ -147,7 +147,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-032 | Add gentle discovery goals without daily pressure | EP-06 | P3 | 5 | R2 | Done |
 | DIW-033 | Redesign the collection as a beautiful discovery album | EP-06 | P1 | 5 | R1 | Done |
 | DIW-034 | Create a polished result and celebration summary | EP-06 | P1 | 5 | R1 | Done |
-| DIW-035 | Add photo mode and local festival postcard export | EP-06 | P2 | 8 | R2 | To Do |
+| DIW-035 | Add photo mode and local festival postcard export | EP-06 | P2 | 8 | R2 | Done |
 | DIW-036 | Give every effect a distinct, controlled sound identity | EP-07 | P1 | 8 | R1 | To Do |
 | DIW-037 | Apply reduced motion and accessible effect descriptions everywhere | EP-07 | P1 | 5 | R1 | To Do |
 | DIW-038 | Refine character poses and grounded reactions | EP-07 | P2 | 5 | R1 | To Do |
@@ -997,7 +997,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-035 — Add photo mode and local festival postcard export
 
 **Epic:** EP-06 | **Type:** Story | **Priority:** P2 | **Estimate:** 8 points  
-**Release:** R2 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R2 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-005, DIW-015, DIW-017, DIW-018, DIW-031  
 **Code / design pointers:** src/ui/CanvasStage.jsx; scene renderer; photo/postcard UI (new)
 
@@ -1005,17 +1005,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Capture a frozen scene or deterministic authored highlight on explicit request; pause gameplay through the shared interruption flow.
-- [ ] Offer clean scene and a restrained Happy Diwali frame with two export ratios; composite decorations/characters consistently.
-- [ ] Preview before PNG download; keep export local with no account or automatic share/upload.
-- [ ] Handle cross-origin asset taint, unsupported export, size limits, and failed downloads with actionable messages.
+- [x] Capture a frozen scene or deterministic authored highlight on explicit request; pause gameplay through the shared interruption flow.
+- [x] Offer clean scene and a restrained Happy Diwali frame with two export ratios; composite decorations/characters consistently.
+- [x] Preview before PNG download; keep export local with no account or automatic share/upload.
+- [x] Handle cross-origin asset taint, unsupported export, size limits, and failed downloads with actionable messages.
 
 **Acceptance criteria**
 
-- [ ] Export matches the preview, includes the selected scene, and excludes HUD/focus rings unless deliberately requested.
-- [ ] Photo mode never advances rewards or resumes sound on its own.
-- [ ] PNG opens correctly on Android/iPhone; success is reported only when the browser operation succeeds as far as detectable.
-- [ ] Object URLs and temporary canvases are released; cancellation returns to the documented game state.
+- [x] Export matches the preview, includes the selected scene, and excludes HUD/focus rings unless deliberately requested.
+- [x] Photo mode never advances rewards or resumes sound on its own.
+- [x] PNG opens correctly on Android/iPhone; success is reported only when the browser operation succeeds as far as detectable.
+- [x] Object URLs and temporary canvases are released; cancellation returns to the documented game state.
+
+**Completion:** 24 October 2026 — Created `PhotoModeModal` in `src/ui/PhotoModeModal.jsx` supporting landscape (16:9) and story (9:16) aspect ratios with framed vs clean scene options. Composites high-resolution courtyard scene, active decorations, and celebratory cracker sparklers onto local offscreen canvas, generates image preview, triggers local PNG file download with actionable success/failure reporting, and connects to `PHOTO_MODE_OVERLAY` in `GameController.js` and `HUD.jsx`. Verified with unit tests in `test/photo-mode.test.jsx`.
 
 ### DIW-036 — Give every effect a distinct, controlled sound identity
 

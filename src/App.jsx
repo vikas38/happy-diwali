@@ -16,6 +16,7 @@ import CrackerLibrary from './ui/CrackerLibrary.jsx'
 import CrackerInspector from './ui/CrackerInspector.jsx'
 import CelebrationSequenceEditor from './ui/CelebrationSequenceEditor.jsx'
 import CourtyardDecorationsModal from './ui/CourtyardDecorationsModal.jsx'
+import PhotoModeModal from './ui/PhotoModeModal.jsx'
 import { GameController, STATES } from './fsm/GameController.js'
 import { getSoundEngine } from './audio/SoundEngine.js'
 import { playCrackerShow, fireRewardConfetti } from './crackers/crackerControllers.js'
@@ -373,6 +374,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
         onStopSequence={() => gc?.stopSequence?.()}
         onOpenSequenceBuilder={() => gc?.openSequenceBuilder?.()}
         onOpenDecorations={() => gc?.openDecorations?.()}
+        onOpenPhotoMode={() => gc?.openPhotoMode?.()}
       />
 
       {audioState && (
@@ -633,6 +635,20 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
               store.completeGentleGoal('decoratedCourtyard')
             }}
             onReset={() => store.resetCourtyardDecorations()}
+          />
+        )}
+
+        {/* Photo Mode / Festival Postcard Modal (DIW-035) */}
+        {fsmState === STATES.PHOTO_MODE_OVERLAY && (
+          <PhotoModeModal
+            isOpen={true}
+            onClose={() => gc.closePhotoMode()}
+            decorations={saveState.courtyardDecorations}
+            selectedCracker={selectedCracker ?? 0}
+            placement={saveState.launchPlacement || 'center'}
+            palette={
+              saveState.selectedPalettes?.[selectedCracker] || saveState.selectedPalette || 'GOLD'
+            }
           />
         )}
       </div>

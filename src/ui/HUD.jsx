@@ -35,6 +35,7 @@ export default function HUD({
   onStopSequence,
   onOpenSequenceBuilder,
   onOpenDecorations,
+  onOpenPhotoMode,
 }) {
   const [internalSettingsOpen, setInternalSettingsOpen] = useState(false)
   const isSettingsOpen =
@@ -118,6 +119,16 @@ export default function HUD({
                   aria-label={t('decorations_title')}
                 >
                   <span aria-hidden="true">🪔</span> {t('decorations_button_label')}
+                </button>
+              )}
+              {onOpenPhotoMode && (
+                <button
+                  type="button"
+                  className="hud-photo-btn"
+                  onClick={onOpenPhotoMode}
+                  aria-label={t('photo_mode_title')}
+                >
+                  <span aria-hidden="true">📸</span> {t('photo_mode_button')}
                 </button>
               )}
             </>

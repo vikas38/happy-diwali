@@ -121,7 +121,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-006 | Add responsive scene lighting and tactile interaction polish | EP-02 | P2 | 5 | R1 | Done |
 | DIW-007 | Redesign cracker cards and the quick-access tray | EP-02 | P1 | 5 | R1 | Done |
 | DIW-008 | Build a consistent illustrated cracker asset set | EP-02 | P1 | 8 | R1 | Done |
-| DIW-009 | Simplify the HUD with permanent mute and pause | EP-03 | P1 | 3 | R1 | To Do |
+| DIW-009 | Simplify the HUD with permanent mute and pause | EP-03 | P1 | 3 | R1 | Done |
 | DIW-010 | Create a browsable cracker library with filters and favourites | EP-03 | P1 | 5 | R1 | To Do |
 | DIW-011 | Add a clear selected-cracker inspector | EP-03 | P1 | 5 | R1 | To Do |
 | DIW-012 | Make ignition and show states feel clear and satisfying | EP-03 | P1 | 5 | R1 | To Do |
@@ -357,7 +357,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-009 — Simplify the HUD with permanent mute and pause
 
 **Epic:** EP-03 | **Type:** Story | **Priority:** P1 | **Estimate:** 3 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-003, DIW-004  
 **Code / design pointers:** src/ui/HUD.jsx; src/App.jsx; src/gameplay.css
 
@@ -365,15 +365,17 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Keep Back, a compact collection indicator, Mute, Pause, and Settings; move advanced sound descriptors out of the main bar.
-- [ ] Use icons with accessible labels and visible text where space allows; tooltip-only meaning is insufficient on touch.
-- [ ] Restore the previous nonzero volume on unmute; apply master mute to every audio role.
+- [x] Keep Back, a compact collection indicator, Mute, Pause, and Settings; move advanced sound descriptors out of the main bar.
+- [x] Use icons with accessible labels and visible text where space allows; tooltip-only meaning is insufficient on touch.
+- [x] Restore the previous nonzero volume on unmute; apply master mute to every audio role.
 
 **Acceptance criteria**
 
-- [ ] Mute is one action away during introduction, countdown, show, reward, and Calm Corner.
-- [ ] Pause becomes a clear resume action in the paused view; opening settings never leaves a hidden show running.
-- [ ] The bar fits narrow/landscape layouts without hiding sound controls or obscuring the stage.
+- [x] Mute is one action away during introduction, countdown, show, reward, and Calm Corner.
+- [x] Pause becomes a clear resume action in the paused view; opening settings never leaves a hidden show running.
+- [x] The bar fits narrow/landscape layouts without hiding sound controls or obscuring the stage.
+
+**Completion:** 24 October 2026 — Verified streamlined HUD with Back, stars indicator, one-action master Mute, Pause (Calm Corner), and Settings across portrait and landscape viewports; unmute accurately restores `lastNonZeroVolume`. Verified with 12 tests in `test/mute-pause.test.jsx`.
 
 ### DIW-010 — Create a browsable cracker library with filters and favourites
 

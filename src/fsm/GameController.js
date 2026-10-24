@@ -334,11 +334,19 @@ export class GameController {
    * Starts the step-back-to-safe-zone routine.
    */
   tapCracker() {
-    if (this.state !== STATES.READY_ON_STREET) return
+    if (this._disposed || this.state !== STATES.READY_ON_STREET) return
     this._startStepBack()
   }
 
   _startStepBack() {
+    if (this._disposed) return
+    if (
+      this.state !== STATES.READY_ON_STREET &&
+      this.state !== STATES.STEPPING_BACK_SAFE_ROUTINE &&
+      !INTERRUPTION_STATES.includes(this.state)
+    ) {
+      return
+    }
     const { chhotu, pip, sound } = this._engines
     const from = this._chhotuStartPoint()
     const to = this._safeZonePoint()
@@ -385,6 +393,15 @@ export class GameController {
   }
 
   _startCountdown(fromBeat = 0) {
+    if (this._disposed) return
+    if (
+      this.state !== STATES.STEPPING_BACK_SAFE_ROUTINE &&
+      this.state !== STATES.COUNTDOWN_3_2_1 &&
+      this.state !== STATES.CRACKER_SHOW_ACTIVE &&
+      !INTERRUPTION_STATES.includes(this.state)
+    ) {
+      return
+    }
     const { sound } = this._engines
     if (sound?.supported && fromBeat === 0) {
       this._stopFuse = playFireworkSound(sound, 'fuse', 3.2)
@@ -436,6 +453,7 @@ export class GameController {
   }
 
   _startCrackerShow() {
+    if (this._disposed || this.state !== STATES.COUNTDOWN_3_2_1) return
     this._stopCountdownCue()
     this._stopFuse?.()
     this._stopFuse = null
@@ -480,6 +498,7 @@ export class GameController {
   }
 
   _onCrackerShowComplete() {
+    if (this._disposed || this.state !== STATES.CRACKER_SHOW_ACTIVE) return
     const { chhotu, pip, sound } = this._engines || {}
     sound?.startMusic?.()
     // Victory celebration from characters

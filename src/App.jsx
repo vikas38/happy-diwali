@@ -198,7 +198,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
   const handleTapCracker = useCallback(
     (e) => {
       if (!saveState.seenHint) store.dismissHint()
-      if (fsmSnapshot.state !== STATES.READY_ON_STREET) return
+      if (fsmSnapshot.state !== STATES.READY_ON_STREET || gc.state !== STATES.READY_ON_STREET) return
       // Cooldown guard: prevent accidental click from "Put on Street" modal
       if (e?.target?.tagName?.toLowerCase() === 'canvas' && Date.now() < readyCooldownRef.current)
         return

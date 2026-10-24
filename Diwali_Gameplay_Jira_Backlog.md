@@ -124,7 +124,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-009 | Simplify the HUD with permanent mute and pause | EP-03 | P1 | 3 | R1 | Done |
 | DIW-010 | Create a browsable cracker library with filters and favourites | EP-03 | P1 | 5 | R1 | Done |
 | DIW-011 | Add a clear selected-cracker inspector | EP-03 | P1 | 5 | R1 | Done |
-| DIW-012 | Make ignition and show states feel clear and satisfying | EP-03 | P1 | 5 | R1 | To Do |
+| DIW-012 | Make ignition and show states feel clear and satisfying | EP-03 | P1 | 5 | R1 | Done |
 | DIW-013 | Add brief, skippable gameplay onboarding | EP-03 | P2 | 3 | R1 | To Do |
 | DIW-014 | Create a readable sound, motion, and quality settings sheet | EP-03 | P1 | 5 | R1 | To Do |
 | DIW-015 | Unify drawers, dialogs, and focus restoration | EP-03 | P1 | 5 | R1 | Done |
@@ -430,7 +430,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-012 — Make ignition and show states feel clear and satisfying
 
 **Epic:** EP-03 | **Type:** Story | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-001, DIW-004, DIW-011, DIW-015  
 **Code / design pointers:** src/fsm/GameController.js; src/ui/Countdown.jsx; src/ui/CanvasStage.jsx; src/ui/RewardOverlay.jsx
 
@@ -438,17 +438,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Use explicit Choose → Ready → Grown-up prepares → Countdown → Show → Result states with contextual copy.
-- [ ] Add a readable localized countdown near the ignition area, while keeping essential feedback available in DOM text.
-- [ ] Keep ordinary button activation as the primary ignition request; stage tapping may be an optional equivalent, never a required precision target.
-- [ ] Suppress redundant first-use introductions on replay; protect against double activation and stale callbacks.
+- [x] Use explicit Choose → Ready → Grown-up prepares → Countdown → Show → Result states with contextual copy.
+- [x] Add a readable localized countdown near the ignition area, while keeping essential feedback available in DOM text.
+- [x] Keep ordinary button activation as the primary ignition request; stage tapping may be an optional equivalent, never a required precision target.
+- [x] Suppress redundant first-use introductions on replay; protect against double activation and stale callbacks.
 
 **Acceptance criteria**
 
-- [ ] Double-tapping the start control produces one show and one award transaction.
-- [ ] Every state has an understandable next action or progress indication; mute/pause remain available.
-- [ ] Pausing during preparation/show follows the established restart-countdown policy.
-- [ ] End-of-show results appear after the authored settling phase with matching stored rewards.
+- [x] Double-tapping the start control produces one show and one award transaction.
+- [x] Every state has an understandable next action or progress indication; mute/pause remain available.
+- [x] Pausing during preparation/show follows the established restart-countdown policy.
+- [x] End-of-show results appear after the authored settling phase with matching stored rewards.
+
+**Completion:** 24 October 2026 — Verified and reinforced explicit Choose → Ready → Grown-up prepares → Countdown → Show → Result flow. Added robust state and double-activation guards in `GameController.js` and `App.jsx` (`_startStepBack`, `_startCountdown`, `_startCrackerShow`, `_onCrackerShowComplete`), verified ordinary button activation as primary without requiring precision tapping, ensured mute/pause operability across all states, and verified restart-countdown policy on pause/resume with zero awards from abandoned runs. Tested in `test/ignition-flow.test.jsx`.
 
 ### DIW-013 — Add brief, skippable gameplay onboarding
 

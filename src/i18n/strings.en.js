@@ -238,7 +238,7 @@ export const STRINGS_EN = {
   scene_default_title: 'Your Diwali, your pace.',
   scene_idle_desc: 'Choose a firework from your box below.',
   scene_ready_desc: 'Your spark is ready. Let’s bring it to life.',
-  scene_stepping_desc: 'Chhotu and Pip move to their watching spot.',
+  scene_stepping_desc: 'Chhotu and Pip step back safely while the grown-up prepares the fuse.',
   scene_active_desc: 'Stay a little. Watch the last embers fall.',
   scene_reward_desc: 'One more bright memory for your collection.',
   scene_anticipation_desc: 'A moment of anticipation.',

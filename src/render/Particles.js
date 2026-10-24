@@ -9,6 +9,7 @@ import { CALM_VISUALS_CONFIG, FlashLimiter } from '../safety/calmVisuals.js'
 // ===================================================================
 
 const POOL_SIZE = 800
+const MAX_TRAIL_CAPACITY = 24
 
 /**
  * Seeded RNG hook for testing environments.
@@ -52,8 +53,22 @@ export class Particles {
       sat: 100,
       light: 60,
       shape: 'circle',
-      trail: null,
       maxTrail: 0,
+      trailX: new Float32Array(MAX_TRAIL_CAPACITY),
+      trailY: new Float32Array(MAX_TRAIL_CAPACITY),
+      trailCount: 0,
+      trailHead: 0,
+      get trail() {
+        if (this.trailCount === 0) return null
+        const arr = []
+        const cap = this.maxTrail || MAX_TRAIL_CAPACITY
+        const start = (this.trailHead - this.trailCount + cap) % cap
+        for (let i = 0; i < this.trailCount; i++) {
+          const idx = (start + i) % cap
+          arr.push({ x: this.trailX[idx], y: this.trailY[idx] })
+        }
+        return arr
+      },
       rotation: 0,
       rotSpeed: 0,
       glow: false,
@@ -106,8 +121,9 @@ export class Particles {
     p.sat = config.sat ?? 100
     p.light = config.light ?? 60
     p.shape = config.shape || 'circle'
-    p.maxTrail = config.trail || 0
-    p.trail = p.maxTrail > 0 ? [] : null
+    p.maxTrail = Math.min(MAX_TRAIL_CAPACITY, config.trail || 0)
+    p.trailCount = 0
+    p.trailHead = 0
     p.rotation = config.rotation ?? particleRng() * Math.PI * 2
     p.rotSpeed = config.rotSpeed ?? 0
     p.glow = config.glow || false
@@ -181,10 +197,12 @@ export class Particles {
         if (Math.abs(p.vy) < 10) p.vy = 0
       }
 
-      // Trail
-      if (p.trail) {
-        p.trail.push({ x: p.x, y: p.y })
-        if (p.trail.length > p.maxTrail) p.trail.shift()
+      // Trail — zero-allocation typed ring buffer
+      if (p.maxTrail > 0) {
+        p.trailX[p.trailHead] = p.x
+        p.trailY[p.trailHead] = p.y
+        p.trailHead = (p.trailHead + 1) % p.maxTrail
+        if (p.trailCount < p.maxTrail) p.trailCount++
       }
 
       // Alpha decay
@@ -231,19 +249,34 @@ export class Particles {
     ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha))
     ctx.fillStyle = `hsl(${p.hue}, ${p.sat}%, ${p.light}%)`
 
-    // Smooth glowing trail with incandescent core
-    if (p.trail && p.trail.length > 1) {
+    // Smooth glowing trail with incandescent core via zero-allocation ring buffer
+    if (p.maxTrail > 0 && p.trailCount > 1) {
       ctx.lineCap = 'round'
       const alpha = Math.max(0, Math.min(1, p.alpha))
-      for (let i = 1; i < p.trail.length; i++) {
-        const heat = i / (p.trail.length - 1)
+      const count = p.trailCount
+      const cap = p.maxTrail
+      const start = (p.trailHead - count + cap) % cap
+
+      let prevX = p.trailX[start]
+      let prevY = p.trailY[start]
+
+      for (let i = 1; i < count; i++) {
+        const ringIdx = (start + i) % cap
+        const currX = p.trailX[ringIdx]
+        const currY = p.trailY[ringIdx]
+        const heat = i / (count - 1)
         ctx.globalAlpha = alpha * heat * heat * 0.8
-        ctx.strokeStyle = `hsl(${p.hue - (1 - heat) * 12}, ${p.sat}%, ${Math.max(35, p.light - (1 - heat) * 30 - p.age * 8)}%)`
+        ctx.strokeStyle = `hsl(${p.hue - (1 - heat) * 12}, ${p.sat}%, ${Math.max(
+          35,
+          p.light - (1 - heat) * 30 - p.age * 8
+        )}%)`
         ctx.lineWidth = Math.max(0.25, p.size * heat * 0.8)
         ctx.beginPath()
-        ctx.moveTo(p.trail[i - 1].x, p.trail[i - 1].y)
-        ctx.lineTo(p.trail[i].x, p.trail[i].y)
+        ctx.moveTo(prevX, prevY)
+        ctx.lineTo(currX, currY)
         ctx.stroke()
+        prevX = currX
+        prevY = currY
       }
       ctx.globalAlpha = alpha
     }

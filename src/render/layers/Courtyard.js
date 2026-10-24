@@ -83,11 +83,15 @@ function lamp(c, x, y, s, t) {
   ellipse(c, 0, -5, 2, 4, '#fff3c8')
   c.restore()
 }
-export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
-  const effectiveT = reducedMotion ? 0 : t
+let _cachedStaticCanvas = null
+let _cachedW = 0
+let _cachedH = 0
+
+function renderStaticScenery(c, w, h) {
   const isPortrait = isPortraitLayout(w, h)
   const ground = getGroundY(w, h)
-  // Backdrop: slightly desaturated nocturnal gradient so foreground pops
+
+  // Backdrop: nocturnal sky gradient
   const sky = c.createLinearGradient(0, 0, 0, h)
   sky.addColorStop(0, '#080f20')
   sky.addColorStop(0.55, '#1e2433')
@@ -95,22 +99,13 @@ export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
   c.fillStyle = sky
   c.fillRect(0, 0, w, h)
   halo(c, w * 0.55, ground, w * 0.65, '#9a633824')
-  for (let i = 0; i < 70; i++) {
-    const x = (((i * 7919) % 997) / 997) * w,
-      y = (((i * 3571) % 991) / 991) * (ground * 0.85)
-    ellipse(
-      c,
-      x,
-      y,
-      i % 7 === 0 ? 1.3 : 0.65,
-      i % 7 === 0 ? 1.3 : 0.65,
-      `rgba(239,229,204,${0.22 + Math.sin(effectiveT * 0.4 + i) * 0.12})`
-    )
-  }
+
+  // Moon
   halo(c, w * 0.78, ground * 0.35, 75, '#c9d7eb18')
   ellipse(c, w * 0.78, ground * 0.35, 18, 18, '#e8e6d4')
   ellipse(c, w * 0.78 + 6, ground * 0.35 - 5, 17, 17, '#151f30')
-  // Distant terraces give depth with lowered contrast to prevent visual competition
+
+  // Distant terraces
   for (let i = 0; i < 17; i++) {
     const x = (i * w) / 16,
       bh = (isPortrait ? ground * 0.25 : h * 0.065) + (((i * 37) % 11) / 95) * (ground * 0.3)
@@ -119,10 +114,13 @@ export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
     if (i % 3 === 0) {
       ellipse(c, x + w / 34, ground - bh, w / 36, 18, '#20252e')
     }
-    for (let j = 0; j < 3; j++)
-      (c.fillStyle = '#bfa16824'), c.fillRect(x + 12 + j * 16, ground - bh + 22, 3, 7)
+    for (let j = 0; j < 3; j++) {
+      c.fillStyle = '#bfa16824'
+      c.fillRect(x + 12 + j * 16, ground - bh + 22, 3, 7)
+    }
   }
-  // Two framing sandstone havelis — desaturated nocturnal tones
+
+  // Framing sandstone havelis
   for (const side of [0, 1]) {
     const bw = Math.min(w * 0.21, 270),
       x = side ? w - bw : 0,
@@ -156,9 +154,8 @@ export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
       halo(c, lx, ly, 9, '#ffb34735')
       ellipse(c, lx, ly, 1.8, 2.4, '#fbd493')
     }
-    for (let i = 0; i < 5; i++)
-      lamp(c, x + 20 + (i * (bw - 40)) / 4, ground - 13, 0.7, effectiveT + i)
   }
+
   // Cobblestone street ground
   const floor = c.createLinearGradient(0, ground, 0, h)
   floor.addColorStop(0, '#3e393a')
@@ -183,11 +180,67 @@ export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
   }
   halo(c, w * 0.15, ground + 20, 160, '#e7a34216')
   halo(c, w * 0.9, ground + 20, 160, '#e7a34212')
+}
+
+export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
+  const effectiveT = reducedMotion ? 0 : t
+  const isPortrait = isPortraitLayout(w, h)
+  const ground = getGroundY(w, h)
+
+  // 1. Render or blit cached static scenery
+  const isJSDOM = typeof navigator !== 'undefined' && /jsdom/i.test(navigator.userAgent)
+  const canCache = !isJSDOM && typeof document !== 'undefined' && typeof document.createElement === 'function'
+  if (canCache) {
+    if (!_cachedStaticCanvas || _cachedW !== w || _cachedH !== h) {
+      _cachedStaticCanvas = document.createElement('canvas')
+      _cachedStaticCanvas.width = w
+      _cachedStaticCanvas.height = h
+      const offCtx = _cachedStaticCanvas.getContext('2d')
+      if (offCtx) {
+        renderStaticScenery(offCtx, w, h)
+        _cachedW = w
+        _cachedH = h
+      } else {
+        _cachedStaticCanvas = null
+      }
+    }
+  }
+
+  if (_cachedStaticCanvas) {
+    c.drawImage(_cachedStaticCanvas, 0, 0)
+  } else {
+    renderStaticScenery(c, w, h)
+  }
+
+  // 2. Animated overlay: 70 twinkling stars
+  for (let i = 0; i < 70; i++) {
+    const x = (((i * 7919) % 997) / 997) * w,
+      y = (((i * 3571) % 991) / 991) * (ground * 0.85)
+    ellipse(
+      c,
+      x,
+      y,
+      i % 7 === 0 ? 1.3 : 0.65,
+      i % 7 === 0 ? 1.3 : 0.65,
+      `rgba(239,229,204,${0.22 + Math.sin(effectiveT * 0.4 + i) * 0.12})`
+    )
+  }
+
+  // 3. Animated haveli lamps
+  for (const side of [0, 1]) {
+    const bw = Math.min(w * 0.21, 270),
+      x = side ? w - bw : 0
+    for (let i = 0; i < 5; i++) {
+      lamp(c, x + 20 + (i * (bw - 40)) / 4, ground - 13, 0.7, effectiveT + i)
+    }
+  }
+
+  // 4. Animated street and foreground lamps
   for (let i = 0; i < 9; i++) {
     const x = w * 0.07 + i * w * 0.108
     lamp(c, x, ground + 8, 0.6 + (i % 3) * 0.15, effectiveT + i)
   }
-  // Foreground lanterns and their warm reflections.
+
   for (const x of [w * 0.045, w * 0.94]) {
     const y = h * 0.85
     halo(c, x, y, 95, '#ffac4520')

@@ -39,12 +39,7 @@ export default function Countdown({ countdownNumber }) {
   const ariaText = t('countdown_aria', { number: displayText })
 
   return (
-    <div
-      className="countdown-overlay countdown-overlay--fixed"
-      role="status"
-      aria-live="polite"
-      aria-label={ariaText}
-    >
+    <div className="countdown-overlay countdown-overlay--fixed" role="status" aria-live="polite">
       <span className="sr-only">{ariaText}</span>
       <div className="countdown-wrap" aria-hidden="true">
         <svg className="countdown-progress-ring" viewBox="0 0 160 160">

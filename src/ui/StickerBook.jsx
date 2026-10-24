@@ -123,11 +123,13 @@ export default function StickerBook({
       className="overlay overlay--sticker"
       role="dialog"
       aria-modal="true"
-      aria-label={t('sticker_book_dialog') || t('sticker_book_dialog_aria')}
+      aria-labelledby="sticker-book-title"
     >
       <div className="sticker-book">
         <div className="sticker-book__header">
-          <h2 className="sticker-book__title">{t('sticker_book_title')}</h2>
+          <h2 id="sticker-book-title" className="sticker-book__title">
+            {t('sticker_book_title')}
+          </h2>
           <div className="sticker-book__header-actions">
             {onToggleMute && (
               <button

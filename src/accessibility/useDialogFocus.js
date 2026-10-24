@@ -1,21 +1,31 @@
 // Keep focus within the topmost game dialog and restore it on dismissal.
 import { useEffect } from 'react'
+
 export function useDialogFocus(key) {
   useEffect(() => {
     const dialogs = document.querySelectorAll('[role="dialog"]')
     const dialog = dialogs[dialogs.length - 1]
     if (!dialog) return
+
     const previous = document.activeElement
     const controls = () =>
       [...dialog.querySelectorAll('button:not(:disabled),input,a[href],[tabindex="0"]')].filter(
-        (el) => el.getClientRects().length
+        (el) => !el.disabled && el.getAttribute('aria-hidden') !== 'true'
       )
-    controls()[0]?.focus()
+
+    // Initial focus: prefer autofocus element, otherwise first control
+    const autoFocusEl = dialog.querySelector('[autofocus], [autoFocus]')
+    if (autoFocusEl && typeof autoFocusEl.focus === 'function') {
+      autoFocusEl.focus()
+    } else {
+      controls()[0]?.focus()
+    }
+
     const trap = (e) => {
       if (e.key !== 'Tab') return
-      const items = controls(),
-        first = items[0],
-        last = items[items.length - 1]
+      const items = controls()
+      const first = items[0]
+      const last = items[items.length - 1]
       if (!first) {
         e.preventDefault()
         return
@@ -31,10 +41,16 @@ export function useDialogFocus(key) {
         first.focus()
       }
     }
+
     document.addEventListener('keydown', trap)
     return () => {
       document.removeEventListener('keydown', trap)
-      if (previous?.isConnected) previous.focus()
+      if (previous?.isConnected && typeof previous.focus === 'function') {
+        previous.focus()
+      } else {
+        const fallback = document.querySelector('.contextual-primary-btn, .back-home')
+        fallback?.focus?.()
+      }
     }
   }, [key])
 }

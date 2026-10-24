@@ -42,7 +42,7 @@ export const INTERRUPTION_STATES = [
 const TRANSITIONS = {
   [STATES.SAFETY_SPLASH]: [STATES.IDLE],
   [STATES.IDLE]: [STATES.CRACKER_INTRO_CARD, STATES.READY_ON_STREET],
-  [STATES.CRACKER_INTRO_CARD]: [STATES.READY_ON_STREET],
+  [STATES.CRACKER_INTRO_CARD]: [STATES.READY_ON_STREET, STATES.IDLE],
   [STATES.READY_ON_STREET]: [
     STATES.STEPPING_BACK_SAFE_ROUTINE,
     STATES.CRACKER_INTRO_CARD,
@@ -294,6 +294,14 @@ export class GameController {
     const store = this._getStore()
     store?.markIntroSeen?.(this.selectedCracker)
     this._gotoReady(this.selectedCracker)
+  }
+
+  /**
+   * Cancel introduction back to idle tray without marking intro seen or moving to street.
+   */
+  cancelIntro() {
+    if (this.state !== STATES.CRACKER_INTRO_CARD) return
+    this._setState(STATES.IDLE, { cracker: null })
   }
 
   _gotoReady(index) {

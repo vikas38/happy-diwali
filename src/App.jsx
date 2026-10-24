@@ -178,6 +178,10 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
     gc.putOnStreet()
   }, [gc, saveState.seenHint, store])
 
+  const handleCancelIntro = useCallback(() => {
+    gc.cancelIntro()
+  }, [gc])
+
   const handleTapCracker = useCallback(
     (e) => {
       if (!saveState.seenHint) store.dismissHint()
@@ -428,7 +432,11 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
         {fsmState === STATES.SAFETY_SPLASH && <SafetySplash onStart={handleStart} />}
 
         {fsmState === STATES.CRACKER_INTRO_CARD && uiData.cracker && (
-          <IntroCard cracker={uiData.cracker} onPutOnStreet={handlePutOnStreet} />
+          <IntroCard
+            cracker={uiData.cracker}
+            onPutOnStreet={handlePutOnStreet}
+            onCancel={handleCancelIntro}
+          />
         )}
 
         {fsmState === STATES.COUNTDOWN_3_2_1 && (

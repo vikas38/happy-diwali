@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { t } from '../i18n/index.js'
 
 // ===================================================================
@@ -8,18 +8,26 @@ import { t } from '../i18n/index.js'
 // initializes/resumes the AudioContext.
 
 export default function SafetySplash({ onStart }) {
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'Escape') onStart?.()
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [onStart])
+
   return (
     <div
       className="overlay overlay--safety"
       role="dialog"
       aria-modal="true"
-      aria-label={t('safety_dialog_aria')}
+      aria-labelledby="safety-splash-title"
     >
       <div className="safety-splash">
         <div className="safety-splash__diya" aria-hidden="true">
           🪔
         </div>
-        <h1 className="safety-splash__title">
+        <h1 id="safety-splash-title" className="safety-splash__title">
           {t('safety_title_line1')}
           <br />
           <span className="neon">{t('safety_title_accent')}</span>

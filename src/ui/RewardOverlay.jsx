@@ -48,19 +48,27 @@ export default function RewardOverlay({
   isMuted = false,
   onToggleMute,
 }) {
-  if (!cracker) return null
-
-  const handleSkip = () => {
+  const handleSkip = React.useCallback(() => {
     if (onSkip) onSkip()
-    else onNextCracker()
-  }
+    else onNextCracker?.()
+  }, [onSkip, onNextCracker])
+
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'Escape') handleSkip()
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [handleSkip])
+
+  if (!cracker) return null
 
   return (
     <div
       className="overlay overlay--reward"
       role="dialog"
       aria-modal="true"
-      aria-label={t('reward_dialog_aria')}
+      aria-labelledby="reward-card-title"
     >
       <div className="reward-card">
         <div className="reward-card__top">
@@ -85,7 +93,7 @@ export default function RewardOverlay({
             {t('reward_skip_btn')}
           </button>
         </div>
-        <h2 className="reward-card__title">
+        <h2 id="reward-card-title" className="reward-card__title">
           {t('reward_title_prefix')} <span className="neon">{t('reward_title_accent')}</span>
         </h2>
         <StarRating count={isNewSticker ? 3 : 1} />

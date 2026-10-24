@@ -110,7 +110,7 @@ export default function CalmCorner({
       className="overlay overlay--calm"
       role="dialog"
       aria-modal="true"
-      aria-label={t('calm_corner_dialog')}
+      aria-labelledby="calm-corner-title"
     >
       <div className="calm-corner">
         <button
@@ -123,7 +123,7 @@ export default function CalmCorner({
         <span className="calm-corner__tag" aria-hidden="true">
           {t('calm_corner_tag')}
         </span>
-        <h2 className="calm-corner__title">
+        <h2 id="calm-corner-title" className="calm-corner__title">
           {t('calm_corner_title_prefix')}{' '}
           <span className="title-accent">{t('calm_corner_title_accent')}</span>
         </h2>

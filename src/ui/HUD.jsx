@@ -129,10 +129,10 @@ export default function HUD({
             className="hud-settings-sheet"
             role="dialog"
             aria-modal="true"
-            aria-label={t('courtyard_settings')}
+            aria-labelledby="hud-settings-title"
           >
             <div className="sheet-header">
-              <h3>{t('courtyard_settings')}</h3>
+              <h3 id="hud-settings-title">{t('courtyard_settings')}</h3>
               <button
                 className="sheet-close-btn"
                 onClick={handleCloseSettings}

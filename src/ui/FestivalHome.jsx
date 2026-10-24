@@ -172,6 +172,7 @@ function Modal({ title, onClose, children }) {
     <dialog
       ref={ref}
       className="festival-modal"
+      aria-labelledby="festival-modal-title"
       onCancel={onClose}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
@@ -180,7 +181,7 @@ function Modal({ title, onClose, children }) {
       <button className="modal-close" aria-label={t('close_dialog')} onClick={onClose}>
         ×
       </button>
-      <h2>{title}</h2>
+      <h2 id="festival-modal-title">{title}</h2>
       {children}
     </dialog>
   )

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CrackerArt from './CrackerArt.jsx'
 import { t } from '../i18n/index.js'
 
@@ -22,7 +22,15 @@ function IntensityDots({ count }) {
   )
 }
 
-export default function IntroCard({ cracker, onPutOnStreet }) {
+export default function IntroCard({ cracker, onPutOnStreet, onCancel }) {
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'Escape') onCancel?.()
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [onCancel])
+
   if (!cracker) return null
 
   return (
@@ -30,13 +38,23 @@ export default function IntroCard({ cracker, onPutOnStreet }) {
       className="overlay overlay--intro"
       role="dialog"
       aria-modal="true"
-      aria-label={t('intro_meet_title', { name: cracker.name })}
+      aria-labelledby="intro-card-title"
     >
       <div className="intro-card intro-card--bounce-in">
+        {onCancel && (
+          <button
+            type="button"
+            className="btn btn--icon intro-card__close"
+            onClick={onCancel}
+            aria-label={t('close_dialog')}
+          >
+            ✕
+          </button>
+        )}
         <div className="intro-card__emoji" aria-hidden="true">
           <CrackerArt index={cracker.id} />
         </div>
-        <h2 className="intro-card__title">
+        <h2 id="intro-card-title" className="intro-card__title">
           {t('intro_meet_prefix')} <span className="neon">{cracker.name}</span>!
         </h2>
         <p className="intro-card__desc">{cracker.description}</p>

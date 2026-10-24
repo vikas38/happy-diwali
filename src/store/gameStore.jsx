@@ -397,11 +397,33 @@ export function GameStoreProvider({ children }) {
     }))
   }, [updateStore])
 
-  const dismissHint = useCallback(() => {
-    updateStore((s) => {
-      if (s.seenHint) return s
-      return { ...s, seenHint: true }
-    })
+  const dismissHint = useCallback(
+    (hintId) => {
+      updateStore((s) => {
+        const current = Array.isArray(s.dismissedHints)
+          ? s.dismissedHints
+          : s.seenHint
+            ? ['choose', 'grownup', 'controls']
+            : []
+        const updated = hintId
+          ? [...new Set([...current, hintId])]
+          : ['choose', 'grownup', 'controls']
+        return {
+          ...s,
+          seenHint: updated.length >= 3 || !hintId,
+          dismissedHints: updated,
+        }
+      })
+    },
+    [updateStore]
+  )
+
+  const replayHints = useCallback(() => {
+    updateStore((s) => ({
+      ...s,
+      seenHint: false,
+      dismissedHints: [],
+    }))
   }, [updateStore])
 
   const resetProgress = useCallback(() => {
@@ -464,6 +486,7 @@ export function GameStoreProvider({ children }) {
     awardShowCompletion,
     markFirstCompleted,
     dismissHint,
+    replayHints,
     dismissStorageNotice,
     resetProgress,
     getState,

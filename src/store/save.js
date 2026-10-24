@@ -102,6 +102,7 @@ export function createDefaultSave() {
     seenSplash: false,
     seenIntros: [], // cracker indices whose intro card has been shown
     seenHint: false, // first-run courtyard hint
+    dismissedHints: [], // ['choose', 'grownup', 'controls']
     hasCompletedFirst: false, // completed at least one firework
     calmVisuals: osReduced, // backward-compatible boolean
     discoveredIds: [0],
@@ -301,6 +302,14 @@ export function validateSave(raw) {
     ? raw.intensity
     : defaults.intensity
 
+  const rawDismissed = Array.isArray(raw.dismissedHints) ? raw.dismissedHints : null
+  const seenHintBool = typeof raw.seenHint === 'boolean' ? raw.seenHint : defaults.seenHint
+  const validDismissed = rawDismissed
+    ? [...new Set(rawDismissed.filter((h) => typeof h === 'string'))]
+    : seenHintBool
+      ? ['choose', 'grownup', 'controls']
+      : []
+
   return {
     version: SAVE_VERSION,
     unlocked: validUnlocked,
@@ -316,7 +325,8 @@ export function validateSave(raw) {
     selectedPalette,
     seenSplash,
     seenIntros: validSeenIntros,
-    seenHint: typeof raw.seenHint === 'boolean' ? raw.seenHint : defaults.seenHint,
+    seenHint: seenHintBool,
+    dismissedHints: validDismissed,
     hasCompletedFirst,
     calmVisuals:
       typeof raw.calmVisuals === 'boolean' && !raw.motionPolicy

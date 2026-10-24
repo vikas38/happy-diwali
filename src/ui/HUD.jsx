@@ -24,6 +24,7 @@ export default function HUD({
   onTestSound,
   onOpenStickerBook,
   onCalmCorner,
+  onReplayHints,
 }) {
   const [internalSettingsOpen, setInternalSettingsOpen] = useState(false)
   const isSettingsOpen =
@@ -299,6 +300,24 @@ export default function HUD({
                 </div>
                 <small className="sheet-row-hint">{t('sparkle_palette_hint')}</small>
               </div>
+
+              {onReplayHints && (
+                <div className="sheet-row sheet-test-row">
+                  <span className="sheet-label">{t('help_and_hints')}</span>
+                  <button
+                    type="button"
+                    className="btn btn--secondary sheet-test-btn"
+                    onClick={() => {
+                      onReplayHints()
+                      handleCloseSettings()
+                    }}
+                    aria-label={t('replay_hints_aria')}
+                  >
+                    <span aria-hidden="true">✦</span> {t('replay_hints')}
+                  </button>
+                  <small className="sheet-row-hint">{t('replay_hints_hint')}</small>
+                </div>
+              )}
             </div>
 
             <div className="sheet-footer">

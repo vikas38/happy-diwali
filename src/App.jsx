@@ -180,16 +180,16 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
 
   const handleSelectCracker = useCallback(
     (index) => {
-      if (!saveState.seenHint) store.dismissHint()
+      store.dismissHint('choose')
       gc.selectCracker(index)
     },
-    [gc, saveState.seenHint, store]
+    [gc, store]
   )
 
   const handlePutOnStreet = useCallback(() => {
-    if (!saveState.seenHint) store.dismissHint()
+    store.dismissHint('choose')
     gc.putOnStreet()
-  }, [gc, saveState.seenHint, store])
+  }, [gc, store])
 
   const handleCancelIntro = useCallback(() => {
     gc.cancelIntro()
@@ -197,7 +197,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
 
   const handleTapCracker = useCallback(
     (e) => {
-      if (!saveState.seenHint) store.dismissHint()
+      store.dismissHint('grownup')
       if (fsmSnapshot.state !== STATES.READY_ON_STREET || gc.state !== STATES.READY_ON_STREET) return
       // Cooldown guard: prevent accidental click from "Put on Street" modal
       if (e?.target?.tagName?.toLowerCase() === 'canvas' && Date.now() < readyCooldownRef.current)
@@ -214,7 +214,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
       }
       gc.tapCracker()
     },
-    [gc, fsmSnapshot.state, saveState.seenHint, store]
+    [gc, fsmSnapshot.state, store]
   )
 
   const handleLightAgain = useCallback(() => {
@@ -230,7 +230,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
   }, [gc])
 
   const handleContextualPlace = useCallback(() => {
-    if (!saveState.seenHint) store.dismissHint()
+    store.dismissHint('choose')
     const target = selectedCracker !== null ? selectedCracker : 0
     if (fsmSnapshot.state === STATES.IDLE) {
       if (!store.hasSeenIntro(target)) {
@@ -242,11 +242,12 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
     } else if (fsmSnapshot.state === STATES.CRACKER_INTRO_CARD) {
       gc.putOnStreet()
     }
-  }, [gc, selectedCracker, fsmSnapshot.state, saveState.seenHint, store])
+  }, [gc, selectedCracker, fsmSnapshot.state, store])
 
   const handleCalmCorner = useCallback(() => {
+    store.dismissHint('controls')
     gc.enterCalmCorner()
-  }, [gc])
+  }, [gc, store])
 
   const handleResumeFromCalm = useCallback(() => {
     gc.exitCalmCorner()
@@ -267,8 +268,9 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
   )
 
   const handleToggleMute = useCallback(() => {
+    store.dismissHint('controls')
     gc.toggleMute()
-  }, [gc])
+  }, [gc, store])
 
   const handleTestSound = useCallback(() => {
     const sound = getSoundEngine()
@@ -286,6 +288,33 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
     fsmState === STATES.REWARD_CELEBRATION
   const isLastCracker = selectedCracker === 5
   const isMuted = Boolean(saveState.muted || saveState.masterVolume === 0)
+
+  const dismissedHints = Array.isArray(saveState.dismissedHints)
+    ? saveState.dismissedHints
+    : saveState.seenHint
+      ? ['choose', 'grownup', 'controls']
+      : []
+
+  let activeHintKey = null
+  let activeHintText = null
+
+  if (showHUD) {
+    if (!dismissedHints.includes('choose') && fsmState === STATES.IDLE) {
+      activeHintKey = 'choose'
+      activeHintText = t('hint_choose_sparkle')
+    } else if (!dismissedHints.includes('grownup') && fsmState === STATES.READY_ON_STREET) {
+      activeHintKey = 'grownup'
+      activeHintText = t('hint_ask_grownup')
+    } else if (
+      !dismissedHints.includes('controls') &&
+      (fsmState === STATES.STEPPING_BACK_SAFE_ROUTINE ||
+        fsmState === STATES.COUNTDOWN_3_2_1 ||
+        fsmState === STATES.CRACKER_SHOW_ACTIVE)
+    ) {
+      activeHintKey = 'controls'
+      activeHintText = t('hint_pause_mute')
+    }
+  }
 
   if (canvasFailed)
     return (
@@ -327,6 +356,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
         onTestSound={handleTestSound}
         onOpenStickerBook={() => gc.openStickerBook()}
         onCalmCorner={handleCalmCorner}
+        onReplayHints={() => store.replayHints()}
       />
 
       {audioState && (
@@ -344,12 +374,12 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
         </div>
       )}
       <div className="game-stage" data-state={fsmState}>
-        {!saveState.seenHint && showHUD && (
+        {activeHintKey && showHUD && (
           <aside className="courtyard-hint-banner" role="status" aria-live="polite">
             <span className="hint-star" aria-hidden="true">
               ✦
             </span>
-            <span className="hint-text">{t('hint_choose_sparkle')}</span>
+            <span className="hint-text">{activeHintText}</span>
             <button
               type="button"
               className="hint-close-btn"

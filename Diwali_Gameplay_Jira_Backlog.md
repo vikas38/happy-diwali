@@ -125,7 +125,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-010 | Create a browsable cracker library with filters and favourites | EP-03 | P1 | 5 | R1 | Done |
 | DIW-011 | Add a clear selected-cracker inspector | EP-03 | P1 | 5 | R1 | Done |
 | DIW-012 | Make ignition and show states feel clear and satisfying | EP-03 | P1 | 5 | R1 | Done |
-| DIW-013 | Add brief, skippable gameplay onboarding | EP-03 | P2 | 3 | R1 | To Do |
+| DIW-013 | Add brief, skippable gameplay onboarding | EP-03 | P2 | 3 | R1 | Done |
 | DIW-014 | Create a readable sound, motion, and quality settings sheet | EP-03 | P1 | 5 | R1 | To Do |
 | DIW-015 | Unify drawers, dialogs, and focus restoration | EP-03 | P1 | 5 | R1 | Done |
 | DIW-016 | Make the cracker catalog extensible by stable ID | EP-04 | P1 | 5 | R1 | Done |
@@ -455,7 +455,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-013 — Add brief, skippable gameplay onboarding
 
 **Epic:** EP-03 | **Type:** Story | **Priority:** P2 | **Estimate:** 3 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-009, DIW-011, DIW-012, DIW-014, DIW-017  
 **Code / design pointers:** src/ui/SafetySplash.jsx; src/ui/IntroCard.jsx; src/store/save.js
 
@@ -463,16 +463,18 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Offer Silent/Gentle sound and motion preference before the first enabled cue.
-- [ ] Use up to three contextual hints: pick a cracker, ask the grown-up, and pause or mute anytime.
-- [ ] Persist completed/dismissed hints; offer Help in Settings for replaying them.
-- [ ] Use neutral celebration language and make virtual pretend-play framing clear without repeated blocking popups.
+- [x] Offer Silent/Gentle sound and motion preference before the first enabled cue.
+- [x] Use up to three contextual hints: pick a cracker, ask the grown-up, and pause or mute anytime.
+- [x] Persist completed/dismissed hints; offer Help in Settings for replaying them.
+- [x] Use neutral celebration language and make virtual pretend-play framing clear without repeated blocking popups.
 
 **Acceptance criteria**
 
-- [ ] Hints can be skipped and never cover their target action or trap focus.
-- [ ] Returning players reach their previous/next selection without repeating onboarding.
-- [ ] Hints remain useful with keyboard, muted sound, and reduced motion.
+- [x] Hints can be skipped and never cover their target action or trap focus.
+- [x] Returning players reach their previous/next selection without repeating onboarding.
+- [x] Hints remain useful with keyboard, muted sound, and reduced motion.
+
+**Completion:** 24 October 2026 — Verified pre-start Silent/Gentle sound and Gentle visuals choices on `SafetySplash`. Implemented the 3 contextual hints (`choose`, `grownup`, `controls`) in `src/App.jsx`, persisted them via `dismissedHints` in `src/store/save.js` and `src/store/gameStore.jsx`, added "Replay hints" in `src/ui/HUD.jsx` Settings, ensured hints never trap focus or cover actions, and verified returning players never repeat onboarding. Tested in `test/gameplay-onboarding.test.jsx`.
 
 ### DIW-014 — Create a readable sound, motion, and quality settings sheet
 

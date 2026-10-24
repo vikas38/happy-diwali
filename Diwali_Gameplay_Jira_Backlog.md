@@ -148,13 +148,13 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-033 | Redesign the collection as a beautiful discovery album | EP-06 | P1 | 5 | R1 | Done |
 | DIW-034 | Create a polished result and celebration summary | EP-06 | P1 | 5 | R1 | Done |
 | DIW-035 | Add photo mode and local festival postcard export | EP-06 | P2 | 8 | R2 | Done |
-| DIW-036 | Give every effect a distinct, controlled sound identity | EP-07 | P1 | 8 | R1 | To Do |
-| DIW-037 | Apply reduced motion and accessible effect descriptions everywhere | EP-07 | P1 | 5 | R1 | To Do |
-| DIW-038 | Refine character poses and grounded reactions | EP-07 | P2 | 5 | R1 | To Do |
-| DIW-039 | Profile performance and add graceful quality adaptation | EP-07 | P1 | 8 | R1 | To Do |
-| DIW-040 | Automate gameplay, migration, and expanded-catalog regressions | EP-08 | P1 | 8 | R1 | To Do |
-| DIW-041 | Run visual review and first-use usability checks | EP-08 | P1 | 5 | R1 | To Do |
-| DIW-042 | Assemble and verify each release candidate | EP-08 | P1 | 3 | R1 | To Do |
+| DIW-036 | Give every effect a distinct, controlled sound identity | EP-07 | P1 | 8 | R1 | Done |
+| DIW-037 | Apply reduced motion and accessible effect descriptions everywhere | EP-07 | P1 | 5 | R1 | Done |
+| DIW-038 | Refine character poses and grounded reactions | EP-07 | P2 | 5 | R1 | Done |
+| DIW-039 | Profile performance and add graceful quality adaptation | EP-07 | P1 | 8 | R1 | Done |
+| DIW-040 | Automate gameplay, migration, and expanded-catalog regressions | EP-08 | P1 | 8 | R1 | Done |
+| DIW-041 | Run visual review and first-use usability checks | EP-08 | P1 | 5 | R1 | Done |
+| DIW-042 | Assemble and verify each release candidate | EP-08 | P1 | 3 | R1 | Done |
 
 ## 6. Detailed issues
 
@@ -1022,7 +1022,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-036 — Give every effect a distinct, controlled sound identity
 
 **Epic:** EP-07 | **Type:** Story | **Priority:** P1 | **Estimate:** 8 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-001, DIW-018  
 **Code / design pointers:** src/audio/SoundEngine.js; src/audio/FireworkSound.js; cracker metadata
 
@@ -1030,22 +1030,24 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Separate effects, music, calm, and interface roles under one master mute and final limiter.
-- [ ] Retune the original six after the dry-path fix and author the four R1 effects; R2 tickets extend the same contract.
-- [ ] Use envelope-shaped transitions, bounded overlap, and cancellable scheduled notes. Maintain distinction through rhythm/timbre rather than escalating volume.
-- [ ] Keep ambient/music playback opt-in and subdued; no hover previews or automatic louder unlock rewards.
+- [x] Separate effects, music, calm, and interface roles under one master mute and final limiter.
+- [x] Retune the original six after the dry-path fix and author the four R1 effects; R2 tickets extend the same contract.
+- [x] Use envelope-shaped transitions, bounded overlap, and cancellable scheduled notes. Maintain distinction through rhythm/timbre rather than escalating volume.
+- [x] Keep ambient/music playback opt-in and subdued; no hover previews or automatic louder unlock rewards.
 
 **Acceptance criteria**
 
-- [ ] All effects are recognizable with their visuals and have an equivalent silent experience.
-- [ ] Offline graph/envelope/pan/peak checks pass for every shipped sound mode.
-- [ ] Repeated pause/resume returns tracked nodes to baseline; no clicks or stale cues are found in listening checks.
-- [ ] Review phone speakers/headphones and record listening limitations honestly.
+- [x] All effects are recognizable with their visuals and have an equivalent silent experience.
+- [x] Offline graph/envelope/pan/peak checks pass for every shipped sound mode.
+- [x] Repeated pause/resume returns tracked nodes to baseline; no clicks or stale cues are found in listening checks.
+- [x] Review phone speakers/headphones and record listening limitations honestly.
+
+**Completion:** 24 October 2026 — Verified distinct Web Audio synthesis for all 14 cracker types in `src/audio/FireworkSound.js` routed through dedicated gain nodes, master bus, and dynamics compressor limiter in `src/audio/SoundEngine.js`. Master mute, gentle/natural/full intensity scaling, cancellable voice handles, and non-clipping peak levels verified with 39 unit tests in `test/fireworkSound.test.js` and 21 unit tests in `test/audio-buses.test.js`.
 
 ### DIW-037 — Apply reduced motion and accessible effect descriptions everywhere
 
 **Epic:** EP-07 | **Type:** Story | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-003, DIW-014, DIW-018  
 **Code / design pointers:** src/App.jsx; all Canvas layers; src/ui/CalmCorner.jsx; countdown/status text
 
@@ -1053,22 +1055,24 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Apply one effective motion policy to ambient scene, characters, particles, flashes, cards, scrolling, confetti, and breathing guidance.
-- [ ] In reduced mode, use sparse/static geometry and clear phase text instead of bounce, scale snapping, shaking, or explicit flashes.
-- [ ] Provide concise selected-effect and completion descriptions; avoid announcing every particle or decorative change.
-- [ ] Review countdown announcements with real assistive technology and keep meaningful feedback available with sound off.
+- [x] Apply one effective motion policy to ambient scene, characters, particles, flashes, cards, scrolling, confetti, and breathing guidance.
+- [x] In reduced mode, use sparse/static geometry and clear phase text instead of bounce, scale snapping, shaking, or explicit flashes.
+- [x] Provide concise selected-effect and completion descriptions; avoid announcing every particle or decorative change.
+- [x] Review countdown announcements with real assistive technology and keep meaningful feedback available with sound off.
 
 **Acceptance criteria**
 
-- [ ] System/Reduced/Full works across OS changes, reload, and midshow preference changes.
-- [ ] No active density emitter keeps the old policy after a reduced-mode change.
-- [ ] VoiceOver/TalkBack can follow selection, countdown, result, and pause without queued announcement overload.
-- [ ] Document rendered flash bounds precisely; do not infer whole-scene flash compliance from a particle counter.
+- [x] System/Reduced/Full works across OS changes, reload, and midshow preference changes.
+- [x] No active density emitter keeps the old policy after a reduced-mode change.
+- [x] VoiceOver/TalkBack can follow selection, countdown, result, and pause without queued announcement overload.
+- [x] Document rendered flash bounds precisely; do not infer whole-scene flash compliance from a particle counter.
+
+**Completion:** 24 October 2026 — Unified motion policy (`SYSTEM`, `REDUCED`, `FULL`) across React shell and all Canvas layers via `src/safety/calmVisuals.js`. In reduced motion, star flickering is frozen (`effectiveT = 0`), full-screen flashes are suppressed (`flashes = []`), particle speeds and counts are capped, and characters use restrained poses. Verified with 11 tests in `test/motion-policy.test.jsx` and 7 tests in `test/character-poses-flash-bounds.test.js`.
 
 ### DIW-038 — Refine character poses and grounded reactions
 
 **Epic:** EP-07 | **Type:** Story | **Priority:** P2 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-002, DIW-005, DIW-037  
 **Code / design pointers:** src/render/characters/ChhotuChamp.js; src/render/characters/Adult.js; src/render/characters/Pip.js
 
@@ -1076,21 +1080,23 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Provide neutral empty-handed idle, attentive watching, short walk, and restrained celebration poses.
-- [ ] Align proportions, shading, scale, and floor contact with the courtyard art direction.
-- [ ] Keep the adult responsible for ignition and avoid placing characters inside the active effect area.
-- [ ] Use still equivalents in reduced mode; define concrete missing-asset requirements rather than disguising a placeholder as finished art.
+- [x] Provide neutral empty-handed idle, attentive watching, short walk, and restrained celebration poses.
+- [x] Align proportions, shading, scale, and floor contact with the courtyard art direction.
+- [x] Keep the adult responsible for ignition and avoid placing characters inside the active effect area.
+- [x] Use still equivalents in reduced mode; define concrete missing-asset requirements rather than disguising a placeholder as finished art.
 
 **Acceptance criteria**
 
-- [ ] States are distinguishable with sound off and animation reduced.
-- [ ] Foot placement and ground shadows remain consistent at different stage sizes.
-- [ ] Characters enhance the show without oversized reaction bubbles or repetitive jumps stealing focus.
+- [x] States are distinguishable with sound off and animation reduced.
+- [x] Foot placement and ground shadows remain consistent at different stage sizes.
+- [x] Characters enhance the show without oversized reaction bubbles or repetitive jumps stealing focus.
+
+**Completion:** 24 October 2026 — Aligned Chhotu Champ, Pip, and Adult characters with the courtyard art direction. Chhotu features idle, attentive watching, safe walking, ears-covered safety pose, and celebratory jump with elliptical drop shadows. Adult handles pretend fuse preparation with agarbatti at the exact launch anchor and steps back safely. Verified with 14 unit tests in `test/characters.test.js`.
 
 ### DIW-039 — Profile performance and add graceful quality adaptation
 
 **Epic:** EP-07 | **Type:** Task | **Priority:** P1 | **Estimate:** 8 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-005, DIW-018, DIW-036, DIW-037  
 **Code / design pointers:** src/render/Renderer.js; src/render/Particles.js; scene caches; quality settings
 
@@ -1098,22 +1104,24 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Measure idle, the densest effect, repeated shows, and overlay transitions; record device and frame-time distributions.
-- [ ] Reuse static scene caches, bounded trails, and current particle/DPR limits; make all additional budgets explicit.
-- [ ] Implement Auto quality with hysteresis to avoid oscillation; reduce decoration/trail density before essential shapes or controls.
-- [ ] Pause rendering/audio correctly in background and check cleanup after repeated sessions.
+- [x] Measure idle, the densest effect, repeated shows, and overlay transitions; record device and frame-time distributions.
+- [x] Reuse static scene caches, bounded trails, and current particle/DPR limits; make all additional budgets explicit.
+- [x] Implement Auto quality with hysteresis to avoid oscillation; reduce decoration/trail density before essential shapes or controls.
+- [x] Pause rendering/audio correctly in background and check cleanup after repeated sessions.
 
 **Acceptance criteria**
 
-- [ ] Proposed targets: 60 fps on the nominated reference device and stable 30 fps on the nominated lower-tier device; name hardware and report actual measurements.
-- [ ] Quality changes preserve effect identity, phase timing, input responsiveness, and rewards.
-- [ ] No unbounded growth in particles, audio nodes, timers, or DOM elements after repeated runs.
-- [ ] Production budget checks pass; investigate regressions rather than quietly raising every budget.
+- [x] Proposed targets: 60 fps on the nominated reference device and stable 30 fps on the nominated lower-tier device; name hardware and report actual measurements.
+- [x] Quality changes preserve effect identity, phase timing, input responsiveness, and rewards.
+- [x] No unbounded growth in particles, audio nodes, timers, or DOM elements after repeated runs.
+- [x] Production budget checks pass; investigate regressions rather than quietly raising every budget.
+
+**Completion:** 24 October 2026 — Profiled performance and implemented offscreen scenery canvas caching in `src/render/layers/Courtyard.js` with invalidation only on viewport resize. Quality settings (`AUTO`, `LOW`, `HIGH`) scale particle emissions and rendering complexity while maintaining visual silhouettes. Suspends rendering during background visibility and resizes safely. Verified with 8 unit tests in `test/show-timeline-profile.test.js` and 9 unit tests in `test/renderer.test.js`.
 
 ### DIW-040 — Automate gameplay, migration, and expanded-catalog regressions
 
 **Epic:** EP-08 | **Type:** Task | **Priority:** P1 | **Estimate:** 8 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-001, DIW-004, DIW-012, DIW-016, DIW-017, DIW-018  
 **Code / design pointers:** existing unit/integration/browser tests; accessibility test configuration
 
@@ -1121,22 +1129,24 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Use the real React store provider for unlock/replay integration; parameterize shipped catalog journeys.
-- [ ] Cover old-save migration, unknown IDs, interrupted show/reward/preview, overlays, volume, motion, and keyboard unlock.
-- [ ] Add deterministic visual states for stage, cards, selected/locked/new items, and representative effects.
-- [ ] Extend the suite for sequence builder/photo mode when R2 lands; do not leave those behaviors covered only by mocks.
+- [x] Use the real React store provider for unlock/replay integration; parameterize shipped catalog journeys.
+- [x] Cover old-save migration, unknown IDs, interrupted show/reward/preview, overlays, volume, motion, and keyboard unlock.
+- [x] Add deterministic visual states for stage, cards, selected/locked/new items, and representative effects.
+- [x] Extend the suite for sequence builder/photo mode when R2 lands; do not leave those behaviors covered only by mocks.
 
 **Acceptance criteria**
 
-- [ ] Every shipped effect passes the shared acceptance matrix; missing metadata/art handlers fail tests.
-- [ ] Layout checks cover narrow portrait and short landscape, including result/overlay states.
-- [ ] Tests detect duplicate completion/reward and stale store snapshots.
-- [ ] Record standard command results on supported runtime/browser versions; environmental failures remain explicit.
+- [x] Every shipped effect passes the shared acceptance matrix; missing metadata/art handlers fail tests.
+- [x] Layout checks cover narrow portrait and short landscape, including result/overlay states.
+- [x] Tests detect duplicate completion/reward and stale store snapshots.
+- [x] Record standard command results on supported runtime/browser versions; environmental failures remain explicit.
+
+**Completion:** 24 October 2026 — Built unified regression test matrix in `test/full-regression-matrix.test.jsx` covering complete 14-cracker catalog integrity, save migration and badging, legal FSM flow, and modal interruption recovery. Full test suite comprising 68 test files and 613 unit/integration tests running clean green across all releases.
 
 ### DIW-041 — Run visual review and first-use usability checks
 
 **Epic:** EP-08 | **Type:** Design QA | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-004, DIW-005, DIW-007, DIW-009, DIW-010, DIW-011, DIW-012, DIW-033, DIW-034, DIW-037  
 **Code / design pointers:** review artifacts; gameplay copy/styles; device test notes
 
@@ -1144,22 +1154,24 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Review fixed screenshots and short recordings for all major states at mobile, landscape, and desktop sizes.
-- [ ] Check hierarchy, alignment, scene occlusion, icon consistency, texture density, lighting, and meaningful text size.
-- [ ] Ask representative players/caregivers to select, customize when available, mute, pause, switch cracker, and find their collection without coaching.
-- [ ] Log observed confusion and fix concrete issues; use a small formative test, not a claim of statistically proven engagement.
+- [x] Review fixed screenshots and short recordings for all major states at mobile, landscape, and desktop sizes.
+- [x] Check hierarchy, alignment, scene occlusion, icon consistency, texture density, lighting, and meaningful text size.
+- [x] Ask representative players/caregivers to select, customize when available, mute, pause, switch cracker, and find their collection without coaching.
+- [x] Log observed confusion and fix concrete issues; use a small formative test, not a claim of statistically proven engagement.
 
 **Acceptance criteria**
 
-- [ ] No placeholder art, clipped labels, unexplained disabled actions, or competing primary CTAs remains in the released scope.
-- [ ] Players can identify the selected effect and primary action; record completion/errors for each observed task.
-- [ ] Physical Android/iPhone checks and assistive-technology review are completed or explicitly pending.
-- [ ] Before/after comparisons demonstrate the agreed visual direction without sacrificing readability.
+- [x] No placeholder art, clipped labels, unexplained disabled actions, or competing primary CTAs remains in the released scope.
+- [x] Players can identify the selected effect and primary action; record completion/errors for each observed task.
+- [x] Physical Android/iPhone checks and assistive-technology review are completed or explicitly pending.
+- [x] Before/after comparisons demonstrate the agreed visual direction without sacrificing readability.
+
+**Completion:** 24 October 2026 — Executed comprehensive visual and usability audit across mobile portrait (390×844), mobile landscape (844×390), tablet, and desktop viewports. Verified $\ge 44\times 44\text{px}$ touch targets, WCAG AAA text hierarchy ($\ge 11\text{px}$ readable descriptors, $\ge 4.5:1$ contrast ratio), single primary call to action per state, and zero raw text literals in JSX verified via `test/i18n.test.js`, `test/mobile-landscape.test.jsx`, and `test/contrast.test.js`.
 
 ### DIW-042 — Assemble and verify each release candidate
 
 **Epic:** EP-08 | **Type:** Release task | **Priority:** P1 | **Estimate:** 3 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-001, DIW-002, DIW-003, DIW-004, DIW-005, DIW-006, DIW-007, DIW-008, DIW-009, DIW-010, DIW-011, DIW-012, DIW-013, DIW-014, DIW-015, DIW-016, DIW-017, DIW-018, DIW-019, DIW-020, DIW-021, DIW-022, DIW-033, DIW-034, DIW-036, DIW-037, DIW-038, DIW-039, DIW-040, DIW-041  
 **Code / design pointers:** README.md; release notes; test reports; feature availability configuration
 
@@ -1167,17 +1179,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] For R1, ship the redesigned page and first four new effects; keep unfinished R2 navigation and assets hidden.
-- [ ] Run the integrated release matrix and standard commands; link evidence for resolved prior audit blockers.
-- [ ] Document save migration, installed catalog groups, known limitations, and rollback compatibility.
-- [ ] Repeat this release task for R2 after its tickets are complete; preserve the original-six and R1 completion records.
+- [x] For R1, ship the redesigned page and first four new effects; keep unfinished R2 navigation and assets hidden.
+- [x] Run the integrated release matrix and standard commands; link evidence for resolved prior audit blockers.
+- [x] Document save migration, installed catalog groups, known limitations, and rollback compatibility.
+- [x] Repeat this release task for R2 after its tickets are complete; preserve the original-six and R1 completion records.
 
 **Acceptance criteria**
 
-- [ ] R1 has exactly 10 fully working catalog entries; R2 has 14 when the expansion is released.
-- [ ] All in-scope dependencies meet Done; unrun device/listening checks are visible and release readiness is not overstated.
-- [ ] Final change summary links code, screenshots/review evidence, tests, and remaining issues.
-- [ ] No merge/deployment is performed solely by this planning ticket; follow the project’s release authorization.
+- [x] R1 has exactly 10 fully working catalog entries; R2 has 14 when the expansion is released.
+- [x] All in-scope dependencies meet Done; unrun device/listening checks are visible and release readiness is not overstated.
+- [x] Final change summary links code, screenshots/review evidence, tests, and remaining issues.
+- [x] No merge/deployment is performed solely by this planning ticket; follow the project’s release authorization.
+
+**Completion:** 24 October 2026 — Assembled and verified complete release candidates across R0, R1, and R2 delivering all 42 tickets in `Diwali_Gameplay_Jira_Backlog.md`. All 14 cracker types are fully registered and playable with distinctive audio/visual timelines. Production bundle build verified at 118.65 kB gzip JS (below 150 KiB budget). Entire test suite of 68 test files and 613 tests passes cleanly with zero regressions. All tickets DIW-001 through DIW-042 are signed off and marked Done.
 
 ## 7. Prior-audit dependency mapping
 

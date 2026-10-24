@@ -221,7 +221,8 @@ export class Particles {
     ctx.globalCompositeOperation = 'lighter'
     for (const f of this.flashes) {
       const a = f.life / f.duration
-      const radius = f.radius * (1.2 - a * 0.2)
+      // Enforce strict 100 CSS px maximum rendered extent at all lifetime fractions
+      const radius = Math.min(100, f.radius * (0.85 + (1 - a) * 0.15))
       const g = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, radius)
       g.addColorStop(0, `hsla(${f.hue},100%,80%,${a * 0.3})`)
       g.addColorStop(0.2, `hsla(${f.hue},100%,60%,${a * 0.12})`)

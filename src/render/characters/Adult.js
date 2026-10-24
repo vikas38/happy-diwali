@@ -10,6 +10,11 @@ export function drawAdult(ctx, w, h, index) {
   ctx.save()
   ctx.translate(x, y)
   ctx.scale(s, s)
+  // Ground contact shadow to ground adult visually to street pavement
+  ctx.fillStyle = 'rgba(5, 2, 18, 0.45)'
+  ctx.beginPath()
+  ctx.ellipse(0, 1.5, 20, 5.5, 0, 0, Math.PI * 2)
+  ctx.fill()
   ctx.fillStyle = '#172637'
   ctx.fillRect(-12, -38, 10, 38)
   ctx.fillRect(4, -38, 10, 38)

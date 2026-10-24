@@ -16,16 +16,20 @@
 
 export const ARM_STATES = {
   IDLE_WAVE: 'IDLE_WAVE',
+  NEUTRAL_IDLE: 'NEUTRAL_IDLE',
   LIGHTING_REACH: 'LIGHTING_REACH',
   COVER_EARS_SMILE: 'COVER_EARS_SMILE',
+  WATCHING: 'WATCHING',
   VICTORY_JUMP: 'VICTORY_JUMP',
 }
 
 // Arm pose definitions — maintained for state interpolation & unit tests
 const ARM_POSES = {
   IDLE_WAVE: { lx: -16, ly: 6, rx: 18, ry: -18 },
+  NEUTRAL_IDLE: { lx: -14, ly: 10, rx: 14, ry: 10 },
   LIGHTING_REACH: { lx: -13, ly: 4, rx: 19, ry: 23 },
   COVER_EARS_SMILE: { lx: -14, ly: -14, rx: 14, ry: -14 },
+  WATCHING: { lx: -12, ly: 6, rx: 14, ry: -8 },
   VICTORY_JUMP: { lx: -17, ly: -24, rx: 17, ry: -24 },
 }
 
@@ -268,12 +272,14 @@ export class ChhotuChamp {
     ctx.fill()
     ctx.restore()
 
-    // Select sprite pose based on state
-    let spriteKey = 'COVER_EARS'
+    // Select sprite pose based on state (neutral empty-handed IDLE by default, not COVER_EARS)
+    let spriteKey = 'IDLE'
     if (this.armState === ARM_STATES.COVER_EARS_SMILE) {
       spriteKey = 'COVER_EARS'
     } else if (this.armState === ARM_STATES.VICTORY_JUMP) {
       spriteKey = 'CELEBRATE'
+    } else {
+      spriteKey = 'IDLE'
     }
 
     const spriteObj = spriteCache[spriteKey]

@@ -314,7 +314,7 @@ export class GameController {
     const pipPos = this._pipStartPoint()
     chhotu.setPosition(chhotuPos.x, chhotuPos.y)
     chhotu.setFacing(1) // face left toward cracker
-    chhotu.setArmState(ARM_STATES.IDLE_WAVE)
+    chhotu.setArmState(ARM_STATES.NEUTRAL_IDLE || ARM_STATES.IDLE_WAVE)
     pip.setPosition(pipPos.x, pipPos.y)
     pip.setMood(PIP_MOODS.IDLE)
     this._setState(STATES.READY_ON_STREET, { cracker: getCracker(index) })
@@ -434,6 +434,9 @@ export class GameController {
     this._setState(STATES.CRACKER_SHOW_ACTIVE, { cracker: getCracker(this.selectedCracker) })
 
     const { chhotu, pip } = this._engines || {}
+
+    // Chhotu attentively watches from behind safe zone line
+    chhotu?.setArmState?.(ARM_STATES.WATCHING || ARM_STATES.COVER_EARS_SMILE)
 
     // Pip reacts with happy jumps
     pip?.setMood?.(PIP_MOODS.HAPPY)
@@ -573,7 +576,7 @@ export class GameController {
     const pipPos = this._pipStartPoint()
     chhotu.setPosition(chhotuPos.x, chhotuPos.y)
     chhotu.setFacing(1)
-    chhotu.setArmState(ARM_STATES.IDLE_WAVE)
+    chhotu.setArmState(ARM_STATES.NEUTRAL_IDLE || ARM_STATES.IDLE_WAVE)
     pip.setPosition(pipPos.x, pipPos.y)
     pip.setMood(PIP_MOODS.IDLE)
     this.selectedCracker = null

@@ -362,6 +362,7 @@ export const STRINGS_EN = {
   privacy_line2: 'Progress is saved only in this browser.',
   privacy_line3: 'There is no tracking, no analytics, and no accounts.',
   close_dialog: 'Close dialog',
+  dialog_close: 'Close dialog',
 
   // Swatches
   swatch_rose: 'Rose',

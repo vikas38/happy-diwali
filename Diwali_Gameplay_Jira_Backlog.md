@@ -127,7 +127,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-012 | Make ignition and show states feel clear and satisfying | EP-03 | P1 | 5 | R1 | To Do |
 | DIW-013 | Add brief, skippable gameplay onboarding | EP-03 | P2 | 3 | R1 | To Do |
 | DIW-014 | Create a readable sound, motion, and quality settings sheet | EP-03 | P1 | 5 | R1 | To Do |
-| DIW-015 | Unify drawers, dialogs, and focus restoration | EP-03 | P1 | 5 | R1 | To Do |
+| DIW-015 | Unify drawers, dialogs, and focus restoration | EP-03 | P1 | 5 | R1 | Done |
 | DIW-016 | Make the cracker catalog extensible by stable ID | EP-04 | P1 | 5 | R1 | Done |
 | DIW-017 | Migrate saves for expanded content and customization | EP-04 | P1 | 5 | R1 | Done |
 | DIW-018 | Add reusable authored effect timelines and emission primitives | EP-04 | P1 | 8 | R1 | To Do |
@@ -494,7 +494,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-015 — Unify drawers, dialogs, and focus restoration
 
 **Epic:** EP-03 | **Type:** Task | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-001, DIW-003  
 **Code / design pointers:** src/accessibility/useDialogFocus.js; src/App.jsx; gameplay overlay components
 
@@ -502,17 +502,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Create one overlay owner with accessible naming, initial focus, intended focus scope, background inertness, Escape, and return focus.
-- [ ] Treat mobile sheets and desktop dialogs as alternate presentations of the same interaction contract.
-- [ ] Keep essential mute/pause/resume controls within the active modal scope.
-- [ ] Use accessible normal-button confirmation for grown-up unlock; cancel any retained hold handlers on blur/unmount.
+- [x] Create one overlay owner with accessible naming, initial focus, intended focus scope, background inertness, Escape, and return focus.
+- [x] Treat mobile sheets and desktop dialogs as alternate presentations of the same interaction contract.
+- [x] Keep essential mute/pause/resume controls within the active modal scope.
+- [x] Use accessible normal-button confirmation for grown-up unlock; cancel any retained hold handlers on blur/unmount.
 
 **Acceptance criteria**
 
-- [ ] Library, settings, collection, photo mode, and help cannot create competing active modals.
-- [ ] Closing a sheet returns focus to a meaningful visible control, including when its original trigger disappeared.
-- [ ] Escape never restores an empty introduction or re-awards a reward.
-- [ ] Touch and keyboard can complete the grown-up unlock flow with identical outcomes.
+- [x] Library, settings, collection, photo mode, and help cannot create competing active modals.
+- [x] Closing a sheet returns focus to a meaningful visible control, including when its original trigger disappeared.
+- [x] Escape never restores an empty introduction or re-awards a reward.
+- [x] Touch and keyboard can complete the grown-up unlock flow with identical outcomes.
+
+**Completion:** 24 October 2026 — Built unified `ModalOverlay` component in `src/ui/controls/ModalOverlay.jsx` with sheet/dialog responsive presentation, enhanced `src/accessibility/useDialogFocus.js` with background inertness, Escape handling, and disappearing trigger fallback restoration, added overlay states (`LIBRARY_OVERLAY`, `CRACKER_INSPECTOR_OVERLAY`, `PHOTO_MODE_OVERLAY`) to `GameController` to guarantee single-modal ownership, and added window blur/unmount cleanup to grown-up hold handlers in `FestivalHome.jsx`. Verified with 7 unit tests in `test/dialog-unification.test.jsx`.
 
 ### DIW-016 — Make the cracker catalog extensible by stable ID
 

@@ -349,7 +349,9 @@ function GrownUpsNavButton({ onOpen }) {
   }
 
   useEffect(() => {
+    window.addEventListener('blur', cancelHold)
     return () => {
+      window.removeEventListener('blur', cancelHold)
       if (timerRef.current) cancelAnimationFrame(timerRef.current)
     }
   }, [])
@@ -366,6 +368,7 @@ function GrownUpsNavButton({ onOpen }) {
       onPointerUp={cancelHold}
       onPointerCancel={cancelHold}
       onPointerLeave={cancelHold}
+      onBlur={cancelHold}
       onKeyDown={handleKeyDown}
       onClick={(e) => e.preventDefault()}
       aria-label={t('grownups_nav_label')}

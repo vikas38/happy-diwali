@@ -30,12 +30,18 @@ export const STATES = {
   CALM_CORNER_OVERLAY: 'CALM_CORNER_OVERLAY',
   STICKER_BOOK_OVERLAY: 'STICKER_BOOK_OVERLAY',
   SETTINGS_OVERLAY: 'SETTINGS_OVERLAY',
+  LIBRARY_OVERLAY: 'LIBRARY_OVERLAY',
+  CRACKER_INSPECTOR_OVERLAY: 'CRACKER_INSPECTOR_OVERLAY',
+  PHOTO_MODE_OVERLAY: 'PHOTO_MODE_OVERLAY',
 }
 
 export const INTERRUPTION_STATES = [
   STATES.CALM_CORNER_OVERLAY,
   STATES.STICKER_BOOK_OVERLAY,
   STATES.SETTINGS_OVERLAY,
+  STATES.LIBRARY_OVERLAY,
+  STATES.CRACKER_INSPECTOR_OVERLAY,
+  STATES.PHOTO_MODE_OVERLAY,
 ]
 
 // Legal forward transitions (interruption overlays are allowed from any state except safety splash)
@@ -56,6 +62,9 @@ const TRANSITIONS = {
   [STATES.CALM_CORNER_OVERLAY]: [],
   [STATES.STICKER_BOOK_OVERLAY]: [],
   [STATES.SETTINGS_OVERLAY]: [],
+  [STATES.LIBRARY_OVERLAY]: [],
+  [STATES.CRACKER_INSPECTOR_OVERLAY]: [],
+  [STATES.PHOTO_MODE_OVERLAY]: [],
 }
 
 const COUNTDOWN_BEATS = [3, 2, 1, 'GLOW!']
@@ -755,6 +764,30 @@ export class GameController {
 
   closeSettings() {
     this._resumeFromInterruption(STATES.SETTINGS_OVERLAY)
+  }
+
+  openLibrary() {
+    this._suspendForInterruption(STATES.LIBRARY_OVERLAY)
+  }
+
+  closeLibrary() {
+    this._resumeFromInterruption(STATES.LIBRARY_OVERLAY)
+  }
+
+  openInspector(cracker) {
+    this._suspendForInterruption(STATES.CRACKER_INSPECTOR_OVERLAY, { cracker })
+  }
+
+  closeInspector() {
+    this._resumeFromInterruption(STATES.CRACKER_INSPECTOR_OVERLAY)
+  }
+
+  openPhotoMode() {
+    this._suspendForInterruption(STATES.PHOTO_MODE_OVERLAY)
+  }
+
+  closePhotoMode() {
+    this._resumeFromInterruption(STATES.PHOTO_MODE_OVERLAY)
   }
 
   // -----------------------------------------------------------------

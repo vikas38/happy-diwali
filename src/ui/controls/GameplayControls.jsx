@@ -216,3 +216,5 @@ export function ProgressLabel({
     </div>
   )
 }
+
+export { default as ModalOverlay } from './ModalOverlay.jsx'

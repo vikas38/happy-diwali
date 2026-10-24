@@ -130,7 +130,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-015 | Unify drawers, dialogs, and focus restoration | EP-03 | P1 | 5 | R1 | Done |
 | DIW-016 | Make the cracker catalog extensible by stable ID | EP-04 | P1 | 5 | R1 | Done |
 | DIW-017 | Migrate saves for expanded content and customization | EP-04 | P1 | 5 | R1 | Done |
-| DIW-018 | Add reusable authored effect timelines and emission primitives | EP-04 | P1 | 8 | R1 | To Do |
+| DIW-018 | Add reusable authored effect timelines and emission primitives | EP-04 | P1 | 8 | R1 | Done |
 | DIW-019 | Add Golden Waterfall | EP-04 | P1 | 5 | R1 | To Do |
 | DIW-020 | Add Comet Fan | EP-04 | P1 | 5 | R1 | To Do |
 | DIW-021 | Add Ring Burst | EP-04 | P1 | 5 | R1 | To Do |
@@ -580,7 +580,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-018 — Add reusable authored effect timelines and emission primitives
 
 **Epic:** EP-04 | **Type:** Task | **Priority:** P1 | **Estimate:** 8 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-001, DIW-016  
 **Code / design pointers:** src/crackers/crackerControllers.js; src/render/Particles.js; src/render/Renderer.js; src/audio/FireworkSound.js
 
@@ -588,16 +588,18 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Expose fan, ring, arc, trail, radial petal, and staggered-burst primitives with deterministic seed support.
-- [ ] Author anticipation, focal action, and settling on one show timeline coordinated with audio time.
-- [ ] Provide cancellation handles, completion identity, normalized stage anchors, live motion policy, and per-effect particle budgets.
-- [ ] Reuse the existing Canvas/particle architecture; no game-engine rewrite.
+- [x] Expose fan, ring, arc, trail, radial petal, and staggered-burst primitives with deterministic seed support.
+- [x] Author anticipation, focal action, and settling on one show timeline coordinated with audio time.
+- [x] Provide cancellation handles, completion identity, normalized stage anchors, live motion policy, and per-effect particle budgets.
+- [x] Reuse the existing Canvas/particle architecture; no game-engine rewrite.
 
 **Acceptance criteria**
 
-- [ ] Timing remains coherent under variable frame intervals; completion follows the visual ending.
-- [ ] Cancel/restart/dispose cannot leak timers or emit a second completion.
-- [ ] Each primitive has deterministic geometry checks and a reduced-motion presentation.
+- [x] Timing remains coherent under variable frame intervals; completion follows the visual ending.
+- [x] Cancel/restart/dispose cannot leak timers or emit a second completion.
+- [x] Each primitive has deterministic geometry checks and a reduced-motion presentation.
+
+**Completion:** 24 October 2026 — Created `src/crackers/effectPrimitives.js` exposing deterministic PRNG (`createRng`), normalized stage anchors (`resolveAnchor`), per-effect `BudgetTracker`, the 6 geometric emission primitives (`emitFan`, `emitRing`, `emitArc`, `emitTrail`, `emitPetal`, `emitStaggeredBurst`) with reduced motion and calm visuals scaling, and `AuthoredShowTimeline` explicitly modeling Anticipation → Focal Action → Settling → Completed with cancellation handles and bounded catch-up. Verified with 12 unit tests in `test/effect-primitives.test.js`.
 - [ ] Peak simultaneous particles stay within the configured shared budget, including settling tails.
 
 ### DIW-019 — Add Golden Waterfall

@@ -60,13 +60,13 @@ input:focus-visible {
 .brand small {
   display: block;
   font-family: 'Segoe UI', sans-serif;
-  font-size: 6.7px;
+  font-size: 11px;
   letter-spacing: 1.5px;
   font-weight: 600;
   margin-top: 5px;
 }
 .sidebar-label {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 1.7px;
   color: #9c948d;
   margin: 56px 12px 17px;
@@ -106,7 +106,7 @@ input:focus-visible {
 }
 .nav-count {
   margin-left: auto;
-  font-size: 10px;
+  font-size: 13px;
   background: #e9e4dc;
   border-radius: 5px;
   padding: 3px 6px;
@@ -141,7 +141,7 @@ input:focus-visible {
   margin-left: auto;
 }
 .made-with {
-  font-size: 8px;
+  font-size: 12px;
   text-align: center;
   color: #a69b8e;
   margin-top: 19px;
@@ -156,7 +156,7 @@ input:focus-visible {
   align-items: center;
   justify-content: space-between;
   padding: 0 46px;
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 1.6px;
   color: #91857a;
 }
@@ -213,7 +213,7 @@ input:focus-visible {
   margin-bottom: 27px;
 }
 .eyebrow {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 2px;
   color: #9b8a77;
   font-weight: 600;
@@ -245,7 +245,7 @@ input:focus-visible {
   align-items: center;
   justify-content: center;
   transform: rotate(12deg);
-  font-size: 10px;
+  font-size: 13px;
   color: #a58a65;
   line-height: 1.3;
 }
@@ -273,7 +273,7 @@ input:focus-visible {
   max-width: 53%;
 }
 .hero-tag {
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 1.7px;
   color: #e6c79b;
   display: flex;
@@ -331,7 +331,7 @@ input:focus-visible {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 8px;
+  font-size: 12px;
   color: #ad9eb8;
   margin-top: 17px;
 }
@@ -374,7 +374,7 @@ input:focus-visible {
   margin-top: 8px;
 }
 .section-heading > span {
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 1.4px;
   color: #a2988b;
 }
@@ -428,7 +428,7 @@ input:focus-visible {
   border-radius: 4px;
   background: #ffffff66;
   padding: 5px 7px;
-  font-size: 6.5px;
+  font-size: 11px;
   letter-spacing: 1.3px;
   color: #7e7066;
   z-index: 1;
@@ -472,13 +472,13 @@ input:focus-visible {
   color: #a49a90;
 }
 .activity-copy p {
-  font-size: 10px;
+  font-size: 14px;
   color: #948982;
   margin-top: 8px;
 }
 .activity-copy small {
   display: block;
-  font-size: 6.5px;
+  font-size: 11px;
   letter-spacing: 1px;
   color: #a0968b;
   margin-top: 17px;
@@ -518,7 +518,7 @@ input:focus-visible {
     serif;
 }
 .bottom-grid p {
-  font-size: 9px;
+  font-size: 14px;
   color: #a09386;
   margin-top: 7px;
 }
@@ -535,7 +535,7 @@ input:focus-visible {
   background: #b39767;
 }
 .journey-card small {
-  font-size: 8px;
+  font-size: 12px;
   color: #a29583;
   display: block;
   margin-top: 6px;
@@ -554,7 +554,7 @@ input:focus-visible {
 }
 .calm-card strong {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   color: #8a7a9e;
   margin-top: 15px;
   font-weight: 500;
@@ -566,11 +566,11 @@ input:focus-visible {
   display: flex;
   justify-content: space-between;
   color: #a69a8d;
-  font-size: 8px;
+  font-size: 12px;
   padding: 26px 0;
 }
 .festival-footer > span:last-child {
-  font-size: 6.5px;
+  font-size: 11px;
   letter-spacing: 1.5px;
 }
 .festival-modal {
@@ -680,7 +680,7 @@ input:focus-visible {
   font-size: 11px;
 }
 .home-stickers small {
-  font-size: 8px;
+  font-size: 12px;
 }
 .home-breathing {
   margin: 55px auto;
@@ -762,7 +762,7 @@ input:focus-visible {
   color: rgba(255, 255, 255, 0.65);
 }
 .privacy-note {
-  font-size: 10px !important;
+  font-size: 12px !important;
 }
 .diya-flame {
   transform-origin: 50% 65%;
@@ -811,7 +811,7 @@ input:focus-visible {
     font-size: 25px;
   }
   .brand small {
-    font-size: 5.5px;
+    font-size: 11px;
   }
   .festival-main {
     margin-left: 200px;
@@ -842,10 +842,10 @@ input:focus-visible {
     font-size: 16px;
   }
   .activity-copy p {
-    font-size: 9px;
+    font-size: 14px;
   }
   .activity-copy small {
-    font-size: 5.5px;
+    font-size: 11px;
     letter-spacing: 0.6px;
   }
   .bottom-grid {
@@ -888,7 +888,7 @@ input:focus-visible {
   }
   .nav-item {
     justify-content: center;
-    font-size: 10px;
+    font-size: 13px;
     padding: 10px 6px;
     gap: 6px;
   }
@@ -905,16 +905,16 @@ input:focus-visible {
   .festival-topbar {
     height: 58px;
     padding: 0 22px;
-    font-size: 7px;
+    font-size: 11px;
   }
   .topbar-actions {
     gap: 13px;
   }
   .topbar-actions button {
-    font-size: 9px;
+    font-size: 12px;
   }
   .star-bank {
-    font-size: 10px;
+    font-size: 13px;
     padding: 6px 9px;
   }
   .avatar {
@@ -927,16 +927,16 @@ input:focus-visible {
     font-size: 29px;
   }
   .welcome > div > p:last-child {
-    font-size: 10px;
+    font-size: 13px;
   }
   .eyebrow {
-    font-size: 7px;
+    font-size: 11px;
     letter-spacing: 1.5px;
   }
   .festival-stamp {
     width: 58px;
     height: 58px;
-    font-size: 8px;
+    font-size: 12px;
     flex-shrink: 0;
     margin-left: 8px;
   }
@@ -976,7 +976,7 @@ input:focus-visible {
     bottom: 16px;
     right: auto;
     left: 29px;
-    font-size: 9px;
+    font-size: 12px;
   }
   .hero-footnote {
     max-width: 160px;
@@ -989,7 +989,7 @@ input:focus-visible {
     display: none;
   }
   .section-heading p {
-    font-size: 10px;
+    font-size: 13px;
   }
   .activity-grid {
     grid-template-columns: 1fr;
@@ -1002,7 +1002,7 @@ input:focus-visible {
     height: 150px;
   }
   .activity-tag {
-    font-size: 5px;
+    font-size: 11px;
     left: 7px;
     padding: 4px;
     letter-spacing: 0.7px;
@@ -1014,11 +1014,11 @@ input:focus-visible {
     font-size: 19px;
   }
   .activity-copy p {
-    font-size: 10px;
+    font-size: 14px;
     line-height: 1.6;
   }
   .activity-copy small {
-    font-size: 6px;
+    font-size: 11px;
     margin-top: 19px;
   }
   .diya-art > svg {
@@ -1039,10 +1039,10 @@ input:focus-visible {
     padding: 23px;
   }
   .bottom-grid p {
-    font-size: 10px;
+    font-size: 14px;
   }
   .festival-footer {
-    font-size: 7px;
+    font-size: 11px;
   }
   .festival-modal {
     padding: 34px 20px;
@@ -1054,7 +1054,7 @@ input:focus-visible {
     gap: 8px;
   }
   .home-stickers strong {
-    font-size: 10px;
+    font-size: 13px;
   }
   .parent-volume {
     flex-direction: column;
@@ -1086,7 +1086,7 @@ input:focus-visible {
     top: 19px;
     right: 20px;
     width: auto;
-    font-size: 10px;
+    font-size: 13px;
     padding: 8px;
   }
   .sidebar-bottom > .nav-item svg {
@@ -1156,7 +1156,7 @@ input:focus-visible {
 }
 .hero-footnote {
   color: #c9b9d2;
-  font-size: 9px;
+  font-size: 12px;
 }
 .sun-button {
   position: relative;
@@ -1532,7 +1532,7 @@ input:focus-visible {
     display: none;
   }
   .festival-topbar > div:first-child {
-    font-size: 6px;
+    font-size: 11px;
     letter-spacing: 0.7px;
   }
   .star-bank {
@@ -1648,7 +1648,7 @@ input:focus-visible {
   transition: stroke-dashoffset 0.05s linear;
 }
 .grown-ups-hold-hint {
-  font-size: 9px;
+  font-size: 12px;
   padding: 2px 6px;
   border-radius: 4px;
   background: rgba(180, 140, 90, 0.15);

@@ -26,6 +26,24 @@ export const SPARKLE_PALETTES = {
   EMERALD: 'EMERALD',
 }
 
+export const DIYA_ARRANGEMENTS = {
+  ROW: 'ROW',
+  CIRCLE: 'CIRCLE',
+  ARCH: 'ARCH',
+}
+
+export const RANGOLI_PATTERNS = {
+  LOTUS: 'LOTUS',
+  STAR: 'STAR',
+  CHAKRA: 'CHAKRA',
+}
+
+export const DEFAULT_RANGOLI_COLORS = {
+  outer: '#dd796d', // rose
+  middle: '#dc922e', // marigold
+  center: '#58a7a5', // ocean
+}
+
 /**
  * The default save state for a brand-new player.
  * Only the first cracker (Phuljhari) is unlocked; intensity defaults to SOFT.
@@ -48,6 +66,14 @@ export function createDefaultSave() {
     seenHint: false, // first-run courtyard hint
     hasCompletedFirst: false, // completed at least one firework (unlocks skip walk)
     calmVisuals: osReduced, // backward-compatible boolean
+    diyas: {
+      lit: [],
+      arrangement: DIYA_ARRANGEMENTS.ROW,
+    },
+    rangoli: {
+      pattern: RANGOLI_PATTERNS.LOTUS,
+      colors: { ...DEFAULT_RANGOLI_COLORS },
+    },
   }
 }
 
@@ -135,6 +161,30 @@ export function validateSave(raw) {
       ? raw.seenSplash
       : Boolean(raw.hasCompletedFirst || (Array.isArray(raw.stickers) && raw.stickers.length > 0))
 
+  // Validate diyas
+  const diyasRaw = raw.diyas && typeof raw.diyas === 'object' ? raw.diyas : {}
+  const rawLit = Array.isArray(diyasRaw.lit) ? diyasRaw.lit : []
+  const validLit = [...new Set(rawLit.filter((n) => Number.isInteger(n) && n >= 0 && n < 5))].sort(
+    (a, b) => a - b
+  )
+  const arrangement = Object.values(DIYA_ARRANGEMENTS).includes(diyasRaw.arrangement)
+    ? diyasRaw.arrangement
+    : DIYA_ARRANGEMENTS.ROW
+
+  // Validate rangoli
+  const rangoliRaw = raw.rangoli && typeof raw.rangoli === 'object' ? raw.rangoli : {}
+  const pattern = Object.values(RANGOLI_PATTERNS).includes(rangoliRaw.pattern)
+    ? rangoliRaw.pattern
+    : RANGOLI_PATTERNS.LOTUS
+  const hexPattern = /^#[0-9a-fA-F]{6}$/
+  const colorsRaw =
+    rangoliRaw.colors && typeof rangoliRaw.colors === 'object' ? rangoliRaw.colors : {}
+  const colors = {
+    outer: hexPattern.test(colorsRaw.outer) ? colorsRaw.outer : DEFAULT_RANGOLI_COLORS.outer,
+    middle: hexPattern.test(colorsRaw.middle) ? colorsRaw.middle : DEFAULT_RANGOLI_COLORS.middle,
+    center: hexPattern.test(colorsRaw.center) ? colorsRaw.center : DEFAULT_RANGOLI_COLORS.center,
+  }
+
   const result = {
     version: SAVE_VERSION,
     unlocked: Array.isArray(raw.unlocked) ? raw.unlocked : defaults.unlocked,
@@ -157,6 +207,14 @@ export function validateSave(raw) {
       typeof raw.calmVisuals === 'boolean' && !raw.motionPolicy
         ? raw.calmVisuals
         : effectiveCalmVisuals,
+    diyas: {
+      lit: validLit,
+      arrangement,
+    },
+    rangoli: {
+      pattern,
+      colors,
+    },
   }
 
   // unlocked: array of cracker indices 0..5, always include 0

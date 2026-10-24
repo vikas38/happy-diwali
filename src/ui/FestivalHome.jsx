@@ -34,8 +34,14 @@ function Icon({ name, size = 22 }) {
   )
 }
 
-function Rangoli({ color = '#dd796d' }) {
+function Rangoli({ pattern = 'LOTUS', color, colors, onSelectRegion, activeRegion = 'outer' }) {
   const grainId = React.useId().replace(/:/g, '')
+  const effectiveColors =
+    typeof color === 'string' && !colors?.outer
+      ? { outer: color, middle: '#dc922e', center: '#58a7a5' }
+      : colors || { outer: '#dd796d', middle: '#dc922e', center: '#58a7a5' }
+  const { outer = '#dd796d', middle = '#dc922e', center = '#58a7a5' } = effectiveColors
+
   return (
     <svg viewBox="0 0 240 240" aria-hidden="true">
       <defs>
@@ -52,21 +58,129 @@ function Rangoli({ color = '#dd796d' }) {
         </filter>
       </defs>
       <g filter={`url(#${grainId})`} transform="translate(120 120)">
-        {Array.from({ length: 12 }, (_, i) => (
-          <g key={i} transform={`rotate(${i * 30})`}>
-            <path
-              d="M0-13Q-46-64 0-103Q46-64 0-13"
-              fill={i % 2 ? '#e9b84e' : color}
+        {pattern === 'STAR' ? (
+          <>
+            {/* 8-point geometric star */}
+            {Array.from({ length: 8 }, (_, i) => (
+              <g key={i} transform={`rotate(${i * 45})`}>
+                <polygon
+                  points="0,-108 18,-60 0,-36 -18,-60"
+                  fill={outer}
+                  stroke="#fff3d6"
+                  strokeWidth="2.5"
+                  onClick={() => onSelectRegion?.('outer')}
+                  style={{ cursor: onSelectRegion ? 'pointer' : 'default' }}
+                />
+                <circle cy="-115" r="4" fill={middle} />
+              </g>
+            ))}
+            {/* Middle diamond ring */}
+            {Array.from({ length: 8 }, (_, i) => (
+              <g key={i} transform={`rotate(${i * 45 + 22.5})`}>
+                <polygon
+                  points="0,-64 14,-36 0,-18 -14,-36"
+                  fill={middle}
+                  stroke="#fff3d6"
+                  strokeWidth="2"
+                  onClick={() => onSelectRegion?.('middle')}
+                  style={{ cursor: onSelectRegion ? 'pointer' : 'default' }}
+                />
+              </g>
+            ))}
+            <circle
+              r="24"
+              fill={center}
+              stroke="#fff3d6"
+              strokeWidth="3.5"
+              onClick={() => onSelectRegion?.('center')}
+              style={{ cursor: onSelectRegion ? 'pointer' : 'default' }}
+            />
+            <circle r="12" fill={middle} />
+            <circle r="5" fill={outer} />
+          </>
+        ) : pattern === 'CHAKRA' ? (
+          <>
+            {/* Chakra whirling petals */}
+            {Array.from({ length: 16 }, (_, i) => (
+              <g key={i} transform={`rotate(${i * 22.5})`}>
+                <path
+                  d="M0,-24 Q-20,-70 0,-105 Q20,-70 0,-24"
+                  fill={outer}
+                  stroke="#fff3d6"
+                  strokeWidth="2.5"
+                  onClick={() => onSelectRegion?.('outer')}
+                  style={{ cursor: onSelectRegion ? 'pointer' : 'default' }}
+                />
+                <circle cy="-110" r="3.5" fill={middle} />
+              </g>
+            ))}
+            {/* Middle concentric ring */}
+            <circle
+              r="44"
+              fill={middle}
               stroke="#fff3d6"
               strokeWidth="3"
+              onClick={() => onSelectRegion?.('middle')}
+              style={{ cursor: onSelectRegion ? 'pointer' : 'default' }}
             />
-            <path d="M0-38Q-17-66 0-86Q17-66 0-38" fill="none" stroke="#fff3d6" strokeWidth="2" />
-            <circle cy="-112" r="3" fill={color} />
-          </g>
-        ))}
-        <circle r="30" fill="#698f79" stroke="#fff3d6" strokeWidth="4" />
-        <circle r="18" fill="#e9b84e" />
-        <circle r="7" fill={color} />
+            {Array.from({ length: 8 }, (_, i) => (
+              <circle
+                key={i}
+                cx={Math.cos((i * Math.PI) / 4) * 32}
+                cy={Math.sin((i * Math.PI) / 4) * 32}
+                r="5"
+                fill={outer}
+              />
+            ))}
+            <circle
+              r="22"
+              fill={center}
+              stroke="#fff3d6"
+              strokeWidth="3"
+              onClick={() => onSelectRegion?.('center')}
+              style={{ cursor: onSelectRegion ? 'pointer' : 'default' }}
+            />
+            <circle r="9" fill="#fff3d6" />
+          </>
+        ) : (
+          /* Default LOTUS */
+          <>
+            {Array.from({ length: 12 }, (_, i) => (
+              <g key={i} transform={`rotate(${i * 30})`}>
+                <path
+                  d="M0-13Q-46-64 0-103Q46-64 0-13"
+                  fill={i % 2 ? middle : outer}
+                  stroke="#fff3d6"
+                  strokeWidth="3"
+                  onClick={() => onSelectRegion?.('outer')}
+                  style={{ cursor: onSelectRegion ? 'pointer' : 'default' }}
+                />
+                <path
+                  d="M0-38Q-17-66 0-86Q17-66 0-38"
+                  fill="none"
+                  stroke="#fff3d6"
+                  strokeWidth="2"
+                />
+                <circle cy="-112" r="3" fill={outer} />
+              </g>
+            ))}
+            <circle
+              r="30"
+              fill={middle}
+              stroke="#fff3d6"
+              strokeWidth="4"
+              onClick={() => onSelectRegion?.('middle')}
+              style={{ cursor: onSelectRegion ? 'pointer' : 'default' }}
+            />
+            <circle r="18" fill={outer} />
+            <circle
+              r="7"
+              fill={center}
+              onClick={() => onSelectRegion?.('center')}
+              style={{ cursor: onSelectRegion ? 'pointer' : 'default' }}
+            />
+          </>
+        )}
       </g>
     </svg>
   )
@@ -289,7 +403,19 @@ export default function FestivalHome({
   initialModal = null,
   onModalClose,
 }) {
-  const { state, setMasterVolume, toggleMute, unlockAllCrackers } = useGameStore()
+  const {
+    state,
+    setMasterVolume,
+    toggleMute,
+    unlockAllCrackers,
+    setDiyaLit,
+    setDiyaArrangement,
+    resetDiyas,
+    setRangoliPattern,
+    setRangoliRegionColor,
+    setRangoliColors,
+    resetRangoli,
+  } = useGameStore()
   const [modal, setModal] = useState(initialModal)
 
   useEffect(() => {
@@ -301,8 +427,15 @@ export default function FestivalHome({
     onModalClose?.()
   }, [onModalClose])
 
-  const [lit, setLit] = useState([])
-  const [color, setColor] = useState('#dd796d')
+  const diyasState = state.diyas || { lit: [], arrangement: 'ROW' }
+  const rangoliState = state.rangoli || {
+    pattern: 'LOTUS',
+    colors: { outer: '#dd796d', middle: '#dc922e', center: '#58a7a5' },
+  }
+  const [activeRegion, setActiveRegion] = useState('outer')
+  const [undoStack, setUndoStack] = useState([])
+  const [exportNotice, setExportNotice] = useState(null)
+
   const [breath, setBreath] = useState(false)
   useEffect(() => {
     if (modal !== 'calm') return
@@ -320,6 +453,86 @@ export default function FestivalHome({
     [t('swatch_ocean'), '#58a7a5'],
     [t('swatch_marigold'), '#dc922e'],
   ]
+
+  const handleExport = React.useCallback(
+    (format) => {
+      try {
+        const svgEl = document.querySelector('.rangoli-preview svg')
+        if (!svgEl) throw new Error('Preview not found')
+
+        const clone = svgEl.cloneNode(true)
+        clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+        clone.setAttribute('width', '800')
+        clone.setAttribute('height', '800')
+        const svgString = new XMLSerializer().serializeToString(clone)
+
+        if (format === 'svg') {
+          const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = `my-diwali-rangoli-${(rangoliState.pattern || 'lotus').toLowerCase()}.svg`
+          a.addEventListener('click', (e) => e.stopPropagation())
+          document.body.appendChild(a)
+          a.click()
+          document.body.removeChild(a)
+          setTimeout(() => URL.revokeObjectURL(url), 1000)
+          setExportNotice({ type: 'success', message: t('export_success') })
+        } else if (format === 'png') {
+          const canvas = document.createElement('canvas')
+          canvas.width = 800
+          canvas.height = 800
+          const ctx = canvas.getContext?.('2d')
+          if (!ctx) throw new Error('Canvas 2D unavailable')
+
+          const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
+          const url = URL.createObjectURL(blob)
+          const img = new Image()
+          img.onload = () => {
+            ctx.drawImage(img, 0, 0, 800, 800)
+            URL.revokeObjectURL(url)
+            if (canvas.toBlob) {
+              canvas.toBlob((pngBlob) => {
+                if (!pngBlob) {
+                  setExportNotice({ type: 'error', message: t('export_error') })
+                  return
+                }
+                const pngUrl = URL.createObjectURL(pngBlob)
+                const a = document.createElement('a')
+                a.href = pngUrl
+                a.download = `my-diwali-rangoli-${(rangoliState.pattern || 'lotus').toLowerCase()}.png`
+                a.addEventListener('click', (e) => e.stopPropagation())
+                document.body.appendChild(a)
+                a.click()
+                document.body.removeChild(a)
+                setTimeout(() => URL.revokeObjectURL(pngUrl), 1000)
+                setExportNotice({ type: 'success', message: t('export_success') })
+              }, 'image/png')
+            } else {
+              const dataUrl = canvas.toDataURL?.('image/png')
+              if (!dataUrl) throw new Error('toDataURL failed')
+              const a = document.createElement('a')
+              a.href = dataUrl
+              a.download = `my-diwali-rangoli-${(rangoliState.pattern || 'lotus').toLowerCase()}.png`
+              a.addEventListener('click', (e) => e.stopPropagation())
+              document.body.appendChild(a)
+              a.click()
+              document.body.removeChild(a)
+              setExportNotice({ type: 'success', message: t('export_success') })
+            }
+          }
+          img.onerror = () => {
+            URL.revokeObjectURL(url)
+            setExportNotice({ type: 'error', message: t('export_error') })
+          }
+          img.src = url
+        }
+      } catch {
+        setExportNotice({ type: 'error', message: t('export_error') })
+      }
+    },
+    [rangoliState.pattern]
+  )
 
   return (
     <div className={`festival-app ${motion ? '' : 'motion-paused'}`}>
@@ -578,24 +791,58 @@ export default function FestivalHome({
           {modal === 'diyas' && (
             <>
               <p>{t('modal_diyas_intro')}</p>
-              <div className="diya-row">
+              <div
+                className="activity-options-group"
+                role="group"
+                aria-label={t('diya_arrangement_label')}
+              >
+                <button
+                  type="button"
+                  className={`activity-pill-btn ${diyasState.arrangement === 'ROW' ? 'active' : ''}`}
+                  aria-pressed={diyasState.arrangement === 'ROW'}
+                  onClick={() => setDiyaArrangement?.('ROW')}
+                >
+                  {t('diya_arrange_row')}
+                </button>
+                <button
+                  type="button"
+                  className={`activity-pill-btn ${diyasState.arrangement === 'CIRCLE' ? 'active' : ''}`}
+                  aria-pressed={diyasState.arrangement === 'CIRCLE'}
+                  onClick={() => setDiyaArrangement?.('CIRCLE')}
+                >
+                  {t('diya_arrange_circle')}
+                </button>
+                <button
+                  type="button"
+                  className={`activity-pill-btn ${diyasState.arrangement === 'ARCH' ? 'active' : ''}`}
+                  aria-pressed={diyasState.arrangement === 'ARCH'}
+                  onClick={() => setDiyaArrangement?.('ARCH')}
+                >
+                  {t('diya_arrange_arch')}
+                </button>
+              </div>
+
+              <div
+                className={`diya-row diya-container--${(diyasState.arrangement || 'row').toLowerCase()}`}
+              >
                 {[0, 1, 2, 3, 4].map((i) => (
                   <button
                     key={i}
+                    type="button"
                     aria-label={t('modal_diyas_aria', { num: i + 1 })}
-                    aria-pressed={lit.includes(i)}
-                    onClick={() => setLit((s) => (s.includes(i) ? s : [...s, i]))}
+                    aria-pressed={diyasState.lit.includes(i)}
+                    onClick={() => setDiyaLit?.(i)}
                   >
-                    <Diya lit={lit.includes(i)} />
+                    <Diya lit={diyasState.lit.includes(i)} />
                   </button>
                 ))}
               </div>
               <p className="activity-result" aria-live="polite">
-                {lit.length === 5
+                {diyasState.lit.length === 5
                   ? t('modal_diyas_full')
-                  : t('modal_diyas_count', { count: lit.length })}
+                  : t('modal_diyas_count', { count: diyasState.lit.length })}
               </p>
-              <button className="sun-button" onClick={() => setLit([])}>
+              <button type="button" className="sun-button" onClick={() => resetDiyas?.()}>
                 {t('modal_diyas_reset')}
               </button>
             </>
@@ -603,39 +850,188 @@ export default function FestivalHome({
           {modal === 'rangoli' && (
             <>
               <p>{t('modal_rangoli_intro')}</p>
-              <div className="rangoli-preview">
-                <Rangoli color={color} />
+              {/* Pattern Selector */}
+              <div
+                className="activity-options-group"
+                role="group"
+                aria-label={t('rangoli_patterns_label')}
+              >
+                <button
+                  type="button"
+                  className={`activity-pill-btn ${rangoliState.pattern === 'LOTUS' ? 'active' : ''}`}
+                  aria-pressed={rangoliState.pattern === 'LOTUS'}
+                  onClick={() => setRangoliPattern?.('LOTUS')}
+                >
+                  {t('rangoli_pattern_lotus')}
+                </button>
+                <button
+                  type="button"
+                  className={`activity-pill-btn ${rangoliState.pattern === 'STAR' ? 'active' : ''}`}
+                  aria-pressed={rangoliState.pattern === 'STAR'}
+                  onClick={() => setRangoliPattern?.('STAR')}
+                >
+                  {t('rangoli_pattern_star')}
+                </button>
+                <button
+                  type="button"
+                  className={`activity-pill-btn ${rangoliState.pattern === 'CHAKRA' ? 'active' : ''}`}
+                  aria-pressed={rangoliState.pattern === 'CHAKRA'}
+                  onClick={() => setRangoliPattern?.('CHAKRA')}
+                >
+                  {t('rangoli_pattern_chakra')}
+                </button>
               </div>
-              <div className="swatches">
+
+              {/* Rangoli Preview */}
+              <div className="rangoli-preview" role="img" aria-label={t('export_preview_title')}>
+                <Rangoli
+                  pattern={rangoliState.pattern}
+                  colors={rangoliState.colors}
+                  activeRegion={activeRegion}
+                  onSelectRegion={(r) => setActiveRegion(r)}
+                />
+              </div>
+
+              {/* Region Selector */}
+              <div
+                className="activity-options-group"
+                role="group"
+                aria-label={t('rangoli_regions_label')}
+              >
+                <button
+                  type="button"
+                  className={`activity-pill-btn ${activeRegion === 'outer' ? 'active' : ''}`}
+                  aria-pressed={activeRegion === 'outer'}
+                  onClick={() => setActiveRegion('outer')}
+                >
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: 10,
+                      height: 10,
+                      borderRadius: '50%',
+                      background: rangoliState.colors?.outer,
+                      marginRight: 6,
+                    }}
+                    aria-hidden="true"
+                  />
+                  {t('rangoli_region_outer')}
+                </button>
+                <button
+                  type="button"
+                  className={`activity-pill-btn ${activeRegion === 'middle' ? 'active' : ''}`}
+                  aria-pressed={activeRegion === 'middle'}
+                  onClick={() => setActiveRegion('middle')}
+                >
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: 10,
+                      height: 10,
+                      borderRadius: '50%',
+                      background: rangoliState.colors?.middle,
+                      marginRight: 6,
+                    }}
+                    aria-hidden="true"
+                  />
+                  {t('rangoli_region_middle')}
+                </button>
+                <button
+                  type="button"
+                  className={`activity-pill-btn ${activeRegion === 'center' ? 'active' : ''}`}
+                  aria-pressed={activeRegion === 'center'}
+                  onClick={() => setActiveRegion('center')}
+                >
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: 10,
+                      height: 10,
+                      borderRadius: '50%',
+                      background: rangoliState.colors?.center,
+                      marginRight: 6,
+                    }}
+                    aria-hidden="true"
+                  />
+                  {t('rangoli_region_center')}
+                </button>
+              </div>
+
+              {/* Swatches */}
+              <div className="swatches" role="group" aria-label={t('rangoli_swatches_label')}>
                 {swatches.map(([name, c]) => (
                   <button
                     key={c}
+                    type="button"
                     style={{ background: c }}
                     aria-label={name}
-                    aria-pressed={color === c}
-                    onClick={() => setColor(c)}
+                    aria-pressed={rangoliState.colors?.[activeRegion] === c}
+                    onClick={() => {
+                      setUndoStack((prev) => [...prev.slice(-9), { ...rangoliState.colors }])
+                      setRangoliRegionColor?.(activeRegion, c)
+                    }}
                   />
                 ))}
               </div>
-              <button
-                className="sun-button"
-                onClick={() => {
-                  const svg = document.querySelector('.rangoli-preview svg').cloneNode(true)
-                  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-                  svg.setAttribute('width', '800')
-                  svg.setAttribute('height', '800')
-                  const url = URL.createObjectURL(
-                    new Blob([svg.outerHTML], { type: 'image/svg+xml' })
-                  )
-                  const a = document.createElement('a')
-                  a.href = url
-                  a.download = 'my-diwali-rangoli.svg'
-                  a.click()
-                  setTimeout(() => URL.revokeObjectURL(url), 1000)
-                }}
-              >
-                {t('modal_rangoli_keep')}
-              </button>
+
+              {/* Undo & Reset */}
+              <div className="rangoli-actions-row">
+                <button
+                  type="button"
+                  className="activity-pill-btn"
+                  disabled={undoStack.length === 0}
+                  onClick={() => {
+                    if (undoStack.length === 0) return
+                    const prev = undoStack[undoStack.length - 1]
+                    setUndoStack((s) => s.slice(0, -1))
+                    setRangoliColors?.(prev)
+                  }}
+                  aria-label={t('rangoli_undo')}
+                >
+                  {t('rangoli_undo')}
+                </button>
+                <button
+                  type="button"
+                  className="activity-pill-btn"
+                  onClick={() => {
+                    setUndoStack([])
+                    resetRangoli?.()
+                  }}
+                  aria-label={t('rangoli_reset')}
+                >
+                  {t('rangoli_reset')}
+                </button>
+              </div>
+
+              {/* Export Buttons: SVG and PNG */}
+              <div className="rangoli-actions-row">
+                <button
+                  type="button"
+                  className="sun-button"
+                  onClick={() => handleExport('svg')}
+                  aria-label={t('export_svg')}
+                >
+                  {t('export_svg')}
+                </button>
+                <button
+                  type="button"
+                  className="sun-button"
+                  onClick={() => handleExport('png')}
+                  aria-label={t('export_png')}
+                >
+                  {t('export_png')}
+                </button>
+              </div>
+
+              {exportNotice && (
+                <p
+                  className={`export-feedback export-feedback--${exportNotice.type}`}
+                  role="status"
+                  aria-live="polite"
+                >
+                  {exportNotice.message}
+                </p>
+              )}
             </>
           )}
           {modal === 'stickers' && (

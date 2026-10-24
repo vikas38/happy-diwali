@@ -75,6 +75,8 @@ export class GameController {
     this._crackerShowFn = null
     this._cancelShow = null
     this._stopFuse = null
+    this._countdownCueHandle = null
+    this._fanfareCueHandles = []
     this._paused = false
     this._currentCountdownBeat = 0
     this._prevCountdownBeat = 0
@@ -400,15 +402,32 @@ export class GameController {
   }
 
   _playCountdownChime(beatIndex) {
-    const { sound } = this._engines
-    if (!sound.supported) return
+    const { sound } = this._engines || {}
+    if (!sound?.supported) return
+    this._stopCountdownCue()
     // Descending pitches: C5, A4, G4, then a bright chime for GLOW
     const pitches = [523.25, 440.0, 392.0, 659.25]
     const freq = pitches[beatIndex] || 523.25
-    sound.playTestTone(freq, 0.3)
+    this._countdownCueHandle = sound.playCueTone
+      ? sound.playCueTone(freq, 0.3)
+      : sound.playTestTone?.(freq, 0.3)
+  }
+
+  _stopCountdownCue() {
+    if (this._countdownCueHandle) {
+      try {
+        const stopFn =
+          typeof this._countdownCueHandle === 'function'
+            ? this._countdownCueHandle
+            : this._countdownCueHandle.stop
+        stopFn?.()
+      } catch {}
+      this._countdownCueHandle = null
+    }
   }
 
   _startCrackerShow() {
+    this._stopCountdownCue()
     this._stopFuse?.()
     this._stopFuse = null
     this._engines?.sound?.stopMusic?.()
@@ -489,13 +508,31 @@ export class GameController {
   }
 
   _playFanfare() {
-    const { sound } = this._engines
-    if (!sound.supported) return
+    const { sound } = this._engines || {}
+    if (!sound?.supported) return
+    this._stopFanfare()
     // Simple ascending arpeggio fanfare
     const notes = [523.25, 659.25, 783.99, 1046.5] // C5 E5 G5 C6
     notes.forEach((freq, i) => {
-      this._addTimer(() => sound.playTestTone(freq, 0.4), i * 120)
+      this._addTimer(() => {
+        const h = sound.playCueTone
+          ? sound.playCueTone(freq, 0.4)
+          : sound.playTestTone?.(freq, 0.4)
+        if (h) this._fanfareCueHandles.push(h)
+      }, i * 120)
     })
+  }
+
+  _stopFanfare() {
+    if (this._fanfareCueHandles) {
+      this._fanfareCueHandles.forEach((h) => {
+        try {
+          const stopFn = typeof h === 'function' ? h : h.stop
+          stopFn?.()
+        } catch {}
+      })
+      this._fanfareCueHandles = []
+    }
   }
 
   /**
@@ -571,19 +608,17 @@ export class GameController {
 
     // Invalidate active show token so abandoned show callbacks cannot grant awards
     this._activeShowToken = null
-    this._cancelShow?.()
-    this._cancelShow = null
+    this._stopCountdownCue()
+    this._stopFanfare()
     this._stopFuse?.()
     this._stopFuse = null
 
-    // Pause all timers
-    this._clearTimers()
-
-    // Stop cracker audio (fade out 150ms) and particles
+    // Stop and fade audio before visual cancellation to eliminate clicks
     if (this._engines) {
       const { sound, particles, chhotu, pip } = this._engines
       sound?.fadeCrackerAudio?.(150)
       sound?.stopCrackerAudio?.()
+      sound?.stopAllCues?.()
       particles?.clear?.()
 
       if (targetState === STATES.CALM_CORNER_OVERLAY) {
@@ -602,6 +637,12 @@ export class GameController {
         pip._jumpActive = false
       }
     }
+
+    this._cancelShow?.()
+    this._cancelShow = null
+
+    // Pause all timers
+    this._clearTimers()
 
     this._paused = true
     this._setState(targetState)
@@ -754,6 +795,8 @@ export class GameController {
     this._disposed = true
     this._interruptionSnapshot = null
     this._activeShowToken = null
+    this._stopCountdownCue()
+    this._stopFanfare()
     this._cancelShow?.()
     this._cancelShow = null
     this._stopFuse?.()
@@ -761,6 +804,7 @@ export class GameController {
     this._engines?.sound?.stopMusic?.()
     this._engines?.sound?.stopCrackerAudio?.()
     this._engines?.sound?.stopCalmPad?.()
+    this._engines?.sound?.stopAllCues?.()
     this._clearTimers()
     this._listeners.clear()
   }

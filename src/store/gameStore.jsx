@@ -239,11 +239,24 @@ export function GameStoreProvider({ children }) {
           nextIndex: unlockNext ? nextIndex : null,
         }
 
+        // DIW-032: Gentle goal tracking — Courtyard & Sky Explorer
+        const groundIds = [0, 1, 2, 4, 5, 6, 9]
+        const skyIds = [3, 7, 8, 10, 11, 12, 13]
+        const hasGround = stickers.some((id) => groundIds.includes(id))
+        const hasSky = stickers.some((id) => skyIds.includes(id))
+        const groundAndSkyGoal = hasGround && hasSky
+
+        const gentleGoals = {
+          ...(s.gentleGoals || {}),
+          groundAndSky: Boolean(s.gentleGoals?.groundAndSky || groundAndSkyGoal),
+        }
+
         return {
           ...s,
           stickers,
           stars,
           unlocked,
+          gentleGoals,
           hasCompletedFirst: true,
         }
       })
@@ -296,14 +309,24 @@ export function GameStoreProvider({ children }) {
     (crackerId, palette) => {
       if (!isValidCrackerId(crackerId)) return
       if (!Object.values(SPARKLE_PALETTES).includes(palette)) return
-      updateStore((s) => ({
-        ...s,
-        selectedPalette: palette,
-        selectedPalettes: {
+      updateStore((s) => {
+        const nextPalettes = {
           ...(s.selectedPalettes || {}),
           [crackerId]: palette,
-        },
-      }))
+        }
+        const uniquePals = new Set(Object.values(nextPalettes))
+        const twoPalettesGoal = uniquePals.size >= 2 || Boolean(s.gentleGoals?.twoPalettes)
+
+        return {
+          ...s,
+          selectedPalette: palette,
+          selectedPalettes: nextPalettes,
+          gentleGoals: {
+            ...(s.gentleGoals || {}),
+            twoPalettes: twoPalettesGoal,
+          },
+        }
+      })
     },
     [updateStore]
   )
@@ -390,6 +413,10 @@ export function GameStoreProvider({ children }) {
         courtyardDecorations: {
           ...(s.courtyardDecorations || {}),
           [type]: value,
+        },
+        gentleGoals: {
+          ...(s.gentleGoals || {}),
+          decoratedCourtyard: true,
         },
       }))
     },

@@ -51,7 +51,13 @@ export default function RewardOverlay({
   onReplayFavourites,
   onMakeRangoli,
   onFinishForNow,
+  gentleGoals,
+  isSequence = false,
+  sequenceIndex = 0,
+  sequenceTotal = 0,
 }) {
+  const [dismissedSuggestion, setDismissedSuggestion] = useState(false)
+
   const handleSkip = React.useCallback(() => {
     if (onSkip) onSkip()
     else onNextCracker?.()
@@ -66,6 +72,15 @@ export default function RewardOverlay({
   }, [handleSkip])
 
   if (!cracker) return null
+
+  let suggestionText = null
+  if (!gentleGoals?.groundAndSky) {
+    suggestionText = cracker.category === 'ground' ? t('suggestion_sky') : t('suggestion_ground')
+  } else if (!gentleGoals?.twoPalettes) {
+    suggestionText = t('suggestion_palettes')
+  } else if (!gentleGoals?.decoratedCourtyard) {
+    suggestionText = t('suggestion_decorations')
+  }
 
   return (
     <div
@@ -121,6 +136,27 @@ export default function RewardOverlay({
               <br />
               <strong>{cracker.name}</strong>!
             </p>
+          </div>
+        )}
+        {isSequence && (
+          <div className="reward-sequence-pill" role="status">
+            {t('sequence_progress', { current: sequenceIndex + 1, total: sequenceTotal })}
+          </div>
+        )}
+        {suggestionText && !dismissedSuggestion && (
+          <div className="reward-suggestion-card" role="status">
+            <div className="reward-suggestion-header">
+              <span className="reward-suggestion-title">✨ {t('suggestion_title')}</span>
+              <button
+                type="button"
+                className="reward-suggestion-dismiss"
+                onClick={() => setDismissedSuggestion(true)}
+                aria-label={t('suggestion_dismiss')}
+              >
+                ✕
+              </button>
+            </div>
+            <p className="reward-suggestion-text">{suggestionText}</p>
           </div>
         )}
         {allStickersCollected && (

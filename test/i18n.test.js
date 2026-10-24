@@ -57,6 +57,7 @@ describe('T20 — String Externalisation (i18n)', () => {
       '–',
       '-',
       '+',
+      '/',
       '%',
       '!',
       '.',

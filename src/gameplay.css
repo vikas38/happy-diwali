@@ -3246,6 +3246,201 @@ input:focus-visible,
   background: #fbbf24;
 }
 
+/* ===================================================================
+   Discovery Album & Gentle Goals (DIW-032, DIW-033, DIW-034)
+   =================================================================== */
+
+.sticker-book-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom: 8px;
+}
+
+.sticker-tab-btn {
+  padding: 6px 14px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.sticker-tab-btn.is-active {
+  color: #ffd87c;
+  border-bottom-color: #f59e0b;
+}
+
+.sticker-empty-banner {
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  text-align: center;
+}
+
+.sticker-empty-banner h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f8fafc;
+  margin: 0 0 4px;
+}
+
+.sticker-empty-banner p {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.sticker-group {
+  margin-bottom: 20px;
+}
+
+.sticker-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.sticker-group-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fbbf24;
+  margin: 0;
+}
+
+.sticker-group-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sticker-group-count {
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
+.sticker-group-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.gentle-goals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.gentle-goal-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gentle-goal-card.is-completed {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.gentle-goal-badge {
+  font-size: 20px;
+  color: #fbbf24;
+}
+
+.gentle-goal-content {
+  flex: 1;
+}
+
+.gentle-goal-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 2px;
+}
+
+.gentle-goal-desc {
+  font-size: 11px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.gentle-goal-status {
+  font-size: 11px;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.reward-suggestion-card {
+  margin: 10px 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  text-align: left;
+}
+
+.reward-suggestion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.reward-suggestion-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #ffd87c;
+}
+
+.reward-suggestion-dismiss {
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.reward-suggestion-dismiss:hover {
+  color: #ffffff;
+}
+
+.reward-suggestion-text {
+  font-size: 12px;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.reward-sequence-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  margin-bottom: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffd87c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
 
 
 

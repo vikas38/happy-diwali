@@ -202,6 +202,15 @@ export const STRINGS_EN = {
   sticker_book_close: 'Close Sticker Book',
   sticker_book_close_aria: 'Close Sticker Book',
   stickers_collected_count: '{count} / {total} collected',
+  group_original_six: 'Original Six',
+  group_festival_additions: 'Festival Additions',
+  group_sky_collection: 'Sky Collection',
+  group_completed_badge: 'Completed! ✦',
+  tab_stickers: 'Fireworks Album',
+  tab_goals: 'Festival Discoveries',
+  album_empty_title: 'Your album is waiting for its first spark',
+  album_empty_desc: 'Light any firework in the festival to collect your first sticker!',
+  inspect_sticker_aria: 'Inspect {name} sticker',
   sticker_collected_aria: '{name} sticker collected',
   sticker_locked_aria: '{name} sticker locked',
   parent_unlock_label: 'Parents: Hold to unlock all crackers',
@@ -476,6 +485,14 @@ export const STRINGS_EN = {
   goal_decorated_courtyard: 'Courtyard Decorator',
   goal_decorated_courtyard_desc: 'Personalize your courtyard decorations',
   goal_completed: 'Discovered!',
+
+  // Next suggestions (DIW-032, DIW-034)
+  suggestion_title: 'Next idea',
+  suggestion_sky: 'Try a sky firework next!',
+  suggestion_ground: 'Try a ground sparkler next!',
+  suggestion_palettes: 'Try personalizing sparkle colors in the inspector!',
+  suggestion_decorations: 'Personalize your courtyard decorations!',
+  suggestion_dismiss: 'Dismiss suggestion',
 
   // Swatches
   swatch_rose: 'Rose',

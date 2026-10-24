@@ -554,6 +554,10 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             onReplayFavourites={() => gc.goToIdle()}
             onMakeRangoli={() => onBack({ openActivity: 'rangoli' })}
             onFinishForNow={() => onBack()}
+            gentleGoals={saveState.gentleGoals}
+            isSequence={Boolean(gc?.isSequenceActive)}
+            sequenceIndex={gc?.sequenceIndex || 0}
+            sequenceTotal={gc?.sequence?.length || 0}
           />
         )}
 
@@ -577,6 +581,11 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             }}
             isMuted={isMuted}
             onToggleMute={handleToggleMute}
+            gentleGoals={saveState.gentleGoals}
+            onSelectCracker={(id) => {
+              gc.closeStickerBook()
+              handleSelectCracker(id)
+            }}
           />
         )}
 

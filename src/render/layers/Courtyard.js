@@ -328,7 +328,13 @@ function drawToran(c, w, ground, h, isPortrait, style) {
       c.lineWidth = 1.8
       c.beginPath()
       c.moveTo(x + 5, lintelY)
-      c.quadraticCurveTo(x + bw / 2, lintelY + 8, x + bw - 5, lintelY)
+      if (typeof c.quadraticCurveTo === 'function') {
+        c.quadraticCurveTo(x + bw / 2, lintelY + 8, x + bw - 5, lintelY)
+      } else if (typeof c.bezierCurveTo === 'function') {
+        c.bezierCurveTo(x + bw * 0.3, lintelY + 8, x + bw * 0.7, lintelY + 8, x + bw - 5, lintelY)
+      } else if (typeof c.lineTo === 'function') {
+        c.lineTo(x + bw - 5, lintelY)
+      }
       c.stroke()
 
       const leafCount = 9
@@ -358,7 +364,13 @@ function drawToran(c, w, ground, h, isPortrait, style) {
         c.lineWidth = 1.2
         c.beginPath()
         c.moveTo(sx, lintelY)
-        c.quadraticCurveTo((sx + ex) / 2, lintelY + 9, ex, lintelY)
+        if (typeof c.quadraticCurveTo === 'function') {
+          c.quadraticCurveTo((sx + ex) / 2, lintelY + 9, ex, lintelY)
+        } else if (typeof c.bezierCurveTo === 'function') {
+          c.bezierCurveTo(sx + swagWidth * 0.3, lintelY + 9, sx + swagWidth * 0.7, lintelY + 9, ex, lintelY)
+        } else if (typeof c.lineTo === 'function') {
+          c.lineTo(ex, lintelY)
+        }
         c.stroke()
 
         const blooms = 5

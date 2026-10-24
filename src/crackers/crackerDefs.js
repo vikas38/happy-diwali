@@ -439,7 +439,9 @@ export const R1_CRACKERS = ALL_CRACKER_DEFINITIONS.filter(
   (c) => c.release === 'R0' || c.release === 'R1'
 )
 
-// Active shipped collection in R1: 10 crackers (IDs 0..9)
+export const R2_CRACKERS = ALL_CRACKER_DEFINITIONS
+
+// Active base collection in R1: 10 crackers (IDs 0..9)
 export const CRACKERS = R1_CRACKERS
 
 /**

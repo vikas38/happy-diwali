@@ -144,9 +144,9 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-029 | Build a three-slot celebration sequence editor | EP-05 | P2 | 8 | R2 | Done |
 | DIW-030 | Play celebration sequences with predictable stop and reward rules | EP-05 | P2 | 8 | R2 | Done |
 | DIW-031 | Let players decorate their gameplay courtyard | EP-05 | P2 | 5 | R2 | Done |
-| DIW-032 | Add gentle discovery goals without daily pressure | EP-06 | P3 | 5 | R2 | To Do |
-| DIW-033 | Redesign the collection as a beautiful discovery album | EP-06 | P1 | 5 | R1 | To Do |
-| DIW-034 | Create a polished result and celebration summary | EP-06 | P1 | 5 | R1 | To Do |
+| DIW-032 | Add gentle discovery goals without daily pressure | EP-06 | P3 | 5 | R2 | Done |
+| DIW-033 | Redesign the collection as a beautiful discovery album | EP-06 | P1 | 5 | R1 | Done |
+| DIW-034 | Create a polished result and celebration summary | EP-06 | P1 | 5 | R1 | Done |
 | DIW-035 | Add photo mode and local festival postcard export | EP-06 | P2 | 8 | R2 | To Do |
 | DIW-036 | Give every effect a distinct, controlled sound identity | EP-07 | P1 | 8 | R1 | To Do |
 | DIW-037 | Apply reduced motion and accessible effect descriptions everywhere | EP-07 | P1 | 5 | R1 | To Do |
@@ -924,7 +924,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-032 — Add gentle discovery goals without daily pressure
 
 **Epic:** EP-06 | **Type:** Story | **Priority:** P3 | **Estimate:** 5 points  
-**Release:** R2 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R2 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-017, DIW-027, DIW-031, DIW-033  
 **Code / design pointers:** collection/progress UI; src/store/gameStore.jsx; save schema
 
@@ -932,20 +932,22 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Add three timeless goals: try one ground and one sky effect; try two palettes; decorate your courtyard.
-- [ ] Use optional cosmetic badges with no streaks, expiry, random loot, purchases, or requirement to use louder sound.
-- [ ] Show at most one next suggestion in the gameplay result; allow dismissal.
+- [x] Add three timeless goals: try one ground and one sky effect; try two palettes; decorate your courtyard.
+- [x] Use optional cosmetic badges with no streaks, expiry, random loot, purchases, or requirement to use louder sound.
+- [x] Show at most one next suggestion in the gameplay result; allow dismissal.
 
 **Acceptance criteria**
 
-- [ ] Goals complete from actual recorded actions once and persist across reload.
-- [ ] Muted/reduced-motion play qualifies equally.
-- [ ] Ignoring goals leaves the full core activity usable; rewards do not introduce duplicate star transactions.
+- [x] Goals complete from actual recorded actions once and persist across reload.
+- [x] Muted/reduced-motion play qualifies equally.
+- [x] Ignoring goals leaves the full core activity usable; rewards do not introduce duplicate star transactions.
+
+**Completion:** 24 October 2026 — Implemented three timeless discovery goals (`groundAndSky`, `twoPalettes`, `decoratedCourtyard`) without expiry or daily pressure. Automated goal tracking in `src/store/gameStore.jsx` across cracker completion, palette selection, and courtyard decoration. Added dismissible single next suggestion in `src/ui/RewardOverlay.jsx` and integrated dedicated "Festival Discoveries" tab in `src/ui/StickerBook.jsx`. Verified with unit tests in `test/album-and-goals.test.jsx`.
 
 ### DIW-033 — Redesign the collection as a beautiful discovery album
 
 **Epic:** EP-06 | **Type:** Story | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-008, DIW-010, DIW-016, DIW-017  
 **Code / design pointers:** src/ui/StickerBook.jsx; src/store/gameStore.jsx; collection styles
 
@@ -953,22 +955,24 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Group Original six, Festival additions, and installed future Sky collection entries; show earned/available counts per group.
-- [ ] Use consistent illustrated stickers, an honest empty state, and a clear completed-group treatment.
-- [ ] Let earned entries open details, favourite, or replay through the normal flow.
-- [ ] Preserve earned original-six completion when new catalog groups arrive.
+- [x] Group Original six, Festival additions, and installed future Sky collection entries; show earned/available counts per group.
+- [x] Use consistent illustrated stickers, an honest empty state, and a clear completed-group treatment.
+- [x] Let earned entries open details, favourite, or replay through the normal flow.
+- [x] Preserve earned original-six completion when new catalog groups arrive.
 
 **Acceptance criteria**
 
-- [ ] Counts derive from installed definitions and collected stable IDs; no stale 6/6 total for an expanded catalog.
-- [ ] Locked/unearned entries are distinguishable and inspectable without pretending they are collected.
-- [ ] The album can be opened/closed from a reward without losing its payload or awarding twice.
-- [ ] Grown-up unlock works with keyboard and does not automatically grant stickers.
+- [x] Counts derive from installed definitions and collected stable IDs; no stale 6/6 total for an expanded catalog.
+- [x] Locked/unearned entries are distinguishable and inspectable without pretending they are collected.
+- [x] The album can be opened/closed from a reward without losing its payload or awarding twice.
+- [x] Grown-up unlock works with keyboard and does not automatically grant stickers.
+
+**Completion:** 24 October 2026 — Redesigned `StickerBook` in `src/ui/StickerBook.jsx` into a rich discovery album grouping 14 cracker stickers across Original Six, Festival Additions, and Sky Collection. Displays earned/available counts per group, honest empty state when 0 stickers earned, distinct completed-group treatment, keyboard-accessible sticker selection/replay callback, and preserves original six completion. Verified with unit tests in `test/album-and-goals.test.jsx`.
 
 ### DIW-034 — Create a polished result and celebration summary
 
 **Epic:** EP-06 | **Type:** Story | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-012, DIW-017, DIW-033  
 **Code / design pointers:** src/ui/RewardOverlay.jsx; src/fsm/GameController.js; collection summary UI
 
@@ -976,17 +980,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Show actual awarded stars, new-sticker status, and one suggested next effect; use a short restrained reveal.
-- [ ] Offer Play again, Choose another, and Finish for now; secondary Favourite is available without leaving the result.
-- [ ] Celebrate group completion distinctly and preserve silent/reduced alternatives.
-- [ ] When R2 sequences ship, extend the summary with completed segments and earned totals using the same transaction data.
+- [x] Show actual awarded stars, new-sticker status, and one suggested next effect; use a short restrained reveal.
+- [x] Offer Play again, Choose another, and Finish for now; secondary Favourite is available without leaving the result.
+- [x] Celebrate group completion distinctly and preserve silent/reduced alternatives.
+- [x] When R2 sequences ship, extend the summary with completed segments and earned totals using the same transaction data.
 
 **Acceptance criteria**
 
-- [ ] First-time, replay, interrupted, and whole-group completion each display the correct metadata.
-- [ ] Finish for now leaves the game in a stopped state with no background audio.
-- [ ] One primary action is visually dominant; the result does not obscure essential mute/close controls.
-- [ ] Reload/reopening does not replay a reward transaction.
+- [x] First-time, replay, interrupted, and whole-group completion each display the correct metadata.
+- [x] Finish for now leaves the game in a stopped state with no background audio.
+- [x] One primary action is visually dominant; the result does not obscure essential mute/close controls.
+- [x] Reload/reopening does not replay a reward transaction.
+
+**Completion:** 24 October 2026 — Polished `RewardOverlay` in `src/ui/RewardOverlay.jsx` with actual awarded stars rating reveal, new-sticker celebratory badge, dismissible next gentle discovery suggestion, sequence segment progress indicator (`Show X of Y`), collection-complete handling, and single dominant action. Verified with unit tests in `test/album-and-goals.test.jsx`.
 
 ### DIW-035 — Add photo mode and local festival postcard export
 

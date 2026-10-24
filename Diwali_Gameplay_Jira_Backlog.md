@@ -598,9 +598,9 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 - [x] Timing remains coherent under variable frame intervals; completion follows the visual ending.
 - [x] Cancel/restart/dispose cannot leak timers or emit a second completion.
 - [x] Each primitive has deterministic geometry checks and a reduced-motion presentation.
+- [x] Peak simultaneous particles stay within the configured shared budget, including settling tails.
 
 **Completion:** 24 October 2026 — Created `src/crackers/effectPrimitives.js` exposing deterministic PRNG (`createRng`), normalized stage anchors (`resolveAnchor`), per-effect `BudgetTracker`, the 6 geometric emission primitives (`emitFan`, `emitRing`, `emitArc`, `emitTrail`, `emitPetal`, `emitStaggeredBurst`) with reduced motion and calm visuals scaling, and `AuthoredShowTimeline` explicitly modeling Anticipation → Focal Action → Settling → Completed with cancellation handles and bounded catch-up. Verified with 12 unit tests in `test/effect-primitives.test.js`.
-- [ ] Peak simultaneous particles stay within the configured shared budget, including settling tails.
 
 ### DIW-019 — Add Golden Waterfall
 

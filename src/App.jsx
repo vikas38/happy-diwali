@@ -12,6 +12,7 @@ import Countdown from './ui/Countdown.jsx'
 import RewardOverlay from './ui/RewardOverlay.jsx'
 import StickerBook from './ui/StickerBook.jsx'
 import CalmCorner from './ui/CalmCorner.jsx'
+import CrackerLibrary from './ui/CrackerLibrary.jsx'
 import { GameController, STATES } from './fsm/GameController.js'
 import { getSoundEngine } from './audio/SoundEngine.js'
 import { playCrackerShow, fireRewardConfetti } from './crackers/crackerControllers.js'
@@ -407,6 +408,8 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             unlocked={saveState.unlocked}
             selectedCracker={selectedCracker}
             onSelect={handleSelectCracker}
+            onOpenLibrary={() => gc.openLibrary()}
+            favorites={saveState.favorites}
           />
         )}
 
@@ -499,6 +502,21 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             }}
             isMuted={isMuted}
             onToggleMute={handleToggleMute}
+          />
+        )}
+
+        {/* Cracker Library — browsable catalog with category filters and favourites */}
+        {fsmState === STATES.LIBRARY_OVERLAY && (
+          <CrackerLibrary
+            isOpen={true}
+            onClose={() => gc.closeLibrary()}
+            selectedCracker={selectedCracker ?? 0}
+            unlocked={saveState.unlocked}
+            favorites={saveState.favorites}
+            onToggleFavorite={(id) => store.toggleFavorite(id)}
+            onSelect={(id) => {
+              handleSelectCracker(id)
+            }}
           />
         )}
       </div>

@@ -122,7 +122,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-007 | Redesign cracker cards and the quick-access tray | EP-02 | P1 | 5 | R1 | Done |
 | DIW-008 | Build a consistent illustrated cracker asset set | EP-02 | P1 | 8 | R1 | Done |
 | DIW-009 | Simplify the HUD with permanent mute and pause | EP-03 | P1 | 3 | R1 | Done |
-| DIW-010 | Create a browsable cracker library with filters and favourites | EP-03 | P1 | 5 | R1 | To Do |
+| DIW-010 | Create a browsable cracker library with filters and favourites | EP-03 | P1 | 5 | R1 | Done |
 | DIW-011 | Add a clear selected-cracker inspector | EP-03 | P1 | 5 | R1 | To Do |
 | DIW-012 | Make ignition and show states feel clear and satisfying | EP-03 | P1 | 5 | R1 | To Do |
 | DIW-013 | Add brief, skippable gameplay onboarding | EP-03 | P2 | 3 | R1 | To Do |
@@ -380,7 +380,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-010 — Create a browsable cracker library with filters and favourites
 
 **Epic:** EP-03 | **Type:** Story | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-007, DIW-015, DIW-016, DIW-017  
 **Code / design pointers:** src/ui/CrackerCarousel.jsx; cracker library UI (new); src/store/gameStore.jsx
 
@@ -388,17 +388,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Add All, Ground, Sky, and Favourites filters with New as a badge/filter option; avoid a crowded navigation bar.
-- [ ] Use a drawer/sheet on small screens and a bounded panel on large screens; apply the shared interruption model.
-- [ ] Persist favourites and recent selections; keep filters keyboard-operable and announce result counts politely.
-- [ ] Include an empty favourites state with an Add favourite hint and a clear reset-filter action.
+- [x] Add All, Ground, Sky, and Favourites filters with New as a badge/filter option; avoid a crowded navigation bar.
+- [x] Use a drawer/sheet on small screens and a bounded panel on large screens; apply the shared interruption model.
+- [x] Persist favourites and recent selections; keep filters keyboard-operable and announce result counts politely.
+- [x] Include an empty favourites state with an Add favourite hint and a clear reset-filter action.
 
 **Acceptance criteria**
 
-- [ ] All shipped effects appear in the correct category; locked items explain how to access them.
-- [ ] Favourites persist across reload; removed/unknown IDs are ignored without crashing.
-- [ ] Closing the library restores the prior selection and interrupted flow without surprise audio.
-- [ ] Filtering does not strand focus on a removed card or silently change the active cracker.
+- [x] All shipped effects appear in the correct category; locked items explain how to access them.
+- [x] Favourites persist across reload; removed/unknown IDs are ignored without crashing.
+- [x] Closing the library restores the prior selection and interrupted flow without surprise audio.
+- [x] Filtering does not strand focus on a removed card or silently change the active cracker.
+
+**Completion:** 24 October 2026 — Built `CrackerLibrary` in `src/ui/CrackerLibrary.jsx` with category filter chips (All, Ground, Sky, Favourites), polite live result count announcements, empty favourites state with reset action, locked item explanations, direct favorite toggle heart buttons, and wired it to `CrackerCarousel` and `GameController` via `LIBRARY_OVERLAY`. Verified with 5 unit tests in `test/cracker-library.test.jsx`.
 
 ### DIW-011 — Add a clear selected-cracker inspector
 

@@ -139,8 +139,8 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-024 | Add Chrysanthemum Bloom | EP-04 | P2 | 5 | R2 | Done |
 | DIW-025 | Add Double Blossom | EP-04 | P2 | 5 | R2 | Done |
 | DIW-026 | Add Constellation Sparkles | EP-04 | P2 | 5 | R2 | Done |
-| DIW-027 | Let players choose curated effect palettes | EP-05 | P2 | 3 | R2 | To Do |
-| DIW-028 | Add controlled left, center, and right launch placement | EP-05 | P2 | 5 | R2 | To Do |
+| DIW-027 | Let players choose curated effect palettes | EP-05 | P2 | 3 | R2 | Done |
+| DIW-028 | Add controlled left, center, and right launch placement | EP-05 | P2 | 5 | R2 | Done |
 | DIW-029 | Build a three-slot celebration sequence editor | EP-05 | P2 | 8 | R2 | To Do |
 | DIW-030 | Play celebration sequences with predictable stop and reward rules | EP-05 | P2 | 8 | R2 | To Do |
 | DIW-031 | Let players decorate their gameplay courtyard | EP-05 | P2 | 5 | R2 | To Do |
@@ -805,7 +805,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-027 — Let players choose curated effect palettes
 
 **Epic:** EP-05 | **Type:** Story | **Priority:** P2 | **Estimate:** 3 points  
-**Release:** R2 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R2 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-011, DIW-016, DIW-017, DIW-018  
 **Code / design pointers:** selected-cracker panel; src/crackers/crackerDefs.js; particle color configuration
 
@@ -813,20 +813,22 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Offer three or four named palettes per compatible effect, such as Marigold Gold, Rose & Gold, and Peacock Jewels.
-- [ ] Show name plus swatches; persist the selected palette by stable cracker ID.
-- [ ] Apply choices to preview, live effect, and saved show segments; disable editing during an active effect.
+- [x] Offer three or four named palettes per compatible effect, such as Marigold Gold, Rose & Gold, and Peacock Jewels.
+- [x] Show name plus swatches; persist the selected palette by stable cracker ID.
+- [x] Apply choices to preview, live effect, and saved show segments; disable editing during an active effect.
 
 **Acceptance criteria**
 
-- [ ] Palette changes do not alter duration, particle budget, loudness, or reward value.
-- [ ] Every palette retains visible contrast against the courtyard; color names work without swatch perception.
-- [ ] A palette is a variant of an existing cracker, not an extra collectible or first-time reward.
+- [x] Palette changes do not alter duration, particle budget, loudness, or reward value.
+- [x] Every palette retains visible contrast against the courtyard; color names work without swatch perception.
+- [x] A palette is a variant of an existing cracker, not an extra collectible or first-time reward.
+
+**Completion:** 24 October 2026 — Defined four curated palettes (Marigold Gold, Rose & Gold, Peacock Emerald, Festival Rainbow) in `src/crackers/crackerDefs.js`. Added palette chip selector with swatches and accessible names in `src/ui/CrackerInspector.jsx`, persisted selected palette per cracker ID via `setCrackerPalette` in `src/store/save.js` and `src/store/gameStore.jsx`, connected active palette to `src/crackers/crackerControllers.js`, and verified with 3 unit tests in `test/cracker-palettes.test.jsx`.
 
 ### DIW-028 — Add controlled left, center, and right launch placement
 
 **Epic:** EP-05 | **Type:** Story | **Priority:** P2 | **Estimate:** 5 points  
-**Release:** R2 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R2 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-004, DIW-012, DIW-018  
 **Code / design pointers:** src/ui/CanvasStage.jsx; selected-cracker panel; controller launch parameters
 
@@ -834,15 +836,17 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Offer Left/Center/Right anchors with a stage highlight and equivalent labeled buttons.
-- [ ] Map anchors to safe normalized effect zones; preserve ground-versus-sky behavior and adult positioning.
-- [ ] Optional direct tapping selects the nearest valid anchor; never require freeform dragging or place an effect under controls.
+- [x] Offer Left/Center/Right anchors with a stage highlight and equivalent labeled buttons.
+- [x] Map anchors to safe normalized effect zones; preserve ground-versus-sky behavior and adult positioning.
+- [x] Optional direct tapping selects the nearest valid anchor; never require freeform dragging or place an effect under controls.
 
 **Acceptance criteria**
 
-- [ ] All three placements fit every supported viewport and recalculate after rotation.
-- [ ] Keyboard/touch produce equivalent placement; invalid taps do not trigger ignition.
-- [ ] Preview and actual show use the same anchor and bounded effect envelope.
+- [x] All three placements fit every supported viewport and recalculate after rotation.
+- [x] Keyboard/touch produce equivalent placement; invalid taps do not trigger ignition.
+- [x] Preview and actual show use the same anchor and bounded effect envelope.
+
+**Completion:** 24 October 2026 — Implemented normalized anchors (`PLACEMENT_X.left = 0.38`, `center = 0.57`, `right = 0.72`) in `src/render/layers/Courtyard.js` and `src/render/layers/Background.js`. Added launch position selector chips to `src/ui/CrackerInspector.jsx`, updated `src/render/characters/Adult.js` and `src/crackers/crackerControllers.js` to anchor emissions and character positioning cleanly across viewports, persisted `launchPlacement` via `src/store/gameStore.jsx`, and verified with 6 unit tests in `test/launch-placement.test.jsx`.
 
 ### DIW-029 — Build a three-slot celebration sequence editor
 

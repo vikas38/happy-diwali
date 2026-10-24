@@ -13,7 +13,7 @@
 //   - Distinct Safe Zone viewing mat with brass floral border
 // ===================================================================
 
-import { STAGE, drawCourtyard, propScale } from './Courtyard.js'
+import { STAGE, drawCourtyard, propScale, PLACEMENT_X } from './Courtyard.js'
 import { DEPTH } from '../Renderer.js'
 export const LAYOUT = STAGE
 
@@ -60,8 +60,15 @@ export class Background {
     this.w = 0
     this.h = 0
     this.currentCracker = 0
+    this.launchPlacement = 'center'
     this.gameState = 'SAFETY_SPLASH'
     this.fuseBurn = 0
+  }
+
+  setPlacement(placement) {
+    if (placement && ['left', 'center', 'right'].includes(placement)) {
+      this.launchPlacement = placement
+    }
   }
 
   setGameState(state, crackerIndex) {
@@ -564,7 +571,8 @@ export class Background {
     ]
     if (!activeStates.includes(this.gameState)) return
 
-    const cx = w * LAYOUT.launchX
+    const px = PLACEMENT_X[this.launchPlacement] ?? LAYOUT.launchX
+    const cx = w * px
     const cy = h * LAYOUT.launchY - 6
     const isBurning = this.gameState === 'COUNTDOWN_3_2_1'
     const isReady = this.gameState === 'READY_ON_STREET'

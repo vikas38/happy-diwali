@@ -1,10 +1,11 @@
-import { effectOrigin } from '../layers/Courtyard.js'
+import { effectOrigin, PLACEMENT_X, STAGE } from '../layers/Courtyard.js'
 // A clearly labelled adult handles the pretend ignition; children stay back.
-export function drawAdult(ctx, w, h, index) {
-  const x = w * 0.57 + 38,
+export function drawAdult(ctx, w, h, index, placement = 'center') {
+  const px = PLACEMENT_X[placement] ?? STAGE.launchX
+  const x = w * px + 38,
     y = h * 0.73 - 4,
     s = Math.max(0.75, Math.min(1.2, h / 650))
-  const tip = effectOrigin(index, w, h),
+  const tip = effectOrigin(index, w, h, placement),
     tx = (tip.x - x) / s,
     ty = (tip.y - y) / s
   ctx.save()

@@ -100,6 +100,19 @@ export function createDefaultSave() {
     motionPolicy: MOTION_POLICY.SYSTEM, // 'SYSTEM' | 'REDUCED' | 'FULL'
     intensity: INTENSITY.SOFT,
     selectedPalette: SPARKLE_PALETTES.GOLD,
+    selectedPalettes: {},
+    launchPlacement: 'center',
+    sequenceDraft: [],
+    courtyardDecorations: {
+      rangoliMotif: 'lotus',
+      toranStyle: 'marigold',
+      diyaStyle: 'arch',
+    },
+    gentleGoals: {
+      groundAndSky: false,
+      twoPalettes: false,
+      decoratedCourtyard: false,
+    },
     seenSplash: false,
     seenIntros: [], // cracker indices whose intro card has been shown
     seenHint: false, // first-run courtyard hint
@@ -311,6 +324,64 @@ export function validateSave(raw) {
       ? ['choose', 'grownup', 'controls']
       : []
 
+  // selectedPalettes: { [id]: paletteKey }
+  const selectedPalettes = {}
+  if (
+    raw.selectedPalettes &&
+    typeof raw.selectedPalettes === 'object' &&
+    !Array.isArray(raw.selectedPalettes)
+  ) {
+    for (const [idStr, pal] of Object.entries(raw.selectedPalettes)) {
+      const idNum = Number(idStr)
+      if (isValidCrackerId(idNum) && Object.values(SPARKLE_PALETTES).includes(pal)) {
+        selectedPalettes[idNum] = pal
+      }
+    }
+  }
+
+  const launchPlacement = ['left', 'center', 'right'].includes(raw.launchPlacement)
+    ? raw.launchPlacement
+    : defaults.launchPlacement || 'center'
+
+  let sequenceDraft = []
+  if (Array.isArray(raw.sequenceDraft)) {
+    sequenceDraft = raw.sequenceDraft
+      .filter(
+        (slot) =>
+          slot &&
+          typeof slot === 'object' &&
+          isValidCrackerId(slot.crackerId) &&
+          (!slot.palette || Object.values(SPARKLE_PALETTES).includes(slot.palette)) &&
+          (!slot.placement || ['left', 'center', 'right'].includes(slot.placement))
+      )
+      .slice(0, 3)
+      .map((slot) => ({
+        crackerId: slot.crackerId,
+        palette: slot.palette || SPARKLE_PALETTES.GOLD,
+        placement: slot.placement || 'center',
+      }))
+  }
+
+  const courtyardDecorations = {
+    rangoliMotif: ['lotus', 'geometric', 'diyas'].includes(raw.courtyardDecorations?.rangoliMotif)
+      ? raw.courtyardDecorations.rangoliMotif
+      : 'lotus',
+    toranStyle: ['marigold', 'mango_leaves'].includes(raw.courtyardDecorations?.toranStyle)
+      ? raw.courtyardDecorations.toranStyle
+      : 'marigold',
+    diyaStyle: ['arch', 'courtyard_row', 'haveli_steps'].includes(
+      raw.courtyardDecorations?.diyaStyle
+    )
+      ? raw.courtyardDecorations.diyaStyle
+      : 'arch',
+  }
+
+  const gentleGoals = {
+    groundAndSky: Boolean(raw.gentleGoals?.groundAndSky),
+    twoPalettes: Boolean(raw.gentleGoals?.twoPalettes),
+    decoratedCourtyard: Boolean(raw.gentleGoals?.decoratedCourtyard),
+  }
+
   return {
     version: SAVE_VERSION,
     unlocked: validUnlocked,
@@ -325,6 +396,11 @@ export function validateSave(raw) {
     motionPolicy,
     intensity,
     selectedPalette,
+    selectedPalettes,
+    launchPlacement,
+    sequenceDraft,
+    courtyardDecorations,
+    gentleGoals,
     seenSplash,
     seenIntros: validSeenIntros,
     seenHint: seenHintBool,

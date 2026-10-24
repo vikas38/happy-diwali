@@ -93,7 +93,11 @@ export function playCrackerShow(index, engines, onDone) {
     sounds = []
   let cancelled = false,
     tick = 0
-  const { x, y } = effectOrigin(index, r.width, r.height)
+  const placement =
+    engines?.store?.getState?.()?.launchPlacement ||
+    engines?.store?.state?.launchPlacement ||
+    'center'
+  const { x, y } = effectOrigin(index, r.width, r.height, placement)
   const scale = Math.max(0.7, Math.min(1.5, r.height / 650, r.width / 650))
   const calm = Boolean(p.calmVisuals || r._calmVisuals)
   const motionReduced = Boolean(r._reducedMotion || p.reducedMotion)

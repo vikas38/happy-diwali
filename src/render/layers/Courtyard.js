@@ -26,8 +26,16 @@ export const propScale = (w, h) => {
   // Landscape-first layout
   return Math.max(1.0, Math.min(1.8, w / 700, h / 460))
 }
-export function effectOrigin(index, w, h) {
+
+export const PLACEMENT_X = {
+  left: 0.38,
+  center: 0.57,
+  right: 0.72,
+}
+
+export function effectOrigin(index, w, h, placement = 'center') {
   const s = propScale(w, h)
+  const px = PLACEMENT_X[placement] ?? STAGE.launchX
   const tips = [
     [-6, -36], // 0: Phuljhari
     [0, -28],  // 1: Anar
@@ -45,7 +53,7 @@ export function effectOrigin(index, w, h) {
     [0, -30],  // 13: Constellation Sparkles
   ]
   const [dx, dy] = tips[index] || [0, 0]
-  return { x: w * STAGE.launchX + dx * s, y: h * STAGE.launchY - 6 + dy * s }
+  return { x: w * px + dx * s, y: h * STAGE.launchY - 6 + dy * s }
 }
 const TAU = Math.PI * 2
 function ellipse(c, x, y, rx, ry, color) {

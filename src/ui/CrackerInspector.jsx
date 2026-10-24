@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef } from 'react'
 import ModalOverlay from './controls/ModalOverlay.jsx'
 import CrackerArt from './CrackerArt.jsx'
 import { t } from '../i18n/index.js'
+import { PALETTE_DEFINITIONS } from '../crackers/crackerDefs.js'
 
 /**
  * CrackerInspector — Rich metadata inspection panel for selected crackers.
  * DIW-011: Authored duration, plain-language description, category, palettes,
  * separated natural sound vs playback intensity, explicit silent preview, and
  * clear primary Ask grown-up to light action.
+ * DIW-027 / DIW-028: Curated palette picker and controlled launch placement.
  */
 export default function CrackerInspector({
   cracker,
@@ -21,6 +23,10 @@ export default function CrackerInspector({
   isFavorite = false,
   onToggleFavorite,
   onCustomize,
+  selectedPalette = 'GOLD',
+  onSelectPalette,
+  selectedPlacement = 'center',
+  onSelectPlacement,
   playbackIntensity = 'SOFT',
   titleId = 'intro-card-title',
 }) {
@@ -148,6 +154,69 @@ export default function CrackerInspector({
               <strong className="inspector-spec-value">{palettesList}</strong>
             </div>
           )}
+        </div>
+
+        {/* Curated Palette Selector (DIW-027) */}
+        {Array.isArray(cracker.palettes) && cracker.palettes.length > 0 && (
+          <div className="inspector-palette-section" role="region" aria-label={t('inspector_palettes_label')}>
+            <span className="inspector-spec-label">{t('inspector_palettes_label')}</span>
+            <div className="inspector-palette-chips" role="radiogroup" aria-label={t('inspector_palettes_label')}>
+              {cracker.palettes.map((palKey) => {
+                const palDef = PALETTE_DEFINITIONS[palKey] || {
+                  key: palKey,
+                  name: palKey,
+                  swatches: ['#F59E0B'],
+                }
+                const isSelected = selectedPalette === palKey
+                return (
+                  <button
+                    key={palKey}
+                    type="button"
+                    role="radio"
+                    aria-checked={isSelected}
+                    className={`inspector-palette-chip ${isSelected ? 'is-selected' : ''}`}
+                    onClick={() => onSelectPalette && onSelectPalette(cracker.id, palKey)}
+                    aria-label={`${palDef.name}${isSelected ? ' (Selected)' : ''}`}
+                  >
+                    <span className="palette-chip-swatches" aria-hidden="true">
+                      {palDef.swatches.map((color, sIdx) => (
+                        <span key={sIdx} className="palette-chip-dot" style={{ backgroundColor: color }} />
+                      ))}
+                    </span>
+                    <span className="palette-chip-name">{palDef.name}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Controlled Launch Placement Selector (DIW-028) */}
+        <div className="inspector-placement-section" role="region" aria-label={t('inspector_placement_label')}>
+          <span className="inspector-spec-label">{t('inspector_placement_label')}</span>
+          <div className="inspector-placement-chips" role="radiogroup" aria-label={t('inspector_placement_label')}>
+            {[
+              { key: 'left', labelKey: 'placement_left' },
+              { key: 'center', labelKey: 'placement_center' },
+              { key: 'right', labelKey: 'placement_right' },
+            ].map((p) => {
+              const label = t(p.labelKey)
+              const isSelected = selectedPlacement === p.key
+              return (
+                <button
+                  key={p.key}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSelected}
+                  className={`inspector-placement-chip ${isSelected ? 'is-selected' : ''}`}
+                  onClick={() => onSelectPlacement && onSelectPlacement(p.key)}
+                  aria-label={`${label}${isSelected ? ' (Selected)' : ''}`}
+                >
+                  {label}
+                </button>
+              )
+            })}
+          </div>
         </div>
 
         {/* Locked reason banner if locked */}

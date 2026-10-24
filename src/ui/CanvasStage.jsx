@@ -22,6 +22,7 @@ export default function CanvasStage({
   reducedMotion,
   calmVisuals,
   quality = 'AUTO',
+  launchPlacement = 'center',
   paused,
   onFailure,
 }) {
@@ -34,6 +35,7 @@ export default function CanvasStage({
     const motionPaused = Boolean(reducedMotion || calmVisuals)
     background.reducedMotion = reducedMotion
     background.calmVisuals = calmVisuals
+    if (background.setPlacement) background.setPlacement(launchPlacement)
     renderer._reducedMotion = reducedMotion
     renderer._calmVisuals = calmVisuals
     if (renderer.setQuality) renderer.setQuality(quality)
@@ -117,7 +119,7 @@ export default function CanvasStage({
       {
         draw(ctx, w, h, t) {
           if (background.gameState === 'COUNTDOWN_3_2_1')
-            drawAdult(ctx, w, h, background.currentCracker)
+            drawAdult(ctx, w, h, background.currentCracker, background.launchPlacement)
         },
       },
       DEPTH.MIDGROUND

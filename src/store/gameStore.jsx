@@ -292,6 +292,134 @@ export function GameStoreProvider({ children }) {
     [updateStore]
   )
 
+  const setCrackerPalette = useCallback(
+    (crackerId, palette) => {
+      if (!isValidCrackerId(crackerId)) return
+      if (!Object.values(SPARKLE_PALETTES).includes(palette)) return
+      updateStore((s) => ({
+        ...s,
+        selectedPalette: palette,
+        selectedPalettes: {
+          ...(s.selectedPalettes || {}),
+          [crackerId]: palette,
+        },
+      }))
+    },
+    [updateStore]
+  )
+
+  const setLaunchPlacement = useCallback(
+    (placement) => {
+      if (!['left', 'center', 'right'].includes(placement)) return
+      updateStore((s) => ({
+        ...s,
+        launchPlacement: placement,
+      }))
+    },
+    [updateStore]
+  )
+
+  const addSequenceSlot = useCallback(
+    (crackerId, palette = 'GOLD', placement = 'center') => {
+      if (!isValidCrackerId(crackerId)) return
+      updateStore((s) => {
+        const currentDraft = Array.isArray(s.sequenceDraft) ? s.sequenceDraft : []
+        if (currentDraft.length >= 3) return s
+        return {
+          ...s,
+          sequenceDraft: [...currentDraft, { crackerId, palette, placement }],
+        }
+      })
+    },
+    [updateStore]
+  )
+
+  const updateSequenceSlot = useCallback(
+    (index, slotData) => {
+      updateStore((s) => {
+        const currentDraft = Array.isArray(s.sequenceDraft) ? [...s.sequenceDraft] : []
+        if (index < 0 || index >= currentDraft.length) return s
+        currentDraft[index] = { ...currentDraft[index], ...slotData }
+        return { ...s, sequenceDraft: currentDraft }
+      })
+    },
+    [updateStore]
+  )
+
+  const removeSequenceSlot = useCallback(
+    (index) => {
+      updateStore((s) => {
+        const currentDraft = Array.isArray(s.sequenceDraft) ? s.sequenceDraft : []
+        return {
+          ...s,
+          sequenceDraft: currentDraft.filter((_, idx) => idx !== index),
+        }
+      })
+    },
+    [updateStore]
+  )
+
+  const moveSequenceSlot = useCallback(
+    (fromIndex, toIndex) => {
+      updateStore((s) => {
+        const currentDraft = Array.isArray(s.sequenceDraft) ? [...s.sequenceDraft] : []
+        if (
+          fromIndex < 0 ||
+          fromIndex >= currentDraft.length ||
+          toIndex < 0 ||
+          toIndex >= currentDraft.length
+        ) {
+          return s
+        }
+        const [moved] = currentDraft.splice(fromIndex, 1)
+        currentDraft.splice(toIndex, 0, moved)
+        return { ...s, sequenceDraft: currentDraft }
+      })
+    },
+    [updateStore]
+  )
+
+  const clearSequenceDraft = useCallback(() => {
+    updateStore((s) => ({ ...s, sequenceDraft: [] }))
+  }, [updateStore])
+
+  const setCourtyardDecoration = useCallback(
+    (type, value) => {
+      updateStore((s) => ({
+        ...s,
+        courtyardDecorations: {
+          ...(s.courtyardDecorations || {}),
+          [type]: value,
+        },
+      }))
+    },
+    [updateStore]
+  )
+
+  const resetCourtyardDecorations = useCallback(() => {
+    updateStore((s) => ({
+      ...s,
+      courtyardDecorations: {
+        rangoliMotif: 'lotus',
+        toranStyle: 'marigold',
+        diyaStyle: 'arch',
+      },
+    }))
+  }, [updateStore])
+
+  const completeGentleGoal = useCallback(
+    (goalKey) => {
+      updateStore((s) => ({
+        ...s,
+        gentleGoals: {
+          ...(s.gentleGoals || {}),
+          [goalKey]: true,
+        },
+      }))
+    },
+    [updateStore]
+  )
+
   const setMusicEnabled = useCallback(
     (enabled) => {
       updateStore((s) => ({
@@ -480,6 +608,16 @@ export function GameStoreProvider({ children }) {
     setCalmVisuals,
     setMotionPolicy,
     setSparklePalette,
+    setCrackerPalette,
+    setLaunchPlacement,
+    addSequenceSlot,
+    updateSequenceSlot,
+    removeSequenceSlot,
+    moveSequenceSlot,
+    clearSequenceDraft,
+    setCourtyardDecoration,
+    resetCourtyardDecorations,
+    completeGentleGoal,
     setMusicEnabled,
     markSplashSeen,
     setDiyaLit,

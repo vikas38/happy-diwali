@@ -10,6 +10,37 @@ export const CATALOG_GROUPS = {
   EXPANSION_R2: 'expansion_r2',
 }
 
+export const PALETTE_DEFINITIONS = {
+  GOLD: {
+    key: 'GOLD',
+    name: 'Marigold Gold',
+    label: 'Marigold Gold',
+    swatches: ['#F59E0B', '#FCD34D', '#D97706'],
+    description: 'Warm glowing marigold and amber gold',
+  },
+  ROSE: {
+    key: 'ROSE',
+    name: 'Rose & Gold',
+    label: 'Rose & Gold',
+    swatches: ['#F43F5E', '#FBBF24', '#BE185D'],
+    description: 'Vibrant Jaipur rose with gold accents',
+  },
+  EMERALD: {
+    key: 'EMERALD',
+    name: 'Peacock Emerald',
+    label: 'Peacock Emerald',
+    swatches: ['#10B981', '#064E3B', '#FBBF24'],
+    description: 'Royal peacock turquoise, emerald and gold',
+  },
+  RAINBOW: {
+    key: 'RAINBOW',
+    name: 'Festival Rainbow',
+    label: 'Festival Rainbow',
+    swatches: ['#EF4444', '#F59E0B', '#10B981', '#3B82F6'],
+    description: 'Joyful spectrum of celebration colors',
+  },
+}
+
 export const ORIGINAL_SIX_IDS = [0, 1, 2, 3, 4, 5]
 export const R1_CRACKER_IDS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 export const R2_CRACKER_IDS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]

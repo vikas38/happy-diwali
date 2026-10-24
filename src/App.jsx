@@ -429,6 +429,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
           reducedMotion={effectiveReducedMotion}
           calmVisuals={isMotionPaused}
           quality={saveState.quality || 'AUTO'}
+          launchPlacement={saveState.launchPlacement || 'center'}
           paused={
             fsmState === STATES.CALM_CORNER_OVERLAY ||
             fsmState === STATES.STICKER_BOOK_OVERLAY ||
@@ -498,6 +499,12 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             cracker={uiData.cracker}
             onPutOnStreet={handlePutOnStreet}
             onCancel={handleCancelIntro}
+            selectedPalette={
+              saveState.selectedPalettes?.[uiData.cracker.id] || saveState.selectedPalette || 'GOLD'
+            }
+            onSelectPalette={(id, pal) => store.setCrackerPalette(id, pal)}
+            selectedPlacement={saveState.launchPlacement || 'center'}
+            onSelectPlacement={(placement) => store.setLaunchPlacement(placement)}
           />
         )}
 
@@ -511,6 +518,12 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             isFavorite={saveState.favorites.includes(uiData.cracker.id)}
             onToggleFavorite={(id) => store.toggleFavorite(id)}
             playbackIntensity={saveState.intensity}
+            selectedPalette={
+              saveState.selectedPalettes?.[uiData.cracker.id] || saveState.selectedPalette || 'GOLD'
+            }
+            onSelectPalette={(id, pal) => store.setCrackerPalette(id, pal)}
+            selectedPlacement={saveState.launchPlacement || 'center'}
+            onSelectPlacement={(placement) => store.setLaunchPlacement(placement)}
           />
         )}
 

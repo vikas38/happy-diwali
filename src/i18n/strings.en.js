@@ -420,6 +420,42 @@ export const STRINGS_EN = {
   inspector_customize_btn: 'Customize',
   inspector_locked_reason: 'Discover this sparkle by lighting earlier sparkles in the festival.',
 
+  // Placement & Customization (DIW-027, DIW-028)
+  inspector_placement_label: 'Launch position',
+  placement_left: 'Left courtyard',
+  placement_center: 'Center stage',
+  placement_right: 'Right haveli',
+
+  // Celebration Sequence (DIW-029, DIW-030)
+  sequence_builder_title: 'Celebration Show',
+  sequence_builder_subtitle: 'Arrange up to three sparkles in your festival show',
+  sequence_slot_empty: 'Empty show slot',
+  sequence_add_slot: 'Add sparkle',
+  sequence_remove_slot: 'Remove sparkle',
+  sequence_move_left: 'Move earlier',
+  sequence_move_right: 'Move later',
+  sequence_est_time: 'Estimated show time: {time}s',
+  sequence_play_btn: 'Play celebration show',
+  sequence_clear_btn: 'Clear show',
+  sequence_stop_btn: 'Stop show',
+  sequence_progress: 'Show {current} of {total}',
+
+  // Courtyard Decorations (DIW-031)
+  decorations_title: 'Courtyard Decorations',
+  decorations_subtitle: 'Personalize your festival courtyard',
+  decorations_reset_btn: 'Reset decorations',
+
+  // Gentle Discovery Goals (DIW-032)
+  goals_title: 'Festival Discoveries',
+  goals_subtitle: 'Gentle celebratory discoveries without pressure',
+  goal_ground_and_sky: 'Courtyard & Sky Explorer',
+  goal_ground_and_sky_desc: 'Light one ground sparkle and one sky sparkle',
+  goal_two_palettes: 'Festival Colors',
+  goal_two_palettes_desc: 'Celebrate with two different sparkle palettes',
+  goal_decorated_courtyard: 'Courtyard Decorator',
+  goal_decorated_courtyard_desc: 'Personalize your courtyard decorations',
+  goal_completed: 'Discovered!',
+
   // Swatches
   swatch_rose: 'Rose',
   swatch_purple: 'Purple',

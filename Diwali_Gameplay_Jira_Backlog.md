@@ -143,7 +143,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-028 | Add controlled left, center, and right launch placement | EP-05 | P2 | 5 | R2 | Done |
 | DIW-029 | Build a three-slot celebration sequence editor | EP-05 | P2 | 8 | R2 | Done |
 | DIW-030 | Play celebration sequences with predictable stop and reward rules | EP-05 | P2 | 8 | R2 | Done |
-| DIW-031 | Let players decorate their gameplay courtyard | EP-05 | P2 | 5 | R2 | To Do |
+| DIW-031 | Let players decorate their gameplay courtyard | EP-05 | P2 | 5 | R2 | Done |
 | DIW-032 | Add gentle discovery goals without daily pressure | EP-06 | P3 | 5 | R2 | To Do |
 | DIW-033 | Redesign the collection as a beautiful discovery album | EP-06 | P1 | 5 | R1 | To Do |
 | DIW-034 | Create a polished result and celebration summary | EP-06 | P1 | 5 | R1 | To Do |
@@ -901,7 +901,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-031 — Let players decorate their gameplay courtyard
 
 **Epic:** EP-05 | **Type:** Story | **Priority:** P2 | **Estimate:** 5 points  
-**Release:** R2 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R2 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-005, DIW-015, DIW-017  
 **Code / design pointers:** src/render/layers/Courtyard.js; decoration panel (new); save schema
 
@@ -909,15 +909,17 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Offer three curated rangoli motifs, two toran styles, and a small diya arrangement choice within the gameplay page.
-- [ ] Use fixed decoration slots; persist selections and provide Reset decorations without resetting game progress.
-- [ ] Render chosen props through the same scene model used by photo mode; keep launch zones clear.
+- [x] Offer three curated rangoli motifs, two toran styles, and a small diya arrangement choice within the gameplay page.
+- [x] Use fixed decoration slots; persist selections and provide Reset decorations without resetting game progress.
+- [x] Render chosen props through the same scene model used by photo mode; keep launch zones clear.
 
 **Acceptance criteria**
 
-- [ ] Decorations survive reload and switching game modes.
-- [ ] All combinations retain character/effect readability and do not overlap required controls.
-- [ ] Selecting a decoration never lights a cracker, changes sound, or consumes stars.
+- [x] Decorations survive reload and switching game modes.
+- [x] All combinations retain character/effect readability and do not overlap required controls.
+- [x] Selecting a decoration never lights a cracker, changes sound, or consumes stars.
+
+**Completion:** 24 October 2026 — Created `CourtyardDecorationsModal` in `src/ui/CourtyardDecorationsModal.jsx` offering 3 rangoli motifs (`lotus`, `geometric`, `diyas`), 2 toran styles (`marigold`, `mango_leaves`), and 3 diya arrangements (`arch`, `courtyard_row`, `haveli_steps`) with reset support. Implemented dedicated canvas renderers (`drawRangoliMotif`, `drawToran`, `drawDiyaArrangement`) in `src/render/layers/Courtyard.js` and wired to `Background.js` and `CanvasStage.jsx` keeping launch zones and characters completely clear. Added HUD shortcut and overlay management in `src/App.jsx`. Verified with 4 unit tests in `test/courtyard-decorations.test.jsx`.
 
 ### DIW-032 — Add gentle discovery goals without daily pressure
 

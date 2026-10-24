@@ -23,6 +23,7 @@ export default function CanvasStage({
   calmVisuals,
   quality = 'AUTO',
   launchPlacement = 'center',
+  courtyardDecorations,
   paused,
   onFailure,
 }) {
@@ -36,6 +37,9 @@ export default function CanvasStage({
     background.reducedMotion = reducedMotion
     background.calmVisuals = calmVisuals
     if (background.setPlacement) background.setPlacement(launchPlacement)
+    if (background.setDecorations && courtyardDecorations) {
+      background.setDecorations(courtyardDecorations)
+    }
     renderer._reducedMotion = reducedMotion
     renderer._calmVisuals = calmVisuals
     if (renderer.setQuality) renderer.setQuality(quality)
@@ -48,7 +52,7 @@ export default function CanvasStage({
     jellySquash.reducedMotion = reducedMotion
     jellySquash.calmVisuals = calmVisuals
     jellySquash.reset()
-  }, [reducedMotion, calmVisuals, quality])
+  }, [reducedMotion, calmVisuals, quality, launchPlacement, courtyardDecorations])
   useEffect(() => {
     const sync = () => {
       const r = engines.current?.renderer
@@ -165,6 +169,8 @@ export default function CanvasStage({
     jellySquash.calmVisuals = calmVisuals
     background.reducedMotion = reducedMotion
     background.calmVisuals = calmVisuals
+    if (background.setPlacement) background.setPlacement(launchPlacement)
+    if (background.setDecorations && courtyardDecorations) background.setDecorations(courtyardDecorations)
     chhotu.reducedMotion = Boolean(reducedMotion || calmVisuals)
     pip.reducedMotion = Boolean(reducedMotion || calmVisuals)
     engines.current = { renderer, particles, jellySquash, background, pip, chhotu }

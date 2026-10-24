@@ -15,6 +15,7 @@ import CalmCorner from './ui/CalmCorner.jsx'
 import CrackerLibrary from './ui/CrackerLibrary.jsx'
 import CrackerInspector from './ui/CrackerInspector.jsx'
 import CelebrationSequenceEditor from './ui/CelebrationSequenceEditor.jsx'
+import CourtyardDecorationsModal from './ui/CourtyardDecorationsModal.jsx'
 import { GameController, STATES } from './fsm/GameController.js'
 import { getSoundEngine } from './audio/SoundEngine.js'
 import { playCrackerShow, fireRewardConfetti } from './crackers/crackerControllers.js'
@@ -371,6 +372,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
         sequenceTotal={gc?.sequence?.length || 0}
         onStopSequence={() => gc?.stopSequence?.()}
         onOpenSequenceBuilder={() => gc?.openSequenceBuilder?.()}
+        onOpenDecorations={() => gc?.openDecorations?.()}
       />
 
       {audioState && (
@@ -436,6 +438,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
           calmVisuals={isMotionPaused}
           quality={saveState.quality || 'AUTO'}
           launchPlacement={saveState.launchPlacement || 'center'}
+          courtyardDecorations={saveState.courtyardDecorations}
           paused={
             fsmState === STATES.CALM_CORNER_OVERLAY ||
             fsmState === STATES.STICKER_BOOK_OVERLAY ||
@@ -607,6 +610,20 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
               gc.closeSequenceBuilder()
               gc.startSequence(seq)
             }}
+          />
+        )}
+
+        {/* Courtyard Decorations Modal (DIW-031) */}
+        {fsmState === STATES.DECORATIONS_OVERLAY && (
+          <CourtyardDecorationsModal
+            isOpen={true}
+            onClose={() => gc.closeDecorations()}
+            decorations={saveState.courtyardDecorations}
+            onSelectDecoration={(type, val) => {
+              store.setCourtyardDecoration(type, val)
+              store.completeGentleGoal('decoratedCourtyard')
+            }}
+            onReset={() => store.resetCourtyardDecorations()}
           />
         )}
       </div>

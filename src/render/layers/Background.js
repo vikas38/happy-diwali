@@ -61,8 +61,19 @@ export class Background {
     this.h = 0
     this.currentCracker = 0
     this.launchPlacement = 'center'
+    this.decorations = {
+      rangoliMotif: 'lotus',
+      toranStyle: 'marigold',
+      diyaStyle: 'arch',
+    }
     this.gameState = 'SAFETY_SPLASH'
     this.fuseBurn = 0
+  }
+
+  setDecorations(decorations) {
+    if (decorations && typeof decorations === 'object') {
+      this.decorations = { ...this.decorations, ...decorations }
+    }
   }
 
   setPlacement(placement) {
@@ -507,7 +518,7 @@ export class Background {
 
   draw(ctx, w, h, time) {
     const motionPaused = Boolean(this.reducedMotion || this.calmVisuals)
-    drawCourtyard(ctx, w, h, time, this.gameState, motionPaused)
+    drawCourtyard(ctx, w, h, time, this.gameState, motionPaused, this.decorations)
     if (!motionPaused && this.gameState !== 'CRACKER_SHOW_ACTIVE') {
       this._drawAmbientBursts(ctx, w, h, time)
     }

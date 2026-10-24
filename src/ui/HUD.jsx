@@ -34,6 +34,7 @@ export default function HUD({
   sequenceTotal = 0,
   onStopSequence,
   onOpenSequenceBuilder,
+  onOpenDecorations,
 }) {
   const [internalSettingsOpen, setInternalSettingsOpen] = useState(false)
   const isSettingsOpen =
@@ -98,16 +99,28 @@ export default function HUD({
               </button>
             </div>
           ) : (
-            onOpenSequenceBuilder && (
-              <button
-                type="button"
-                className="hud-sequence-btn"
-                onClick={onOpenSequenceBuilder}
-                aria-label={t('sequence_builder_title')}
-              >
-                <span aria-hidden="true">▶</span> {t('sequence_builder_title')}
-              </button>
-            )
+            <>
+              {onOpenSequenceBuilder && (
+                <button
+                  type="button"
+                  className="hud-sequence-btn"
+                  onClick={onOpenSequenceBuilder}
+                  aria-label={t('sequence_builder_title')}
+                >
+                  <span aria-hidden="true">▶</span> {t('sequence_builder_title')}
+                </button>
+              )}
+              {onOpenDecorations && (
+                <button
+                  type="button"
+                  className="hud-decorations-btn"
+                  onClick={onOpenDecorations}
+                  aria-label={t('decorations_title')}
+                >
+                  <span aria-hidden="true">🪔</span> {t('decorations_button_label')}
+                </button>
+              )}
+            </>
           )}
 
           <button

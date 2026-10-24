@@ -196,52 +196,237 @@ function renderStaticScenery(c, w, h) {
   }
   halo(c, w * 0.15, ground + 20, 160, '#e7a34216')
   halo(c, w * 0.9, ground + 20, 160, '#e7a34212')
+}
 
-  // Traditional doorstep rangoli at the house entrance (right haveli threshold)
-  const doorBw = Math.min(w * 0.21, 270)
-  const rangoliX = w - doorBw * 0.48
-  const rangoliY = ground + 16
-  const rangoliR = Math.min(20, doorBw * 0.15)
-
+function drawRangoliMotif(c, x, y, r, motif) {
   c.save()
-  c.fillStyle = '#e981a030'
-  c.beginPath()
-  c.arc(rangoliX, rangoliY, rangoliR * 1.25, 0, TAU)
-  c.fill()
+  if (motif === 'geometric') {
+    // Sacred 8-pointed star / diamond yantra
+    c.fillStyle = '#1e384d50'
+    c.beginPath()
+    c.arc(x, y, r * 1.3, 0, TAU)
+    c.fill()
 
-  c.strokeStyle = '#61c9be'
-  c.lineWidth = 1.4
-  c.beginPath()
-  c.arc(rangoliX, rangoliY, rangoliR, 0, TAU)
-  c.stroke()
+    c.strokeStyle = '#61c9be'
+    c.lineWidth = 1.4
+    c.beginPath()
+    c.arc(x, y, r, 0, TAU)
+    c.stroke()
 
-  c.strokeStyle = '#e981a0'
-  c.lineWidth = 1.2
-  c.beginPath()
-  c.arc(rangoliX, rangoliY, rangoliR * 0.65, 0, TAU)
-  c.stroke()
+    for (const rot of [0, Math.PI / 4]) {
+      c.save()
+      c.translate(x, y)
+      c.rotate(rot)
+      c.strokeStyle = '#f3bb56'
+      c.lineWidth = 1.2
+      const side = r * 1.15
+      c.strokeRect(-side / 2, -side / 2, side, side)
+      c.restore()
+    }
 
-  c.fillStyle = '#f3bb56'
-  c.beginPath()
-  c.arc(rangoliX, rangoliY, rangoliR * 0.28, 0, TAU)
-  c.fill()
-
-  for (let p = 0; p < 6; p++) {
-    const angle = (p * Math.PI) / 3
-    const px = rangoliX + Math.cos(angle) * rangoliR * 0.82
-    const py = rangoliY + Math.sin(angle) * rangoliR * 0.82
+    c.fillStyle = '#e981a0'
+    c.beginPath()
+    c.arc(x, y, r * 0.35, 0, TAU)
+    c.fill()
     c.fillStyle = '#fff4df'
     c.beginPath()
-    c.arc(px, py, 1.8, 0, TAU)
+    c.arc(x, y, r * 0.15, 0, TAU)
     c.fill()
+
+    for (let p = 0; p < 8; p++) {
+      const angle = (p * Math.PI) / 4
+      const px = x + Math.cos(angle) * r * 0.88
+      const py = y + Math.sin(angle) * r * 0.88
+      c.fillStyle = '#fff4df'
+      c.beginPath()
+      c.arc(px, py, 1.8, 0, TAU)
+      c.fill()
+    }
+  } else if (motif === 'diyas') {
+    // Circular rangoli ring with painted miniature diyas
+    c.fillStyle = '#4a261850'
+    c.beginPath()
+    c.arc(x, y, r * 1.3, 0, TAU)
+    c.fill()
+
+    c.strokeStyle = '#f3bb56'
+    c.lineWidth = 1.5
+    c.beginPath()
+    c.arc(x, y, r * 0.95, 0, TAU)
+    c.stroke()
+
+    c.fillStyle = '#e981a0'
+    c.beginPath()
+    c.arc(x, y, r * 0.45, 0, TAU)
+    c.fill()
+
+    c.fillStyle = '#ffd87c'
+    c.beginPath()
+    c.arc(x, y, r * 0.2, 0, TAU)
+    c.fill()
+
+    for (let p = 0; p < 6; p++) {
+      const angle = (p * Math.PI) / 3
+      const dx = x + Math.cos(angle) * r * 0.8
+      const dy = y + Math.sin(angle) * r * 0.8
+      c.fillStyle = '#a65432'
+      c.beginPath()
+      c.ellipse(dx, dy, 3.2, 2.0, angle, 0, TAU)
+      c.fill()
+      c.fillStyle = '#ffdf79'
+      c.beginPath()
+      c.arc(dx + Math.cos(angle - 0.4) * 2, dy + Math.sin(angle - 0.4) * 2, 1.4, 0, TAU)
+      c.fill()
+    }
+  } else {
+    // Default: 'lotus'
+    c.fillStyle = '#e981a030'
+    c.beginPath()
+    c.arc(x, y, r * 1.25, 0, TAU)
+    c.fill()
+
+    c.strokeStyle = '#61c9be'
+    c.lineWidth = 1.4
+    c.beginPath()
+    c.arc(x, y, r, 0, TAU)
+    c.stroke()
+
+    c.strokeStyle = '#e981a0'
+    c.lineWidth = 1.2
+    c.beginPath()
+    c.arc(x, y, r * 0.65, 0, TAU)
+    c.stroke()
+
+    c.fillStyle = '#f3bb56'
+    c.beginPath()
+    c.arc(x, y, r * 0.28, 0, TAU)
+    c.fill()
+
+    for (let p = 0; p < 6; p++) {
+      const angle = (p * Math.PI) / 3
+      const px = x + Math.cos(angle) * r * 0.82
+      const py = y + Math.sin(angle) * r * 0.82
+      c.fillStyle = '#fff4df'
+      c.beginPath()
+      c.arc(px, py, 1.8, 0, TAU)
+      c.fill()
+    }
   }
   c.restore()
 }
 
-export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
+function drawToran(c, w, ground, h, isPortrait, style) {
+  c.save()
+  for (const side of [0, 1]) {
+    const bw = Math.min(w * 0.21, 270)
+    const x = side ? w - bw : 0
+    const top = ground - (isPortrait ? ground * 0.55 : h * 0.31)
+    const lintelY = top + 15
+
+    if (style === 'mango_leaves') {
+      c.strokeStyle = '#c62828'
+      c.lineWidth = 1.8
+      c.beginPath()
+      c.moveTo(x + 5, lintelY)
+      c.quadraticCurveTo(x + bw / 2, lintelY + 8, x + bw - 5, lintelY)
+      c.stroke()
+
+      const leafCount = 9
+      for (let i = 0; i < leafCount; i++) {
+        const u = (i + 0.5) / leafCount
+        const lx = x + 10 + u * (bw - 20)
+        const ly = lintelY + Math.sin(u * Math.PI) * 7
+        c.fillStyle = i % 2 === 0 ? '#2e7d32' : '#388e3c'
+        c.beginPath()
+        c.moveTo(lx, ly)
+        c.bezierCurveTo(lx - 4, ly + 6, lx - 3, ly + 14, lx, ly + 18)
+        c.bezierCurveTo(lx + 3, ly + 14, lx + 4, ly + 6, lx, ly)
+        c.fill()
+        c.fillStyle = '#fbc02d'
+        c.beginPath()
+        c.arc(lx, ly + 1, 1.5, 0, TAU)
+        c.fill()
+      }
+    } else {
+      // Default: 'marigold'
+      const swagCount = 3
+      const swagWidth = (bw - 16) / swagCount
+      for (let s = 0; s < swagCount; s++) {
+        const sx = x + 8 + s * swagWidth
+        const ex = sx + swagWidth
+        c.strokeStyle = '#e65100'
+        c.lineWidth = 1.2
+        c.beginPath()
+        c.moveTo(sx, lintelY)
+        c.quadraticCurveTo((sx + ex) / 2, lintelY + 9, ex, lintelY)
+        c.stroke()
+
+        const blooms = 5
+        for (let b = 0; b < blooms; b++) {
+          const u = b / (blooms - 1)
+          const bx = sx + u * swagWidth
+          const by = lintelY + Math.sin(u * Math.PI) * 8
+          const isOrange = (s + b) % 2 === 0
+          c.fillStyle = isOrange ? '#ff8f00' : '#ffd54f'
+          c.beginPath()
+          c.arc(bx, by, 3.2, 0, TAU)
+          c.fill()
+          c.fillStyle = isOrange ? '#ff6f00' : '#ffca28'
+          c.beginPath()
+          c.arc(bx, by, 1.8, 0, TAU)
+          c.fill()
+        }
+      }
+    }
+  }
+  c.restore()
+}
+
+function drawDiyaArrangement(c, w, ground, h, isPortrait, style, effectiveT) {
+  c.save()
+  if (style === 'courtyard_row') {
+    const count = 7
+    const startX = w * 0.28
+    const endX = w * 0.72
+    const y = ground + 26
+    for (let i = 0; i < count; i++) {
+      const x = startX + (i / (count - 1)) * (endX - startX)
+      lamp(c, x, y, 0.75, effectiveT + i * 1.1)
+    }
+  } else if (style === 'haveli_steps') {
+    for (const side of [0, 1]) {
+      const bw = Math.min(w * 0.21, 270)
+      const baseX = side ? w - bw + 20 : bw - 20
+      for (let s = 0; s < 4; s++) {
+        const stepX = side ? baseX + s * (bw * 0.18) : baseX - s * (bw * 0.18)
+        const stepY = ground + 10 + s * 6
+        lamp(c, stepX, stepY, 0.7 + s * 0.08, effectiveT + s + side * 2)
+      }
+    }
+  } else {
+    // Default: 'arch'
+    for (const side of [0, 1]) {
+      const bw = Math.min(w * 0.21, 270)
+      const x = side ? w - bw : 0
+      const top = ground - (isPortrait ? ground * 0.55 : h * 0.31)
+      for (let j = 0; j < 3; j++) {
+        const ax = x + bw * (0.12 + j * 0.29)
+        const aw = bw * 0.17
+        lamp(c, ax + aw / 2, top + 34, 0.65, effectiveT + j + side)
+      }
+    }
+  }
+  c.restore()
+}
+
+export function drawCourtyard(c, w, h, t, state, reducedMotion = false, decorations = null) {
   const effectiveT = reducedMotion ? 0 : t
   const isPortrait = isPortraitLayout(w, h)
   const ground = getGroundY(w, h)
+  const doorBw = Math.min(w * 0.21, 270)
+  const rangoliX = w - doorBw * 0.48
+  const rangoliY = ground + 16
+  const rangoliR = Math.min(20, doorBw * 0.15)
 
   // 1. Render or blit cached static scenery
   const isJSDOM = typeof navigator !== 'undefined' && /jsdom/i.test(navigator.userAgent)
@@ -268,6 +453,11 @@ export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
   } else {
     renderStaticScenery(c, w, h)
   }
+
+  // Active courtyard decorations (DIW-031)
+  drawToran(c, w, ground, h, isPortrait, decorations?.toranStyle || 'marigold')
+  drawRangoliMotif(c, rangoliX, rangoliY, rangoliR, decorations?.rangoliMotif || 'lotus')
+  drawDiyaArrangement(c, w, ground, h, isPortrait, decorations?.diyaStyle || 'arch', effectiveT)
 
   // 2. Animated overlay: 70 twinkling stars
   for (let i = 0; i < 70; i++) {

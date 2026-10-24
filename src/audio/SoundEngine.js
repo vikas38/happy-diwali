@@ -578,10 +578,21 @@ export class SoundEngine {
     [130.81, 164.81, 196.0, 246.94], // Cmaj7: C E G B
   ]
 
+  setMusicEnabled(enabled) {
+    this._musicEnabled = Boolean(enabled)
+    if (this.musicBus) {
+      this.musicBus.gain.value = enabled ? 1.0 : 0.0
+    }
+    if (!enabled && this._musicPlaying) {
+      this.stopMusic()
+    }
+  }
+
   /**
    * Start the background festive melody loop routed to musicBus.
    */
   startMusic() {
+    if (this._musicEnabled === false) return
     if (!this.ctx || !this._supported || this._musicPlaying) return
     this._musicPlaying = true
     this._musicGain = this.ctx.createGain()

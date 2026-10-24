@@ -24,6 +24,7 @@ export function particleRng() {
 
 export class Particles {
   constructor() {
+    this.quality = 'AUTO'
     this.reducedMotion = false
     this.calmVisuals = false
     this.flashLimiter = new FlashLimiter()
@@ -35,6 +36,10 @@ export class Particles {
     this.flashes = []
     this.activeCount = 0
     this._nextFree = 0 // round-robin start search index for efficiency
+  }
+
+  setQuality(quality) {
+    this.quality = quality
   }
 
   _createParticle() {
@@ -121,7 +126,8 @@ export class Particles {
     p.sat = config.sat ?? 100
     p.light = config.light ?? 60
     p.shape = config.shape || 'circle'
-    p.maxTrail = Math.min(MAX_TRAIL_CAPACITY, config.trail || 0)
+    const trailCap = this.quality === 'LOW' ? 6 : MAX_TRAIL_CAPACITY
+    p.maxTrail = Math.min(trailCap, config.trail || 0)
     p.trailCount = 0
     p.trailHead = 0
     p.rotation = config.rotation ?? particleRng() * Math.PI * 2
@@ -141,9 +147,10 @@ export class Particles {
    * @param {object} config - burst config with angle, spread, speedMin/Max, hueMin/Max, etc.
    */
   burst(x, y, count, config = {}) {
+    const qualityScale = this.quality === 'LOW' ? 0.6 : 1.0
     const actualCount = this.calmVisuals
-      ? Math.max(1, Math.round(count * CALM_VISUALS_CONFIG.particleCountMultiplier))
-      : count
+      ? Math.max(1, Math.round(count * CALM_VISUALS_CONFIG.particleCountMultiplier * qualityScale))
+      : Math.max(1, Math.round(count * qualityScale))
     const speedMin = config.speedMin ?? 30
     const speedMax = config.speedMax ?? 100
     const sizeMin = config.sizeMin ?? 2

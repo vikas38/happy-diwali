@@ -111,6 +111,10 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
     }
   }, [gc, store])
 
+  useEffect(() => {
+    getSoundEngine().setMusicEnabled(saveState.musicEnabled !== false)
+  }, [saveState.musicEnabled])
+
   // Returning from a hidden tab should never skip the visible safety routine.
   useEffect(() => {
     const pauseWhenHidden = () => {
@@ -347,6 +351,10 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
         stars={saveState.stars}
         selectedPalette={saveState.selectedPalette || 'GOLD'}
         onPaletteChange={(pal) => store.setSparklePalette(pal)}
+        quality={saveState.quality || 'AUTO'}
+        onQualityChange={(q) => store.setQuality(q)}
+        musicEnabled={saveState.musicEnabled !== false}
+        onToggleMusic={() => store.setMusicEnabled(saveState.musicEnabled === false)}
         settingsOpen={fsmState === STATES.SETTINGS_OVERLAY}
         onOpenSettings={() => gc.openSettings()}
         onCloseSettings={() => gc.closeSettings()}
@@ -420,6 +428,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
           onClick={handleTapCracker}
           reducedMotion={effectiveReducedMotion}
           calmVisuals={isMotionPaused}
+          quality={saveState.quality || 'AUTO'}
           paused={
             fsmState === STATES.CALM_CORNER_OVERLAY ||
             fsmState === STATES.STICKER_BOOK_OVERLAY ||

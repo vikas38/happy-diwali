@@ -96,6 +96,7 @@ export function createDefaultSave() {
     masterVolume: 0.7, // 0..1
     lastNonZeroVolume: 0.7, // remembered volume for unmuting
     muted: false, // explicit master mute state
+    musicEnabled: true, // optional background festive melody loop
     motionPolicy: MOTION_POLICY.SYSTEM, // 'SYSTEM' | 'REDUCED' | 'FULL'
     intensity: INTENSITY.SOFT,
     selectedPalette: SPARKLE_PALETTES.GOLD,
@@ -320,6 +321,7 @@ export function validateSave(raw) {
     masterVolume,
     lastNonZeroVolume: lastNonZero,
     muted: isMuted || masterVolume === 0,
+    musicEnabled: typeof raw.musicEnabled === 'boolean' ? raw.musicEnabled : defaults.musicEnabled,
     motionPolicy,
     intensity,
     selectedPalette,

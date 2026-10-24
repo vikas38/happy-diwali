@@ -292,6 +292,16 @@ export function GameStoreProvider({ children }) {
     [updateStore]
   )
 
+  const setMusicEnabled = useCallback(
+    (enabled) => {
+      updateStore((s) => ({
+        ...s,
+        musicEnabled: Boolean(enabled),
+      }))
+    },
+    [updateStore]
+  )
+
   const markSplashSeen = useCallback(() => {
     updateStore((s) => {
       if (s.seenSplash) return s
@@ -470,6 +480,7 @@ export function GameStoreProvider({ children }) {
     setCalmVisuals,
     setMotionPolicy,
     setSparklePalette,
+    setMusicEnabled,
     markSplashSeen,
     setDiyaLit,
     setDiyaArrangement,

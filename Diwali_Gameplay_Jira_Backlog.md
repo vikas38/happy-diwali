@@ -126,7 +126,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-011 | Add a clear selected-cracker inspector | EP-03 | P1 | 5 | R1 | Done |
 | DIW-012 | Make ignition and show states feel clear and satisfying | EP-03 | P1 | 5 | R1 | Done |
 | DIW-013 | Add brief, skippable gameplay onboarding | EP-03 | P2 | 3 | R1 | Done |
-| DIW-014 | Create a readable sound, motion, and quality settings sheet | EP-03 | P1 | 5 | R1 | To Do |
+| DIW-014 | Create a readable sound, motion, and quality settings sheet | EP-03 | P1 | 5 | R1 | Done |
 | DIW-015 | Unify drawers, dialogs, and focus restoration | EP-03 | P1 | 5 | R1 | Done |
 | DIW-016 | Make the cracker catalog extensible by stable ID | EP-04 | P1 | 5 | R1 | Done |
 | DIW-017 | Migrate saves for expanded content and customization | EP-04 | P1 | 5 | R1 | Done |
@@ -479,7 +479,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-014 — Create a readable sound, motion, and quality settings sheet
 
 **Epic:** EP-03 | **Type:** Story | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-009, DIW-015, DIW-017  
 **Code / design pointers:** src/ui/HUD.jsx; settings UI (new); src/store/save.js; src/App.jsx
 
@@ -487,17 +487,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Group Master volume/mute, sound intensity, optional music, Motion System/Reduced/Full, and Quality Auto/Low/High.
-- [ ] Persist settings with clear defaults and descriptive labels; separate sound intensity from graphics quality.
-- [ ] Use an explicit Preview sound button if included; never play a sample merely because a control receives focus.
-- [ ] Apply changes immediately where safe and route required restarts through the interruption contract.
+- [x] Group Master volume/mute, sound intensity, optional music, Motion System/Reduced/Full, and Quality Auto/Low/High.
+- [x] Persist settings with clear defaults and descriptive labels; separate sound intensity from graphics quality.
+- [x] Use an explicit Preview sound button if included; never play a sample merely because a control receives focus.
+- [x] Apply changes immediately where safe and route required restarts through the interruption contract.
 
 **Acceptance criteria**
 
-- [ ] Mute overrides every source; explicit motion overrides survive OS changes and reload.
-- [ ] Quality Low changes rendering detail, not unlocks, timing, or rewards.
-- [ ] Every control is labeled, keyboard-operable, and usable at 200% zoom.
-- [ ] Cancel/close restores the interrupted game; no settings modal runs a show behind it.
+- [x] Mute overrides every source; explicit motion overrides survive OS changes and reload.
+- [x] Quality Low changes rendering detail, not unlocks, timing, or rewards.
+- [x] Every control is labeled, keyboard-operable, and usable at 200% zoom.
+- [x] Cancel/close restores the interrupted game; no settings modal runs a show behind it.
+
+**Completion:** 24 October 2026 — Created a comprehensive sound, motion, and quality settings sheet in `src/ui/HUD.jsx`. Grouped master volume & mute, sound intensity (Gentle, Natural, Full), optional background music (On/Off), motion policy (System, Reduced, Full), visual quality (Auto, Low, High), sparkle palette, and replay hints. Added explicit test sound preview on button click without playing on focus. Connected quality scaling to `Renderer.js` (DPR cap 1.0 on Low) and `Particles.js` (reduced density and trail cap on Low). Tested in `test/settings-sheet.test.jsx`.
 
 ### DIW-015 — Unify drawers, dialogs, and focus restoration
 

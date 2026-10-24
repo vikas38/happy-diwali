@@ -21,6 +21,7 @@ export default function CanvasStage({
   onClick,
   reducedMotion,
   calmVisuals,
+  quality = 'AUTO',
   paused,
   onFailure,
 }) {
@@ -35,15 +36,17 @@ export default function CanvasStage({
     background.calmVisuals = calmVisuals
     renderer._reducedMotion = reducedMotion
     renderer._calmVisuals = calmVisuals
+    if (renderer.setQuality) renderer.setQuality(quality)
     particles.reducedMotion = reducedMotion
     particles.calmVisuals = calmVisuals
+    particles.quality = quality
     if (pip) pip.reducedMotion = motionPaused
     if (chhotu) chhotu.reducedMotion = motionPaused
     if (reducedMotion || calmVisuals) particles.flashes = []
     jellySquash.reducedMotion = reducedMotion
     jellySquash.calmVisuals = calmVisuals
     jellySquash.reset()
-  }, [reducedMotion, calmVisuals])
+  }, [reducedMotion, calmVisuals, quality])
   useEffect(() => {
     const sync = () => {
       const r = engines.current?.renderer

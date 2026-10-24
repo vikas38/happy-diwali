@@ -18,6 +18,10 @@ export default function HUD({
   stars,
   selectedPalette = 'GOLD',
   onPaletteChange,
+  quality = 'AUTO',
+  onQualityChange,
+  musicEnabled = true,
+  onToggleMusic,
   onVolumeChange,
   onIntensityChange,
   onToggleMute,
@@ -219,6 +223,29 @@ export default function HUD({
               </div>
 
               <div className="sheet-row">
+                <span className="sheet-label">{t('music_toggle')}</span>
+                <div className="game-sound-modes" role="group" aria-label={t('music_toggle')}>
+                  <button
+                    type="button"
+                    className={musicEnabled ? 'active' : ''}
+                    aria-pressed={musicEnabled}
+                    onClick={() => onToggleMusic?.(true)}
+                  >
+                    <span aria-hidden="true">✦</span> {t('music_enabled')}
+                  </button>
+                  <button
+                    type="button"
+                    className={!musicEnabled ? 'active' : ''}
+                    aria-pressed={!musicEnabled}
+                    onClick={() => onToggleMusic?.(false)}
+                  >
+                    <span aria-hidden="true">×</span> {t('music_disabled')}
+                  </button>
+                </div>
+                <small className="sheet-row-hint">{t('music_hint')}</small>
+              </div>
+
+              <div className="sheet-row">
                 <span className="sheet-label">{t('motion_policy')}</span>
                 <div className="game-sound-modes" role="group" aria-label={t('motion_policy')}>
                   <button
@@ -256,6 +283,37 @@ export default function HUD({
                   </button>
                 </div>
                 <small className="sheet-row-hint">{t('motion_policy_hint')}</small>
+              </div>
+
+              <div className="sheet-row">
+                <span className="sheet-label">{t('graphics_quality')}</span>
+                <div className="game-sound-modes" role="group" aria-label={t('graphics_quality')}>
+                  <button
+                    type="button"
+                    className={quality === 'AUTO' ? 'active' : ''}
+                    aria-pressed={quality === 'AUTO'}
+                    onClick={() => onQualityChange?.('AUTO')}
+                  >
+                    <span aria-hidden="true">✦</span> {t('quality_auto')}
+                  </button>
+                  <button
+                    type="button"
+                    className={quality === 'LOW' ? 'active' : ''}
+                    aria-pressed={quality === 'LOW'}
+                    onClick={() => onQualityChange?.('LOW')}
+                  >
+                    <span aria-hidden="true">🍃</span> {t('quality_low')}
+                  </button>
+                  <button
+                    type="button"
+                    className={quality === 'HIGH' ? 'active' : ''}
+                    aria-pressed={quality === 'HIGH'}
+                    onClick={() => onQualityChange?.('HIGH')}
+                  >
+                    <span aria-hidden="true">✨</span> {t('quality_high')}
+                  </button>
+                </div>
+                <small className="sheet-row-hint">{t('quality_hint')}</small>
               </div>
 
               <div className="sheet-row">

@@ -26,6 +26,7 @@ export class Renderer {
     this.lastTime = 0
     this.time = 0 // accumulated time in seconds
     this._rafId = null
+    this.quality = 'AUTO'
     this._reducedMotion = window.matchMedia
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
       : false
@@ -42,11 +43,17 @@ export class Renderer {
 
   _onWindowResize = () => this._resize()
 
+  setQuality(quality) {
+    this.quality = quality
+    this._resize()
+  }
+
   _resize() {
     const parent = this.canvas.parentElement
     if (!parent) return
     const rect = parent.getBoundingClientRect()
-    this.dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const maxDpr = this.quality === 'LOW' ? 1.0 : this.quality === 'HIGH' ? 2.5 : 2.0
+    this.dpr = Math.min(window.devicePixelRatio || 1, maxDpr)
     // Validate dimensions to avoid 0-size canvas
     const w = Math.max(1, Math.round(rect.width))
     const h = Math.max(1, Math.round(rect.height))

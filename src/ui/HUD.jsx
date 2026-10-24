@@ -29,6 +29,11 @@ export default function HUD({
   onOpenStickerBook,
   onCalmCorner,
   onReplayHints,
+  isSequenceActive = false,
+  sequenceIndex = 0,
+  sequenceTotal = 0,
+  onStopSequence,
+  onOpenSequenceBuilder,
 }) {
   const [internalSettingsOpen, setInternalSettingsOpen] = useState(false)
   const isSettingsOpen =
@@ -78,6 +83,33 @@ export default function HUD({
 
       {showSettings && (
         <div className="game-settings">
+          {isSequenceActive ? (
+            <div className="hud-sequence-control">
+              <span className="hud-sequence-pill" role="status">
+                {t('sequence_progress', { current: sequenceIndex + 1, total: sequenceTotal })}
+              </span>
+              <button
+                type="button"
+                className="hud-stop-sequence-btn"
+                onClick={onStopSequence}
+                aria-label={t('sequence_stop_btn')}
+              >
+                {t('sequence_stop_btn')}
+              </button>
+            </div>
+          ) : (
+            onOpenSequenceBuilder && (
+              <button
+                type="button"
+                className="hud-sequence-btn"
+                onClick={onOpenSequenceBuilder}
+                aria-label={t('sequence_builder_title')}
+              >
+                <span aria-hidden="true">▶</span> {t('sequence_builder_title')}
+              </button>
+            )
+          )}
+
           <button
             className="game-collection"
             onClick={onOpenStickerBook}

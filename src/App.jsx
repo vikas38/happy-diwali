@@ -14,6 +14,7 @@ import StickerBook from './ui/StickerBook.jsx'
 import CalmCorner from './ui/CalmCorner.jsx'
 import CrackerLibrary from './ui/CrackerLibrary.jsx'
 import CrackerInspector from './ui/CrackerInspector.jsx'
+import CelebrationSequenceEditor from './ui/CelebrationSequenceEditor.jsx'
 import { GameController, STATES } from './fsm/GameController.js'
 import { getSoundEngine } from './audio/SoundEngine.js'
 import { playCrackerShow, fireRewardConfetti } from './crackers/crackerControllers.js'
@@ -365,6 +366,11 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
         onOpenStickerBook={() => gc.openStickerBook()}
         onCalmCorner={handleCalmCorner}
         onReplayHints={() => store.replayHints()}
+        isSequenceActive={Boolean(gc?.isSequenceActive)}
+        sequenceIndex={gc?.sequenceIndex || 0}
+        sequenceTotal={gc?.sequence?.length || 0}
+        onStopSequence={() => gc?.stopSequence?.()}
+        onOpenSequenceBuilder={() => gc?.openSequenceBuilder?.()}
       />
 
       {audioState && (
@@ -582,6 +588,24 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             onToggleFavorite={(id) => store.toggleFavorite(id)}
             onSelect={(id) => {
               handleSelectCracker(id)
+            }}
+          />
+        )}
+
+        {/* Celebration Sequence Builder (DIW-029) */}
+        {fsmState === STATES.SEQUENCE_BUILDER_OVERLAY && (
+          <CelebrationSequenceEditor
+            isOpen={true}
+            onClose={() => gc.closeSequenceBuilder()}
+            sequence={saveState.sequenceDraft || []}
+            unlockedIds={saveState.unlocked || [0]}
+            onAddSlot={(id, palette, placement) => store.addSequenceSlot(id, palette, placement)}
+            onRemoveSlot={(idx) => store.removeSequenceSlot(idx)}
+            onMoveSlot={(from, to) => store.moveSequenceSlot(from, to)}
+            onClearSequence={() => store.clearSequenceDraft()}
+            onPlaySequence={(seq) => {
+              gc.closeSequenceBuilder()
+              gc.startSequence(seq)
             }}
           />
         )}

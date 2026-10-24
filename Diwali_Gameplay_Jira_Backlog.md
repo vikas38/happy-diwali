@@ -141,8 +141,8 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-026 | Add Constellation Sparkles | EP-04 | P2 | 5 | R2 | Done |
 | DIW-027 | Let players choose curated effect palettes | EP-05 | P2 | 3 | R2 | Done |
 | DIW-028 | Add controlled left, center, and right launch placement | EP-05 | P2 | 5 | R2 | Done |
-| DIW-029 | Build a three-slot celebration sequence editor | EP-05 | P2 | 8 | R2 | To Do |
-| DIW-030 | Play celebration sequences with predictable stop and reward rules | EP-05 | P2 | 8 | R2 | To Do |
+| DIW-029 | Build a three-slot celebration sequence editor | EP-05 | P2 | 8 | R2 | Done |
+| DIW-030 | Play celebration sequences with predictable stop and reward rules | EP-05 | P2 | 8 | R2 | Done |
 | DIW-031 | Let players decorate their gameplay courtyard | EP-05 | P2 | 5 | R2 | To Do |
 | DIW-032 | Add gentle discovery goals without daily pressure | EP-06 | P3 | 5 | R2 | To Do |
 | DIW-033 | Redesign the collection as a beautiful discovery album | EP-06 | P1 | 5 | R1 | To Do |
@@ -851,7 +851,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-029 — Build a three-slot celebration sequence editor
 
 **Epic:** EP-05 | **Type:** Story | **Priority:** P2 | **Estimate:** 8 points  
-**Release:** R2 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R2 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-010, DIW-017, DIW-027, DIW-028  
 **Code / design pointers:** celebration builder UI (new); src/store/gameStore.jsx; src/store/save.js
 
@@ -859,22 +859,24 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Add a Build a show mode with one to three slots; each stores cracker ID, palette, and anchor.
-- [ ] Support add, replace, remove, and move-left/right buttons; dragging is optional.
-- [ ] Show estimated total time including preparation and settling; persist one draft locally.
-- [ ] Reject unavailable IDs and handle deleted/invalid draft entries with a clear repair action.
+- [x] Add a Build a show mode with one to three slots; each stores cracker ID, palette, and anchor.
+- [x] Support add, replace, remove, and move-left/right buttons; dragging is optional.
+- [x] Show estimated total time including preparation and settling; persist one draft locally.
+- [x] Reject unavailable IDs and handle deleted/invalid draft entries with a clear repair action.
 
 **Acceptance criteria**
 
-- [ ] A complete three-slot show can be built using keyboard only or touch only.
-- [ ] Reload restores the draft without starting playback or applying rewards.
-- [ ] Empty/incomplete states explain the next action; Play is enabled only for a valid draft.
-- [ ] The estimate comes from the actual schedule, not a separate hard-coded label.
+- [x] A complete three-slot show can be built using keyboard only or touch only.
+- [x] Reload restores the draft without starting playback or applying rewards.
+- [x] Empty/incomplete states explain the next action; Play is enabled only for a valid draft.
+- [x] The estimate comes from the actual schedule, not a separate hard-coded label.
+
+**Completion:** 24 October 2026 — Created `CelebrationSequenceEditor` in `src/ui/CelebrationSequenceEditor.jsx` supporting 1–3 configurable slots (cracker ID, palette, anchor placement) with add, replace, remove, and move reordering controls. Connected draft sequence state persistence to `src/store/save.js` and `src/store/gameStore.jsx`, computed accurate schedule estimates from cracker durations and preparation beats, integrated modal overlay in `src/App.jsx` and quick launcher in `src/ui/HUD.jsx`, and verified with unit tests in `test/celebration-sequence.test.jsx`.
 
 ### DIW-030 — Play celebration sequences with predictable stop and reward rules
 
 **Epic:** EP-05 | **Type:** Story | **Priority:** P2 | **Estimate:** 8 points  
-**Release:** R2 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R2 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-001, DIW-012, DIW-018, DIW-029  
 **Code / design pointers:** src/fsm/GameController.js; show-sequence controller (new); src/ui/RewardOverlay.jsx
 
@@ -882,17 +884,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Run one effect at a time; include the visible preparation/countdown for each segment in the first version.
-- [ ] Expose segment progress, Pause, Stop show, and Mute. Stop clears pending segments and returns to the editable draft.
-- [ ] Pause during an active segment cancels and restarts that segment through countdown; completed segments never replay automatically.
-- [ ] Apply standard first/replay awards once per completed segment using stable run/segment identities. No sequence bonus in the first version.
+- [x] Run one effect at a time; include the visible preparation/countdown for each segment in the first version.
+- [x] Expose segment progress, Pause, Stop show, and Mute. Stop clears pending segments and returns to the editable draft.
+- [x] Pause during an active segment cancels and restarts that segment through countdown; completed segments never replay automatically.
+- [x] Apply standard first/replay awards once per completed segment using stable run/segment identities. No sequence bonus in the first version.
 
 **Acceptance criteria**
 
-- [ ] Stopping midway preserves already earned rewards and grants none for unfinished segments.
-- [ ] Repeated cracker IDs earn a first reward once and normal replay rewards afterward.
-- [ ] No callback from an abandoned sequence can start the next segment or award stars.
-- [ ] On reload, restore only the draft; never resume a running sequence automatically.
+- [x] Stopping midway preserves already earned rewards and grants none for unfinished segments.
+- [x] Repeated cracker IDs earn a first reward once and normal replay rewards afterward.
+- [x] No callback from an abandoned sequence can start the next segment or award stars.
+- [x] On reload, restore only the draft; never resume a running sequence automatically.
+
+**Completion:** 24 October 2026 — Extended `GameController` with automated multi-segment sequence playback engine (`startSequence`, `stopSequence`, `_advanceSequence`), executing sequential segments with individual preparation/countdown cycles, segment progress tracking (`sequenceIndex`, `sequenceTotal`), immediate safe stop cancelling timers and active effects, standard award integration per completed segment, and verified clean segment interruption and reward safety via `test/celebration-sequence.test.jsx`.
 
 ### DIW-031 — Let players decorate their gameplay courtyard
 

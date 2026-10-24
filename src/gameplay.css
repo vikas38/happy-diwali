@@ -2910,6 +2910,204 @@ input:focus-visible,
   border: 1px solid rgba(0, 0, 0, 0.35);
 }
 
+/* Celebration Sequence Editor (DIW-029) */
+.sequence-modal-card {
+  max-width: 540px;
+}
+
+.sequence-builder-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.sequence-slots-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.sequence-slot-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.slot-badge-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #f59e0b;
+  color: #1a0f05;
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.slot-art-wrap {
+  flex-shrink: 0;
+}
+
+.slot-details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.slot-cracker-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.slot-meta-pill {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.slot-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.slot-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f1f5f9;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.slot-action-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.slot-action-btn--remove {
+  color: #f43f5e;
+  border-color: rgba(244, 63, 94, 0.35);
+}
+
+.sequence-slot-empty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.empty-slot-label {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.slot-add-btn {
+  min-height: 38px;
+  font-size: 12px;
+  padding: 6px 14px;
+}
+
+.sequence-picker-dialog {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sequence-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.sequence-picker-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.sequence-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.sequence-picker-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.sequence-picker-item:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: #f59e0b;
+}
+
+.sequence-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sequence-estimate {
+  font-size: 13px;
+  font-weight: 500;
+  color: #fbbf24;
+  text-align: center;
+}
+
+.sequence-action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.sequence-action-buttons .gp-btn {
+  flex: 1;
+}
+
+.sequence-play-btn {
+  min-height: 48px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+
 
 
 

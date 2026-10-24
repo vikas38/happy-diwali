@@ -33,6 +33,8 @@ export const STATES = {
   LIBRARY_OVERLAY: 'LIBRARY_OVERLAY',
   CRACKER_INSPECTOR_OVERLAY: 'CRACKER_INSPECTOR_OVERLAY',
   PHOTO_MODE_OVERLAY: 'PHOTO_MODE_OVERLAY',
+  SEQUENCE_BUILDER_OVERLAY: 'SEQUENCE_BUILDER_OVERLAY',
+  DECORATIONS_OVERLAY: 'DECORATIONS_OVERLAY',
 }
 
 export const INTERRUPTION_STATES = [
@@ -42,6 +44,8 @@ export const INTERRUPTION_STATES = [
   STATES.LIBRARY_OVERLAY,
   STATES.CRACKER_INSPECTOR_OVERLAY,
   STATES.PHOTO_MODE_OVERLAY,
+  STATES.SEQUENCE_BUILDER_OVERLAY,
+  STATES.DECORATIONS_OVERLAY,
 ]
 
 // Legal forward transitions (interruption overlays are allowed from any state except safety splash)
@@ -56,8 +60,12 @@ const TRANSITIONS = {
     STATES.IDLE,
   ],
   [STATES.STEPPING_BACK_SAFE_ROUTINE]: [STATES.COUNTDOWN_3_2_1],
-  [STATES.COUNTDOWN_3_2_1]: [STATES.CRACKER_SHOW_ACTIVE],
-  [STATES.CRACKER_SHOW_ACTIVE]: [STATES.REWARD_CELEBRATION],
+  [STATES.COUNTDOWN_3_2_1]: [STATES.CRACKER_SHOW_ACTIVE, STATES.IDLE],
+  [STATES.CRACKER_SHOW_ACTIVE]: [
+    STATES.REWARD_CELEBRATION,
+    STATES.COUNTDOWN_3_2_1,
+    STATES.IDLE,
+  ],
   [STATES.REWARD_CELEBRATION]: [STATES.READY_ON_STREET, STATES.CRACKER_INTRO_CARD, STATES.IDLE],
   [STATES.CALM_CORNER_OVERLAY]: [],
   [STATES.STICKER_BOOK_OVERLAY]: [],
@@ -65,6 +73,8 @@ const TRANSITIONS = {
   [STATES.LIBRARY_OVERLAY]: [],
   [STATES.CRACKER_INSPECTOR_OVERLAY]: [],
   [STATES.PHOTO_MODE_OVERLAY]: [],
+  [STATES.SEQUENCE_BUILDER_OVERLAY]: [],
+  [STATES.DECORATIONS_OVERLAY]: [],
 }
 
 const COUNTDOWN_BEATS = [3, 2, 1, 'GLOW!']
@@ -92,6 +102,9 @@ export class GameController {
     this._activeShowToken = null
     this._showCompleted = false
     this._interruptionSnapshot = null
+    this.sequence = null
+    this.sequenceIndex = 0
+    this.isSequenceActive = false
   }
 
   // -----------------------------------------------------------------
@@ -531,11 +544,51 @@ export class GameController {
     // Play fanfare (ascending arpeggio)
     this._playFanfare()
 
+    // If sequence playback is active, advance to next segment or complete sequence
+    if (this.isSequenceActive && Array.isArray(this.sequence)) {
+      if (this.sequenceIndex + 1 < this.sequence.length) {
+        this.sequenceIndex++
+        const nextSlot = this.sequence[this.sequenceIndex]
+        if (nextSlot.palette) store?.setCrackerPalette?.(nextSlot.crackerId, nextSlot.palette)
+        if (nextSlot.placement) store?.setLaunchPlacement?.(nextSlot.placement)
+        this.selectedCracker = nextSlot.crackerId
+        this._startCountdown(0)
+        return
+      } else {
+        this.isSequenceActive = false
+      }
+    }
+
     this._setState(STATES.REWARD_CELEBRATION, {
       cracker: getCracker(crackerIndex),
       isNewSticker: awardResult.isNewSticker,
       starsEarned: awardResult.starsEarned,
+      isSequenceCompleted: Boolean(this.sequence && this.sequence.length > 1),
     })
+  }
+
+  startSequence(sequence) {
+    if (!Array.isArray(sequence) || sequence.length === 0) return
+    this.sequence = sequence.slice(0, 3)
+    this.sequenceIndex = 0
+    this.isSequenceActive = true
+    const firstSlot = this.sequence[0]
+    const store = this._getStore()
+    if (firstSlot.palette) store?.setCrackerPalette?.(firstSlot.crackerId, firstSlot.palette)
+    if (firstSlot.placement) store?.setLaunchPlacement?.(firstSlot.placement)
+    this.selectedCracker = firstSlot.crackerId
+    this._gotoReady(firstSlot.crackerId)
+    this._startStepBack()
+  }
+
+  stopSequence() {
+    this.isSequenceActive = false
+    this.sequence = null
+    this.sequenceIndex = 0
+    this._cancelShow?.()
+    this._cancelShow = null
+    this._clearTimers()
+    this._setState(STATES.IDLE)
   }
 
   _playFanfare() {
@@ -807,6 +860,22 @@ export class GameController {
 
   closePhotoMode() {
     this._resumeFromInterruption(STATES.PHOTO_MODE_OVERLAY)
+  }
+
+  openSequenceBuilder() {
+    this._suspendForInterruption(STATES.SEQUENCE_BUILDER_OVERLAY)
+  }
+
+  closeSequenceBuilder() {
+    this._resumeFromInterruption(STATES.SEQUENCE_BUILDER_OVERLAY)
+  }
+
+  openDecorations() {
+    this._suspendForInterruption(STATES.DECORATIONS_OVERLAY)
+  }
+
+  closeDecorations() {
+    this._resumeFromInterruption(STATES.DECORATIONS_OVERLAY)
   }
 
   // -----------------------------------------------------------------

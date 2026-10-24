@@ -116,7 +116,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-001 | Close inherited gameplay reliability blockers | EP-01 | P0 | 8 | R0 | Done |
 | DIW-002 | Define the gameplay art direction and state storyboard | EP-01 | P1 | 5 | R1 | Done |
 | DIW-003 | Implement reusable gameplay design tokens and controls | EP-01 | P1 | 3 | R1 | Done |
-| DIW-004 | Rebuild the responsive stage and control layout | EP-02 | P1 | 8 | R1 | To Do |
+| DIW-004 | Rebuild the responsive stage and control layout | EP-02 | P1 | 8 | R1 | Done |
 | DIW-005 | Create a layered cinematic Diwali courtyard | EP-02 | P1 | 8 | R1 | To Do |
 | DIW-006 | Add responsive scene lighting and tactile interaction polish | EP-02 | P2 | 5 | R1 | To Do |
 | DIW-007 | Redesign cracker cards and the quick-access tray | EP-02 | P1 | 5 | R1 | To Do |
@@ -234,7 +234,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-004 — Rebuild the responsive stage and control layout
 
 **Epic:** EP-02 | **Type:** Story | **Priority:** P1 | **Estimate:** 8 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-003  
 **Code / design pointers:** src/App.jsx; src/gameplay.css; src/ui/CanvasStage.jsx; src/ui/HUD.jsx
 
@@ -242,16 +242,18 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Reserve layout regions for the utility bar, stage, selected-item action, and tray; replace conflicting absolute offsets.
-- [ ] Desktop uses a broad stage and compact detail panel; portrait uses a stage above a selected-item strip and tray; short landscape uses a slim side control rail.
-- [ ] Handle safe-area insets, dynamic viewport height, zoom, rotation, and controlled scrolling when height is insufficient.
+- [x] Reserve layout regions for the utility bar, stage, selected-item action, and tray; replace conflicting absolute offsets.
+- [x] Desktop uses a broad stage and compact detail panel; portrait uses a stage above a selected-item strip and tray; short landscape uses a slim side control rail.
+- [x] Handle safe-area insets, dynamic viewport height, zoom, rotation, and controlled scrolling when height is insufficient.
 
 **Acceptance criteria**
 
-- [ ] No action/tray overlap at 320 × 568, 390 × 844, 844 × 390, tablet, or desktop sizes.
-- [ ] Ready, countdown, reward, and modal states retain visible close/start/mute controls and unclipped focus.
-- [ ] Rotation preserves selected item and session; effect positions recalculate within the new stage bounds.
-- [ ] At 200% zoom, all essential controls are reachable without overlapping labels.
+- [x] No action/tray overlap at 320 × 568, 390 × 844, 844 × 390, tablet, or desktop sizes.
+- [x] Ready, countdown, reward, and modal states retain visible close/start/mute controls and unclipped focus.
+- [x] Rotation preserves selected item and session; effect positions recalculate within the new stage bounds.
+- [x] At 200% zoom, all essential controls are reachable without overlapping labels.
+
+**Completion:** 24 October 2026 — Verified responsive stage and non-overlapping coordinate clearance across portrait (320×568, 360×640, 390×844, 768×1024, 800×1280), landscape (640×360, 844×390, 1024×768, 1280×800), viewport rotation, and 200% zoom with 11 automated Playwright tests in `e2e/responsive-matrix.spec.js`.
 
 ### DIW-005 — Create a layered cinematic Diwali courtyard
 

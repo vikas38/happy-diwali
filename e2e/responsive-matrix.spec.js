@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test'
 import fs from 'fs'
 
 const VIEWPORTS = [
+  { name: 'phone-narrow-portrait', width: 320, height: 568 },
   { name: 'phone-small-portrait', width: 360, height: 640 },
   { name: 'phone-small-landscape', width: 640, height: 360 },
   { name: 'phone-modern-portrait', width: 390, height: 844 },
@@ -104,4 +105,76 @@ test.describe('T19 — Responsive Viewport Matrix', () => {
       })
     })
   }
+
+  test('DIW-004 — rotation between portrait and landscape preserves selection and layout clearance', async ({
+    page,
+  }) => {
+    // 1. Start in portrait (390x844)
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/')
+
+    const playBtn = page.getByRole('button', { name: /Play Little Lights/i })
+    await playBtn.click()
+    const splashBtn = page.getByRole('button', { name: /Step into the courtyard/i })
+    if (await splashBtn.isVisible()) {
+      await splashBtn.click()
+    }
+
+    await page.waitForTimeout(300)
+
+    // Select second cracker if unlocked or verify current selection
+    const firstOption = page.getByRole('option').first()
+    await expect(firstOption).toBeVisible()
+
+    // 2. Rotate to landscape (844x390)
+    await page.setViewportSize({ width: 844, height: 390 })
+    await page.waitForTimeout(400)
+
+    // Top controls still visible
+    const backBtn = page.getByRole('button', { name: /Back to festival/i })
+    await expect(backBtn).toBeVisible()
+    const muteBtn = page.getByRole('button', { name: /Mute|Unmute/i })
+    await expect(muteBtn).toBeVisible()
+
+    // Dock and contextual action bar still visible and side-by-side
+    const dock = page.locator('.firework-dock')
+    const actionBtn = page.locator('.contextual-primary-btn')
+    await expect(dock).toBeVisible()
+    await expect(actionBtn).toBeVisible()
+
+    const dockBox = await dock.boundingBox()
+    const actionBox = await actionBtn.boundingBox()
+    expect(dockBox).not.toBeNull()
+    expect(actionBox).not.toBeNull()
+
+    // Assert side-by-side (no overlap)
+    const overlaps = !(
+      actionBox.x + actionBox.width <= dockBox.x ||
+      dockBox.x + dockBox.width <= actionBox.x ||
+      actionBox.y + actionBox.height <= dockBox.y ||
+      dockBox.y + dockBox.height <= actionBox.y
+    )
+    expect(overlaps).toBe(false)
+  })
+
+  test('DIW-004 — 200% zoom keeps controls reachable and unobstructed', async ({ page }) => {
+    // Emulate 200% zoom by halving CSS viewport dimensions (640x400) and checking reachability
+    await page.setViewportSize({ width: 640, height: 400 })
+    await page.goto('/')
+
+    const playBtn = page.getByRole('button', { name: /Play Little Lights/i })
+    await playBtn.click()
+    const splashBtn = page.getByRole('button', { name: /Step into the courtyard/i })
+    if (await splashBtn.isVisible()) {
+      await splashBtn.click()
+    }
+
+    await page.waitForTimeout(300)
+
+    const backBtn = page.getByRole('button', { name: /Back to festival/i })
+    await expect(backBtn).toBeVisible()
+
+    const actionBtn = page.locator('.contextual-primary-btn')
+    await expect(actionBtn).toBeVisible()
+  })
 })

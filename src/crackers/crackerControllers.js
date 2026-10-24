@@ -87,6 +87,24 @@ export function playCrackerShow(index, engines, onDone) {
     [Symbol.toPrimitive]: getDensity,
   }
 
+  const palette =
+    engines?.store?.getState?.()?.selectedPalette ||
+    engines?.store?.state?.selectedPalette ||
+    'GOLD'
+
+  const getPaletteHue = (offset = 0) => {
+    if (palette === 'RAINBOW') {
+      return (Math.random() * 360 + offset) % 360
+    }
+    if (palette === 'ROSE') {
+      return (330 + Math.random() * 30 + offset) % 360
+    }
+    if (palette === 'EMERALD') {
+      return (145 + Math.random() * 35 + offset) % 360
+    }
+    return 32 + Math.random() * 17
+  }
+
   // Create coordinated timeline for emission, audio, and settling phases
   const timeline = new ShowTimeline(duration, () => {
     clean()
@@ -126,7 +144,7 @@ export function playCrackerShow(index, engines, onDone) {
       size: 0.85 + Math.random() * 1.25,
       alpha: 1,
       decay: 0.55 + Math.random() * 0.4,
-      hue: 32 + Math.random() * 17,
+      hue: extra.hue !== undefined ? extra.hue : getPaletteHue(),
       sat: 85,
       light: 82,
       shape: 'spark',
@@ -140,13 +158,14 @@ export function playCrackerShow(index, engines, onDone) {
     p.flash?.(px, py, radius * scale, hue, motionReduced ? 0.2 : 0.45)
   }
 
-  const burst = (px, py, count = 100, power = 220, hue = 38) => {
-    flash(px, py, 220, hue)
+  const burst = (px, py, count = 100, power = 220, hue) => {
+    const burstHue = hue !== undefined ? hue : getPaletteHue()
+    flash(px, py, 220, burstHue)
     for (let i = 0; i < count * density; i++) {
       const a = (i / (count * density)) * TAU + (Math.random() - 0.5) * 0.1
       const speed = power * (0.3 + Math.random() * 0.7)
       spark(px, py, Math.cos(a) * speed, Math.sin(a) * speed, {
-        hue: hue + Math.random() * 12,
+        hue: burstHue + Math.random() * 12,
         decay: 0.35 + Math.random() * 0.2,
         gravity: 70 * scale,
         drag: 0.992,
@@ -326,7 +345,7 @@ export function playCrackerShow(index, engines, onDone) {
     }
     sounds.forEach((stop) => {
       try {
-        (typeof stop === 'function' ? stop : stop.stop)?.()
+        ;(typeof stop === 'function' ? stop : stop.stop)?.()
       } catch {}
     })
   }

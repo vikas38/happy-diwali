@@ -189,7 +189,8 @@ export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
 
   // 1. Render or blit cached static scenery
   const isJSDOM = typeof navigator !== 'undefined' && /jsdom/i.test(navigator.userAgent)
-  const canCache = !isJSDOM && typeof document !== 'undefined' && typeof document.createElement === 'function'
+  const canCache =
+    !isJSDOM && typeof document !== 'undefined' && typeof document.createElement === 'function'
   if (canCache) {
     if (!_cachedStaticCanvas || _cachedW !== w || _cachedH !== h) {
       _cachedStaticCanvas = document.createElement('canvas')

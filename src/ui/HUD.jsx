@@ -16,6 +16,8 @@ export default function HUD({
   masterVolume,
   intensity,
   stars,
+  selectedPalette = 'GOLD',
+  onPaletteChange,
   onVolumeChange,
   onIntensityChange,
   onToggleMute,
@@ -240,6 +242,49 @@ export default function HUD({
                   </button>
                 </div>
                 <small className="sheet-row-hint">{t('motion_policy_hint')}</small>
+              </div>
+
+              <div className="sheet-row">
+                <span className="sheet-label">{t('sparkle_palette')}</span>
+                <div className="game-sound-modes" role="group" aria-label={t('sparkle_palette')}>
+                  <button
+                    type="button"
+                    className={selectedPalette === 'GOLD' ? 'active' : ''}
+                    aria-pressed={selectedPalette === 'GOLD'}
+                    onClick={() => onPaletteChange?.('GOLD')}
+                    aria-label={t('palette_gold')}
+                  >
+                    <span aria-hidden="true">✨</span> {t('palette_gold')}
+                  </button>
+                  <button
+                    type="button"
+                    className={selectedPalette === 'RAINBOW' ? 'active' : ''}
+                    aria-pressed={selectedPalette === 'RAINBOW'}
+                    onClick={() => onPaletteChange?.('RAINBOW')}
+                    aria-label={t('palette_rainbow')}
+                  >
+                    <span aria-hidden="true">✦</span> {t('palette_rainbow')}
+                  </button>
+                  <button
+                    type="button"
+                    className={selectedPalette === 'ROSE' ? 'active' : ''}
+                    aria-pressed={selectedPalette === 'ROSE'}
+                    onClick={() => onPaletteChange?.('ROSE')}
+                    aria-label={t('palette_rose')}
+                  >
+                    <span aria-hidden="true">🌸</span> {t('palette_rose')}
+                  </button>
+                  <button
+                    type="button"
+                    className={selectedPalette === 'EMERALD' ? 'active' : ''}
+                    aria-pressed={selectedPalette === 'EMERALD'}
+                    onClick={() => onPaletteChange?.('EMERALD')}
+                    aria-label={t('palette_emerald')}
+                  >
+                    <span aria-hidden="true">🍃</span> {t('palette_emerald')}
+                  </button>
+                </div>
+                <small className="sheet-row-hint">{t('sparkle_palette_hint')}</small>
               </div>
             </div>
 

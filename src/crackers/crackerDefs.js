@@ -10,6 +10,8 @@ export const CRACKERS = [
   {
     id: 0,
     name: 'Phuljhari',
+    descriptor: 'Sparkler',
+    fullName: 'Phuljhari · Sparkler',
     emoji: '✨',
     iconType: 'sparkler',
     description: 'A silver wand comes alive with fine golden sparks and a soft, textured crackle.',
@@ -21,6 +23,8 @@ export const CRACKERS = [
   {
     id: 1,
     name: 'Anar',
+    descriptor: 'Fountain',
+    fullName: 'Anar · Fountain',
     emoji: '🌸',
     iconType: 'flowerpot',
     description:
@@ -33,6 +37,8 @@ export const CRACKERS = [
   {
     id: 2,
     name: 'Chakri',
+    descriptor: 'Ground spinner',
+    fullName: 'Chakri · Ground spinner',
     emoji: '🌀',
     iconType: 'spinner',
     description:
@@ -45,6 +51,8 @@ export const CRACKERS = [
   {
     id: 3,
     name: 'Rocket',
+    descriptor: 'Sky rocket',
+    fullName: 'Rocket · Sky rocket',
     emoji: '🚀',
     iconType: 'rocket',
     description:
@@ -57,6 +65,8 @@ export const CRACKERS = [
   {
     id: 4,
     name: 'Ladi',
+    descriptor: 'Sparkle garland',
+    fullName: 'Ladi · Sparkle garland',
     emoji: '🎉',
     iconType: 'garland',
     description:
@@ -64,11 +74,13 @@ export const CRACKERS = [
     intensityDots: 3,
     colors: [0, 45, 120, 280, 320],
     comicWord: 'POP! POP! POP! 🎉',
-    audioProfile: 'Medium-Loud',
+    audioProfile: 'Festive rhythm',
   },
   {
     id: 5,
     name: 'Sutli Bomb',
+    descriptor: 'Twine sounder',
+    fullName: 'Sutli Bomb · Twine sounder',
     emoji: '💥',
     iconType: 'bomb',
     description:
@@ -76,7 +88,7 @@ export const CRACKERS = [
     intensityDots: 4,
     colors: [0, 60, 120, 180, 240, 300, 45, 320],
     comicWord: 'BOOOOM! 💥🌈',
-    audioProfile: 'Loudest (Tamed)',
+    audioProfile: 'Rich boom (Tamed)',
   },
 ]
 

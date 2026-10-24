@@ -32,7 +32,12 @@ function StickerTile({ cracker, unlocked }) {
           </span>
         )}
       </div>
-      <span className="sticker-tile__name">{cracker.name}</span>
+      <span className="sticker-tile__name">
+        {cracker.name}
+        {cracker.descriptor && (
+          <small className="sticker-tile__descriptor"> · {cracker.descriptor}</small>
+        )}
+      </span>
       {Array.from({ length: cracker.intensityDots }).map((_, i) => (
         <span key={i} className="sticker-dot" aria-hidden="true">
           ●

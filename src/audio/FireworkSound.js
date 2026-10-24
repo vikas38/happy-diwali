@@ -83,7 +83,7 @@ export function playFireworkSound(sound, kind, duration = 1, pan = 0) {
     noise(now, 0.55, 0.45, 650, 'lowpass')
     // Delayed restrained reflections
     noise(now + 0.12, 0.5, 0.18, 450, 'lowpass')
-    noise(now + 0.28, 0.6, 0.10, 320, 'lowpass')
+    noise(now + 0.28, 0.6, 0.1, 320, 'lowpass')
   } else if (kind === 'pop') {
     // Ladi: controlled discrete pop with slight varied pitch and bounded gain
     const pitchOffset = (Math.random() - 0.5) * 300

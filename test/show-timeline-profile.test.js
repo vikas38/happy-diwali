@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { ShowTimeline, playCrackerShow, SHOW_DURATIONS } from '../src/crackers/crackerControllers.js'
+import {
+  ShowTimeline,
+  playCrackerShow,
+  SHOW_DURATIONS,
+} from '../src/crackers/crackerControllers.js'
 import { Particles } from '../src/render/Particles.js'
 import { drawCourtyard } from '../src/render/layers/Courtyard.js'
 

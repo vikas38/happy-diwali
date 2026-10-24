@@ -48,7 +48,7 @@ export default function CrackerCarousel({ unlocked, selectedCracker, onSelect })
         <span className="dock-title">{t('dock_heading')}</span>
         <small className="dock-descriptor">
           {selectedItem
-            ? `${selectedItem.name} · ${labels[selectedCracker]}`
+            ? `${selectedItem.name} · ${selectedItem.descriptor} — ${labels[selectedCracker]}`
             : t('dock_subheading')}
         </small>
       </div>

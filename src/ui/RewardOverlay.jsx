@@ -47,6 +47,10 @@ export default function RewardOverlay({
   isLastCracker,
   isMuted = false,
   onToggleMute,
+  allStickersCollected = false,
+  onReplayFavourites,
+  onMakeRangoli,
+  onFinishForNow,
 }) {
   const handleSkip = React.useCallback(() => {
     if (onSkip) onSkip()
@@ -94,7 +98,13 @@ export default function RewardOverlay({
           </button>
         </div>
         <h2 id="reward-card-title" className="reward-card__title">
-          {t('reward_title_prefix')} <span className="neon">{t('reward_title_accent')}</span>
+          {allStickersCollected ? (
+            t('collection_complete_title')
+          ) : (
+            <>
+              {t('reward_title_prefix')} <span className="neon">{t('reward_title_accent')}</span>
+            </>
+          )}
         </h2>
         <StarRating count={isNewSticker ? 3 : 1} />
         {isNewSticker && (
@@ -112,22 +122,59 @@ export default function RewardOverlay({
             </p>
           </div>
         )}
-        <div className="reward-card__actions">
-          <button
-            className="btn btn--secondary"
-            onClick={onLightAgain}
-            aria-label={t('reward_light_again_aria')}
-          >
-            {t('reward_light_again')}
-          </button>
-          <button
-            className="btn btn--primary"
-            onClick={onNextCracker}
-            autoFocus
-            aria-label={t('reward_next_aria')}
-          >
-            {isLastCracker ? t('reward_box') : t('reward_next')}
-          </button>
+        {allStickersCollected && (
+          <p className="reward-card__complete-subtext">{t('collection_complete_sub')}</p>
+        )}
+        <div
+          className={`reward-card__actions ${allStickersCollected ? 'reward-card__actions--complete' : ''}`}
+        >
+          {allStickersCollected ? (
+            <>
+              <button
+                type="button"
+                className="btn btn--secondary"
+                onClick={onReplayFavourites || onLightAgain}
+                aria-label={t('action_replay_favourites_aria')}
+              >
+                {t('action_replay_favourites')}
+              </button>
+              <button
+                type="button"
+                className="btn btn--secondary"
+                onClick={onMakeRangoli}
+                aria-label={t('action_make_rangoli_aria')}
+              >
+                {t('action_make_rangoli')}
+              </button>
+              <button
+                type="button"
+                className="btn btn--primary"
+                onClick={onFinishForNow || handleSkip}
+                autoFocus
+                aria-label={t('action_finish_for_now_aria')}
+              >
+                {t('action_finish_for_now')}
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="btn btn--secondary"
+                onClick={onLightAgain}
+                aria-label={t('reward_light_again_aria')}
+              >
+                {t('reward_light_again')}
+              </button>
+              <button
+                className="btn btn--primary"
+                onClick={onNextCracker}
+                autoFocus
+                aria-label={t('reward_next_aria')}
+              >
+                {isLastCracker ? t('reward_box') : t('reward_next')}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

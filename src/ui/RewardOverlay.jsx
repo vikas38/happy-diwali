@@ -98,6 +98,7 @@ export default function RewardOverlay({
           </button>
         </div>
         <h2 id="reward-card-title" className="reward-card__title">
+          <span className="sr-only">{t('reward_dialog_aria')} </span>
           {allStickersCollected ? (
             t('collection_complete_title')
           ) : (

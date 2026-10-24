@@ -69,7 +69,7 @@ test.describe('T17 — End-to-End Smoke Test', () => {
     await expect(rewardDialog.getByLabel('1 stars earned')).toBeVisible()
     await expect(rewardDialog).not.toContainText('New sticker unlocked')
     await page.getByRole('button', { name: 'Light Again', exact: true }).press('Enter')
-    await page.getByRole('option', { name: 'Anar', exact: true }).click()
+    await page.getByRole('option', { name: /Anar/i }).click()
     await expect(page.getByRole('dialog', { name: /Meet Anar/i })).toBeVisible()
     await page.setViewportSize({ width: 390, height: 844 })
     await page.emulateMedia({ reducedMotion: 'reduce' })

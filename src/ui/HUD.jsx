@@ -94,6 +94,15 @@ export default function HUD({
           </button>
 
           <button
+            type="button"
+            className="motion-control"
+            aria-pressed={reducedMotion}
+            onClick={onToggleMotion || onToggleCalmVisuals}
+          >
+            {reducedMotion ? t('gentle_visuals_on') : t('gentle_visuals_off')}
+          </button>
+
+          <button
             className="game-settings-btn"
             onClick={handleOpenSettings}
             aria-label={t('settings')}
@@ -116,7 +125,11 @@ export default function HUD({
             <span>{t('settings')}</span>
           </button>
 
-          <button className="game-pause" onClick={onCalmCorner} aria-label={t('take_a_breath')}>
+          <button
+            className="game-pause"
+            onClick={onCalmCorner}
+            aria-label={`${t('take_a_breath')} · Calm Corner`}
+          >
             Ⅱ <span>{t('take_a_breath_btn')}</span>
           </button>
         </div>

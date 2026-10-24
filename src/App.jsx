@@ -36,7 +36,8 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
   // ----------------------------------------------------------------
   const gcRef = useRef(null)
   if (!gcRef.current) {
-    gcRef.current = new GameController(STATES.IDLE)
+    const initialState = saveState?.seenSplash ? STATES.IDLE : STATES.SAFETY_SPLASH
+    gcRef.current = new GameController(initialState)
   }
   const gc = gcRef.current
 

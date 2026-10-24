@@ -140,6 +140,14 @@ describe('T01 — Home Entry & Navigation', () => {
       fireEvent.click(screen.getByRole('button', { name: /Play Little Lights/i }))
     })
 
+    // Confirm SafetySplash if present on first-run
+    const splashBtn = screen.queryByRole('button', { name: /Step into the courtyard/i })
+    if (splashBtn) {
+      await act(async () => {
+        fireEvent.click(splashBtn)
+      })
+    }
+
     // First-run hint is visible
     expect(screen.getByText(/Choose a sparkle below to begin your celebration/i)).toBeTruthy()
 

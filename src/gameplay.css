@@ -573,7 +573,7 @@
   transition: bottom 0.25s ease;
 }
 .contextual-action-bar.has-dock {
-  bottom: calc(152px + var(--sab, 0px));
+  bottom: calc(230px + var(--sab, 0px));
 }
 .contextual-action-bar > * {
   pointer-events: auto;
@@ -1451,7 +1451,7 @@ input:focus-visible,
     width: min(440px, calc(100% - 24px));
   }
   .contextual-action-bar.has-dock {
-    bottom: calc(146px + var(--sab, 0px));
+    bottom: calc(205px + var(--sab, 0px));
   }
   .flow-step-text {
     font-size: 12px;

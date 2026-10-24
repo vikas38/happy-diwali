@@ -18,7 +18,7 @@ test('home and courtyard accessibility; keyboard journey, pause and resume', asy
       nodes: v.nodes.map((n) => ({ target: n.target, summary: n.failureSummary })),
     }))
   ).toEqual([])
-  await page.getByRole('button', { name: "Let's light it up" }).focus()
+  await page.getByRole('button', { name: /Play Little Lights/i }).focus()
   await page.keyboard.press('Enter')
   await page.getByRole('button', { name: 'Step into the courtyard' }).press('Enter')
   expect(
@@ -31,10 +31,10 @@ test('home and courtyard accessibility; keyboard journey, pause and resume', asy
       nodes: v.nodes.map((n) => ({ target: n.target, summary: n.failureSummary })),
     }))
   ).toEqual([])
-  await page.getByRole('button', { name: 'Phuljhari', exact: true }).press('Enter')
-  await page.getByRole('button', { name: 'Watch Phuljhari' }).press('Enter')
-  await page.getByRole('button', { name: 'Ask the grown-up to start' }).press('Enter')
-  await page.getByRole('button', { name: 'Calm Corner', exact: true }).click()
+  await page.getByRole('button', { name: /Phuljhari/i }).first().press('Enter')
+  await page.getByRole('button', { name: /Watch Phuljhari/i }).press('Enter')
+  await page.getByRole('button', { name: /Ask (a|the) grown-up/i }).press('Enter')
+  await page.getByRole('button', { name: /Calm Corner/i }).click()
   await expect(page.getByRole('dialog', { name: 'Calm Corner' })).toBeVisible()
   await page.getByRole('button', { name: 'Close Calm Corner' }).click()
   await expect(page.getByRole('dialog', { name: 'You did it!' })).toBeVisible({ timeout: 20000 })
@@ -55,7 +55,7 @@ test('mobile layout, storage failure and reduced motion', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('button', { name: 'Motion off' })).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-  await page.getByRole('button', { name: "Let's light it up" }).click()
+  await page.getByRole('button', { name: /Play Little Lights/i }).click()
   await page.getByRole('button', { name: 'Step into the courtyard' }).click()
   await expect(page.getByRole('button', { name: 'Gentle visuals on' })).toBeVisible()
 })
@@ -101,7 +101,7 @@ test('canvas failure offers a working return to festival', async ({ page }) => {
     HTMLCanvasElement.prototype.getContext = () => null
   })
   await page.goto('/')
-  await page.getByRole('button', { name: "Let's light it up" }).click()
+  await page.getByRole('button', { name: /Play Little Lights/i }).click()
   await expect(page.getByRole('alert')).toContainText('could not draw')
   await page.getByRole('button', { name: 'Back to festival' }).click()
   await expect(page.getByRole('heading', { name: 'Let your Diwali glow' })).toBeVisible()

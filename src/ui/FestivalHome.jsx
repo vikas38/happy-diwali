@@ -691,10 +691,7 @@ export default function FestivalHome({
             <div className="activity-grid">
               <button
                 className="activity-card"
-                onClick={() => {
-                  setLit([])
-                  setModal('diyas')
-                }}
+                onClick={() => setModal('diyas')}
               >
                 <div className="activity-art diya-art">
                   <span className="activity-tag">{t('activity_diya_tag')}</span>

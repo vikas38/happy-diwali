@@ -147,6 +147,8 @@ export const STRINGS_EN = {
   safety_gentle_sound: 'Gentle sound',
   safety_gentle_visuals: 'Gentle visuals',
   safety_full_visuals: 'Festive visuals',
+  gentle_visuals_on: 'Gentle visuals on',
+  gentle_visuals_off: 'Gentle visuals off',
 
   // Reward Celebration
   reward_dialog_aria: 'You did it!',

@@ -29,12 +29,20 @@ export const propScale = (w, h) => {
 export function effectOrigin(index, w, h) {
   const s = propScale(w, h)
   const tips = [
-    [-6, -36],
-    [0, -28],
-    [0, -4],
-    [0, -38],
-    [-22, -2],
-    [0, -16],
+    [-6, -36], // 0: Phuljhari
+    [0, -28],  // 1: Anar
+    [0, -4],   // 2: Chakri
+    [0, -38],  // 3: Rocket
+    [-22, -2], // 4: Ladi
+    [0, -16],  // 5: Sutli
+    [0, -24],  // 6: Golden Waterfall
+    [0, -28],  // 7: Comet Fan
+    [0, -32],  // 8: Ring Burst
+    [0, -22],  // 9: Peacock Fan
+    [0, -30],  // 10: Spiral Sky
+    [0, -32],  // 11: Chrysanthemum Bloom
+    [0, -32],  // 12: Double Blossom
+    [0, -30],  // 13: Constellation Sparkles
   ]
   const [dx, dy] = tips[index] || [0, 0]
   return { x: w * STAGE.launchX + dx * s, y: h * STAGE.launchY - 6 + dy * s }

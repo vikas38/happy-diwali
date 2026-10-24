@@ -50,7 +50,23 @@ function audioFixture() {
 }
 
 describe('Firework sound graph (A1 regression & routing)', () => {
-  const kinds = ['sparkler', 'fountain', 'spinner', 'whoosh', 'pop', 'boom', 'fuse']
+  const kinds = [
+    'sparkler',
+    'fountain',
+    'spinner',
+    'whoosh',
+    'pop',
+    'boom',
+    'fuse',
+    'cascade',
+    'fan',
+    'ring',
+    'peacock',
+    'spiral',
+    'chrysanthemum',
+    'blossom',
+    'constellation',
+  ]
 
   it.each(kinds)('routes %s through the volume/intensity chain and releases its nodes', (kind) => {
     const { sound, nodes } = audioFixture()

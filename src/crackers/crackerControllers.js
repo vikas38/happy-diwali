@@ -204,6 +204,14 @@ export function playCrackerShow(index, engines, onDone) {
   if (index === 2) audio('spinner', 2.5)
   if (index === 3) audio('whoosh', 1.15)
   if (index === 5) audio('fuse', 1.5)
+  if (index === 6) audio('cascade', 3.2)
+  if (index === 7) audio('fan', 3.5)
+  if (index === 8) audio('ring', 3.0)
+  if (index === 9) audio('peacock', 3.2)
+  if (index === 10) audio('spiral', 2.8)
+  if (index === 11) audio('chrysanthemum', 3.0)
+  if (index === 12) audio('blossom', 3.5)
+  if (index === 13) audio('constellation', 4.0)
 
   // Simulation step function executed per frame or timer step
   const emitterStep = (dtMs) => {
@@ -281,6 +289,114 @@ export function playCrackerShow(index, engines, onDone) {
       p.flash?.(rx, ry, 35, 38, 0.09)
       if (tick % 3 === 0) smoke(rx, ry, 8)
     }
+
+    // 6. Golden Waterfall (Ground cascade, 4.5s)
+    if (index === 6 && t < 3.2) {
+      const topY = y - 110 * scale
+      const span = 140 * scale
+      const pCount = Math.max(1, Math.round(9 * density))
+      for (let i = 0; i < pCount; i++) {
+        const px = x + (Math.random() - 0.5) * span
+        spark(px, topY, (Math.random() - 0.5) * 16, 60 + Math.random() * 90, {
+          gravity: 120 * scale,
+          decay: 0.8 + Math.random() * 0.35,
+          trail: motionReduced ? 4 : 10,
+          shape: 'spark',
+          hue: getPaletteHue(),
+          size: 1.2 + Math.random() * 1.5,
+          bounceY: y + 5,
+          bounceDamp: 0.15,
+        })
+      }
+      if (tick % 6 === 0) {
+        flash(x, topY, 70, 48)
+        smoke(x + (Math.random() - 0.5) * span, topY, 12)
+      }
+    }
+
+    // 8. Ring Burst aerial ascent phase
+    if (index === 8 && t < 0.95) {
+      const k = t / 0.95
+      const ry = y - (y - r.height * 0.28) * k * k
+      for (let i = 0; i < 4 * density; i++) {
+        spark(x, ry, (Math.random() - 0.5) * 16, 50 + Math.random() * 40, {
+          gravity: 30 * scale,
+          decay: 1.3,
+          trail: 6,
+          hue: getPaletteHue(),
+        })
+      }
+      if (tick % 3 === 0) smoke(x, ry, 8)
+    }
+
+    // 9. Peacock Fan (Ground feather plumes, 4.5s)
+    if (index === 9 && t < 3.2) {
+      const plumeCount = Math.max(1, Math.round(8 * density))
+      for (let i = 0; i < plumeCount; i++) {
+        const angle = -Math.PI * 0.8 + Math.random() * Math.PI * 0.6
+        const speed = (180 + Math.random() * 180) * scale
+        const hues = [175, 145, 45] // turquoise, emerald, gold
+        const plumeHue = hues[Math.floor(Math.random() * hues.length)]
+        spark(x, y, Math.cos(angle) * speed, Math.sin(angle) * speed, {
+          gravity: 160 * scale,
+          decay: 0.65 + Math.random() * 0.3,
+          trail: motionReduced ? 4 : 8,
+          hue: plumeHue,
+          bounceY: y + 5,
+          bounceDamp: 0.18,
+        })
+      }
+      if (tick % 5 === 0) {
+        smoke(x, y, 14)
+        flash(x, y, 110, 175)
+      }
+    }
+
+    // 10. Spiral Sky aerial curling ascent phase
+    if (index === 10 && t < 1.3) {
+      const k = t / 1.3
+      const ry = y - (y - r.height * 0.28) * k
+      const rx = x + Math.sin(k * 16) * (35 * scale)
+      for (let i = 0; i < 4 * density; i++) {
+        spark(rx, ry, (Math.random() - 0.5) * 20, 40 + Math.random() * 40, {
+          gravity: 35 * scale,
+          decay: 1.2,
+          trail: 6,
+          hue: getPaletteHue(175),
+        })
+      }
+      if (tick % 3 === 0) smoke(rx, ry, 8)
+    }
+
+    // 11. Chrysanthemum Bloom aerial ascent
+    if (index === 11 && t < 1.0) {
+      const k = t / 1.0
+      const ry = y - (y - r.height * 0.26) * k * k
+      for (let i = 0; i < 4 * density; i++) {
+        spark(x, ry, (Math.random() - 0.5) * 18, 55 + Math.random() * 45, {
+          gravity: 35 * scale,
+          decay: 1.3,
+          trail: 6,
+          hue: getPaletteHue(),
+        })
+      }
+      if (tick % 3 === 0) smoke(x, ry, 8)
+    }
+
+    // 12. Double Blossom ascent
+    if (index === 12 && t < 0.9) {
+      const k = t / 0.9
+      const ry = y - (y - r.height * 0.3) * k * k
+      for (let i = 0; i < 4 * density; i++) {
+        spark(x, ry, (Math.random() - 0.5) * 16, 50 + Math.random() * 40, {
+          gravity: 35 * scale,
+          decay: 1.3,
+          trail: 6,
+          hue: getPaletteHue(),
+        })
+      }
+      if (tick % 3 === 0) smoke(x, ry, 8)
+    }
   }
 
   let lastDriveSource = 'timer'
@@ -353,6 +469,186 @@ export function playCrackerShow(index, engines, onDone) {
       for (let i = 0; i < 8; i++) smoke(x + (i - 4) * 12, y, 35)
       if (!motionReduced) jellySquash?.trigger(0.035)
     }, 1500)
+  }
+
+  // 7. Comet Fan (Sky, 4.5s) — 5 luminous comets across the sky
+  if (index === 7) {
+    const fanAngles = [-0.78, -0.64, -0.5, -0.36, -0.22].map((k) => k * Math.PI)
+    fanAngles.forEach((angle, i) => {
+      later(() => {
+        const speed = (260 + (i % 2) * 35) * scale
+        const vx = Math.cos(angle) * speed
+        const vy = Math.sin(angle) * speed
+        spark(x, y, vx, vy, {
+          hue: getPaletteHue(i * 45),
+          gravity: 75 * scale,
+          decay: 0.55,
+          size: 2.8,
+          trail: motionReduced ? 5 : 12,
+        })
+      }, i * 140)
+      later(() => {
+        const dist = 200 * scale
+        const bx = x + Math.cos(angle) * dist
+        const by = Math.max(r.height * 0.2, y + Math.sin(angle) * dist)
+        burst(bx, by, 30, 120, getPaletteHue(i * 40))
+      }, 1000 + i * 140)
+    })
+  }
+
+  // 8. Ring Burst (Sky, 4.0s) — Concentric expanding rings
+  if (index === 8) {
+    later(() => {
+      const skyY = r.height * 0.28
+      const innerCount = Math.round(36 * density)
+      const innerSpeed = 135 * scale
+      const innerHue = getPaletteHue(290)
+      for (let i = 0; i < innerCount; i++) {
+        const a = (i / innerCount) * TAU
+        spark(x, skyY, Math.cos(a) * innerSpeed, Math.sin(a) * innerSpeed, {
+          hue: innerHue,
+          gravity: 18 * scale,
+          drag: 0.978,
+          decay: 0.6,
+          size: 2.2,
+          trail: motionReduced ? 4 : 8,
+        })
+      }
+      const outerCount = Math.round(52 * density)
+      const outerSpeed = 220 * scale
+      const outerHue = getPaletteHue()
+      for (let i = 0; i < outerCount; i++) {
+        const a = (i / outerCount) * TAU
+        spark(x, skyY, Math.cos(a) * outerSpeed, Math.sin(a) * outerSpeed, {
+          hue: outerHue,
+          gravity: 22 * scale,
+          drag: 0.98,
+          decay: 0.5,
+          size: 2.0,
+          trail: motionReduced ? 4 : 10,
+        })
+      }
+      flash(x, skyY, 180, 45)
+      smoke(x, skyY, 22)
+    }, 950)
+  }
+
+  // 10. Spiral Sky (Sky, 4.0s) — Aerial spiral bloom
+  if (index === 10) {
+    later(() => {
+      const skyY = r.height * 0.28
+      const armCount = 3
+      const pointsPerArm = Math.round(18 * density)
+      for (let arm = 0; arm < armCount; arm++) {
+        const baseAngle = (arm * TAU) / armCount
+        for (let i = 1; i <= pointsPerArm; i++) {
+          const radius = i * 7 * scale
+          const a = baseAngle + i * 0.35
+          spark(
+            x + Math.cos(a) * radius,
+            skyY + Math.sin(a) * radius * 0.7,
+            Math.cos(a) * 45 * scale,
+            Math.sin(a) * 35 * scale,
+            {
+              hue: getPaletteHue(arm * 50),
+              gravity: 25 * scale,
+              drag: 0.98,
+              decay: 0.65,
+              trail: motionReduced ? 4 : 7,
+            }
+          )
+        }
+      }
+      flash(x, skyY, 140, 175)
+    }, 1300)
+  }
+
+  // 11. Chrysanthemum Bloom (Sky, 4.0s) — Radial spherical petals
+  if (index === 11) {
+    later(() => {
+      const skyY = r.height * 0.26
+      // Inner petals
+      const innerCount = Math.round(32 * density)
+      for (let i = 0; i < innerCount; i++) {
+        const a = (i / innerCount) * TAU + (Math.random() - 0.5) * 0.1
+        const speed = (90 + Math.random() * 35) * scale
+        spark(x, skyY, Math.cos(a) * speed, Math.sin(a) * speed, {
+          hue: 45,
+          gravity: 28 * scale,
+          drag: 0.982,
+          decay: 0.65,
+          trail: motionReduced ? 4 : 8,
+        })
+      }
+      // Outer petals
+      const outerCount = Math.round(64 * density)
+      for (let i = 0; i < outerCount; i++) {
+        const a = (i / outerCount) * TAU + (Math.random() - 0.5) * 0.08
+        const speed = (170 + Math.random() * 55) * scale
+        spark(x, skyY, Math.cos(a) * speed, Math.sin(a) * speed, {
+          hue: getPaletteHue(310),
+          gravity: 32 * scale,
+          drag: 0.985,
+          decay: 0.55,
+          trail: motionReduced ? 5 : 12,
+        })
+      }
+      flash(x, skyY, 200, 45)
+      smoke(x, skyY, 24)
+    }, 1000)
+  }
+
+  // 12. Double Blossom (Sky, 4.5s) — Two harmonious sequential blooms
+  if (index === 12) {
+    later(() => {
+      const b1x = x - 45 * scale
+      const b1y = r.height * 0.3
+      burst(b1x, b1y, 75, 170, getPaletteHue(320))
+    }, 900)
+    later(() => {
+      const b2x = x + 45 * scale
+      const b2y = r.height * 0.24
+      burst(b2x, b2y, 85, 195, getPaletteHue(45))
+    }, 2000)
+  }
+
+  // 13. Constellation Sparkles (Sky, 5.0s) — Star pattern with still constellation pose
+  if (index === 13) {
+    const starAngles = [0, 1, 2, 3, 4].map((i) => (i * TAU) / 5 - Math.PI / 2)
+    const starR = 90 * scale
+    const skyY = r.height * 0.32
+
+    starAngles.forEach((a, idx) => {
+      later(() => {
+        const px = x + Math.cos(a) * starR
+        const py = skyY + Math.sin(a) * starR
+        for (let s = 0; s < 12 * density; s++) {
+          const sa = Math.random() * TAU
+          spark(px, py, Math.cos(sa) * 25, Math.sin(sa) * 25, {
+            hue: 45,
+            gravity: 8,
+            drag: 0.96,
+            decay: 0.9,
+            size: 2.5,
+          })
+        }
+        flash(px, py, 60, 45)
+      }, 350 * idx)
+    })
+
+    later(() => {
+      for (let s = 0; s < 24 * density; s++) {
+        const sa = Math.random() * TAU
+        spark(x, skyY, Math.cos(sa) * 40, Math.sin(sa) * 40, {
+          hue: 48,
+          gravity: 10,
+          drag: 0.97,
+          decay: 1.1,
+          size: 3.0,
+        })
+      }
+      flash(x, skyY, 110, 48)
+    }, 1800)
   }
 
   function clean() {

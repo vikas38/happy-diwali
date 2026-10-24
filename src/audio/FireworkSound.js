@@ -149,6 +149,62 @@ export function playFireworkSound(sound, kind, duration = 1, pan = 0) {
     for (let t = 0; t < duration; t += 0.06 + Math.random() * 0.08) {
       noise(now + t, 0.02, 0.16 + Math.random() * 0.14, 4000 + Math.random() * 2000)
     }
+  } else if (kind === 'cascade') {
+    // Golden Waterfall (ID 6): soft descending harmonic rushing curtain with fine sparkling hiss
+    noise(now, duration, 0.38, 2200, 'bandpass', 0.9)
+    noise(now + 0.2, duration - 0.2, 0.25, 950, 'lowpass', 0.8)
+    for (let t = 0.1; t < duration; t += 0.05 + Math.random() * 0.08) {
+      const prog = t / duration
+      const taper = prog > 0.7 ? Math.max(0.1, (1 - prog) / 0.3) : 1.0
+      noise(now + t, 0.025, (0.12 + Math.random() * 0.15) * taper, 3000 + Math.random() * 2500, 'bandpass', 1.1)
+    }
+  } else if (kind === 'fan') {
+    // Comet Fan (ID 7): five-tone celestial arcing whooshes
+    for (let i = 0; i < 5; i++) {
+      const offset = i * 0.14
+      tone(now + offset, 0.65, 260 + i * 85, 580 + i * 110, 0.16, 'sine')
+      noise(now + offset, 0.5, 0.22, 1400 + i * 200, 'bandpass', 1.0)
+    }
+  } else if (kind === 'ring') {
+    // Ring Burst (ID 8): resonant crystal chime with gentle outer burst
+    noise(now, 0.1, 0.55, 2100, 'bandpass')
+    tone(now, 1.8, 659.25, 659.25, 0.25, 'sine') // E5
+    tone(now + 0.05, 1.6, 987.77, 987.77, 0.18, 'sine') // B5
+    noise(now + 0.1, 0.8, 0.2, 1200, 'lowpass')
+  } else if (kind === 'peacock') {
+    // Peacock Fan (ID 9): lush fluttering chords rising in harmony
+    const freqs = [330, 440, 554, 660]
+    freqs.forEach((f, idx) => {
+      tone(now + idx * 0.08, 1.4, f, f * 1.05, 0.18, 'triangle')
+      noise(now + idx * 0.08, 0.8, 0.18, 2200, 'bandpass', 1.2)
+    })
+  } else if (kind === 'spiral') {
+    // Spiral Sky (ID 10): ascending curling whistle and sparkle
+    tone(now, 1.4, 280, 780, 0.16, 'sine')
+    noise(now + 0.3, 1.0, 0.14, 2800, 'bandpass')
+    for (let t = 0.5; t < duration; t += 0.1) {
+      noise(now + t, 0.03, 0.08, 3600, 'bandpass')
+    }
+  } else if (kind === 'chrysanthemum') {
+    // Chrysanthemum Bloom (ID 11): soft rounded bloom followed by fine crackle
+    noise(now, 0.15, 0.42, 1400, 'bandpass')
+    tone(now, 0.6, 220, 110, 0.22, 'sine')
+    for (let t = 0.15; t < duration; t += 0.08) {
+      noise(now + t, 0.03, 0.11, 4200 + Math.random() * 1500, 'bandpass')
+    }
+  } else if (kind === 'blossom') {
+    // Double Blossom (ID 12): two controlled harmonic blooms separated by the visual beat
+    noise(now, 0.12, 0.38, 1800, 'bandpass')
+    tone(now, 0.7, 392, 330, 0.2, 'sine')
+    noise(now + 1.1, 0.14, 0.42, 2400, 'bandpass')
+    tone(now + 1.1, 0.9, 587.33, 523.25, 0.22, 'sine')
+  } else if (kind === 'constellation') {
+    // Constellation Sparkles (ID 13): glassy starlight chime sequence
+    const notes = [783.99, 987.77, 1174.66, 1318.51]
+    notes.forEach((freq, idx) => {
+      tone(now + idx * 0.35, 1.4, freq, freq, 0.16, 'sine')
+      noise(now + idx * 0.35, 0.25, 0.08, 3200 + idx * 400, 'bandpass')
+    })
   }
 
   sound.trackCrackerNode(bus, bus)

@@ -571,7 +571,10 @@ export class Background {
 
     ctx.save()
 
-    if (this.gameState === 'CRACKER_SHOW_ACTIVE' && [3, 4, 5].includes(this.currentCracker)) {
+    if (
+      this.gameState === 'CRACKER_SHOW_ACTIVE' &&
+      [3, 4, 5, 7, 8, 10, 11, 12, 13].includes(this.currentCracker)
+    ) {
       ctx.restore()
       return
     }
@@ -610,6 +613,30 @@ export class Background {
         break
       case 5: // Sutli Bomb
         this._drawSutliProp(ctx, cx, cy, time, isBurning, isReady)
+        break
+      case 6: // Golden Waterfall
+        this._drawWaterfallProp(ctx, cx, cy, time, isBurning, isReady)
+        break
+      case 7: // Comet Fan
+        this._drawCometFanProp(ctx, cx, cy, time, isBurning, isReady)
+        break
+      case 8: // Ring Burst
+        this._drawRingBurstProp(ctx, cx, cy, time, isBurning, isReady)
+        break
+      case 9: // Peacock Fan
+        this._drawPeacockFanProp(ctx, cx, cy, time, isBurning, isReady)
+        break
+      case 10: // Spiral Sky
+        this._drawSpiralSkyProp(ctx, cx, cy, time, isBurning, isReady)
+        break
+      case 11: // Chrysanthemum Bloom
+        this._drawChrysanthemumProp(ctx, cx, cy, time, isBurning, isReady)
+        break
+      case 12: // Double Blossom
+        this._drawDoubleBlossomProp(ctx, cx, cy, time, isBurning, isReady)
+        break
+      case 13: // Constellation Sparkles
+        this._drawConstellationProp(ctx, cx, cy, time, isBurning, isReady)
         break
     }
 
@@ -885,5 +912,287 @@ export class Background {
     }
 
     ctx.restore()
+  }
+
+  _drawWaterfallProp(ctx, cx, cy, time, isBurning, isReady = false) {
+    const w = 26
+    const h = 20
+    const topY = cy - h
+    ctx.strokeStyle = '#78350F'
+    ctx.lineWidth = 2
+    ctx.beginPath()
+    ctx.moveTo(cx - w / 2, cy)
+    ctx.lineTo(cx - w / 2, topY)
+    ctx.moveTo(cx + w / 2, cy)
+    ctx.lineTo(cx + w / 2, topY)
+    ctx.stroke()
+
+    const grad = ctx.createLinearGradient(cx - w / 2, topY, cx + w / 2, topY)
+    grad.addColorStop(0, '#B45309')
+    grad.addColorStop(0.5, '#FDE047')
+    grad.addColorStop(1, '#92400E')
+    ctx.fillStyle = grad
+    ctx.fillRect(cx - w / 2 - 2, topY - 3, w + 4, 6)
+
+    if (isReady) {
+      ctx.save()
+      ctx.strokeStyle = '#FFE082'
+      ctx.lineWidth = 1.5
+      ctx.strokeRect(cx - w / 2 - 2, topY - 3, w + 4, 6)
+      ctx.restore()
+    }
+
+    ctx.strokeStyle = '#E5E7EB'
+    ctx.lineWidth = 1.5
+    ctx.beginPath()
+    ctx.moveTo(cx, topY - 3)
+    ctx.quadraticCurveTo(cx + 3, topY - 8, cx, topY - 12)
+    ctx.stroke()
+
+    if (isBurning) {
+      this._drawFuseSparks(ctx, cx, topY - 12, time)
+    }
+  }
+
+  _drawCometFanProp(ctx, cx, cy, time, isBurning, isReady = false) {
+    const fanCount = 5
+    const baseW = 28
+    const baseH = 8
+    ctx.fillStyle = '#78350F'
+    ctx.fillRect(cx - baseW / 2, cy - baseH, baseW, baseH)
+
+    for (let i = 0; i < fanCount; i++) {
+      const angle = ((i - 2) * 12 * Math.PI) / 180
+      const tubeLen = 22
+      ctx.save()
+      ctx.translate(cx, cy - baseH)
+      ctx.rotate(angle)
+      ctx.fillStyle = i % 2 === 0 ? '#1E40AF' : '#F59E0B'
+      ctx.fillRect(-2, -tubeLen, 4, tubeLen)
+      ctx.restore()
+    }
+
+    if (isReady) {
+      ctx.save()
+      ctx.strokeStyle = '#FFE082'
+      ctx.lineWidth = 1.5
+      ctx.strokeRect(cx - baseW / 2, cy - baseH, baseW, baseH)
+      ctx.restore()
+    }
+
+    ctx.strokeStyle = '#E5E7EB'
+    ctx.lineWidth = 1.5
+    ctx.beginPath()
+    ctx.moveTo(cx, cy - 20)
+    ctx.lineTo(cx, cy - 28)
+    ctx.stroke()
+
+    if (isBurning) {
+      this._drawFuseSparks(ctx, cx, cy - 28, time)
+    }
+  }
+
+  _drawRingBurstProp(ctx, cx, cy, time, isBurning, isReady = false) {
+    const tubeW = 12
+    const tubeH = 26
+    const topY = cy - tubeH
+    const grad = ctx.createLinearGradient(cx - tubeW / 2, topY, cx + tubeW / 2, topY)
+    grad.addColorStop(0, '#831843')
+    grad.addColorStop(0.5, '#F43F5E')
+    grad.addColorStop(1, '#881337')
+    ctx.fillStyle = grad
+    ctx.fillRect(cx - tubeW / 2, topY, tubeW, tubeH)
+
+    ctx.fillStyle = '#FDE047'
+    ctx.fillRect(cx - tubeW / 2, topY + 6, tubeW, 3)
+    ctx.fillRect(cx - tubeW / 2, topY + 16, tubeW, 3)
+
+    if (isReady) {
+      ctx.save()
+      ctx.strokeStyle = '#FFE082'
+      ctx.lineWidth = 1.5
+      ctx.strokeRect(cx - tubeW / 2, topY, tubeW, tubeH)
+      ctx.restore()
+    }
+
+    ctx.strokeStyle = '#E5E7EB'
+    ctx.lineWidth = 1.5
+    ctx.beginPath()
+    ctx.moveTo(cx, topY)
+    ctx.lineTo(cx, topY - 8)
+    ctx.stroke()
+
+    if (isBurning) {
+      this._drawFuseSparks(ctx, cx, topY - 8, time)
+    }
+  }
+
+  _drawPeacockFanProp(ctx, cx, cy, time, isBurning, isReady = false) {
+    const potH = 22
+    const baseW = 24
+    const topW = 12
+    const grad = ctx.createLinearGradient(cx - baseW / 2, cy, cx + baseW / 2, cy)
+    grad.addColorStop(0, '#064E3B')
+    grad.addColorStop(0.5, '#10B981')
+    grad.addColorStop(1, '#047857')
+    ctx.fillStyle = grad
+    ctx.beginPath()
+    ctx.moveTo(cx - topW / 2, cy - potH)
+    ctx.lineTo(cx + topW / 2, cy - potH)
+    ctx.lineTo(cx + baseW / 2, cy)
+    ctx.lineTo(cx - baseW / 2, cy)
+    ctx.closePath()
+    ctx.fill()
+
+    ctx.fillStyle = '#FDE047'
+    ctx.beginPath()
+    ctx.arc(cx, cy - potH * 0.45, 3.5, 0, Math.PI * 2)
+    ctx.fill()
+
+    if (isReady) {
+      ctx.save()
+      ctx.strokeStyle = '#FFE082'
+      ctx.lineWidth = 1.5
+      ctx.stroke()
+      ctx.restore()
+    }
+
+    ctx.strokeStyle = '#E5E7EB'
+    ctx.lineWidth = 1.5
+    ctx.beginPath()
+    ctx.moveTo(cx, cy - potH)
+    ctx.lineTo(cx, cy - potH - 8)
+    ctx.stroke()
+
+    if (isBurning) {
+      this._drawFuseSparks(ctx, cx, cy - potH - 8, time)
+    }
+  }
+
+  _drawSpiralSkyProp(ctx, cx, cy, time, isBurning, isReady = false) {
+    const tubeW = 10
+    const tubeH = 24
+    const topY = cy - tubeH
+    ctx.fillStyle = '#0F766E'
+    ctx.fillRect(cx - tubeW / 2, topY, tubeW, tubeH)
+    ctx.strokeStyle = '#FDE047'
+    ctx.lineWidth = 1.5
+    ctx.beginPath()
+    ctx.moveTo(cx - tubeW / 2, topY + 4)
+    ctx.lineTo(cx + tubeW / 2, topY + 10)
+    ctx.moveTo(cx - tubeW / 2, topY + 12)
+    ctx.lineTo(cx + tubeW / 2, topY + 18)
+    ctx.stroke()
+
+    if (isReady) {
+      ctx.save()
+      ctx.strokeStyle = '#FFE082'
+      ctx.lineWidth = 1.5
+      ctx.strokeRect(cx - tubeW / 2, topY, tubeW, tubeH)
+      ctx.restore()
+    }
+
+    ctx.strokeStyle = '#E5E7EB'
+    ctx.lineWidth = 1.5
+    ctx.beginPath()
+    ctx.moveTo(cx, topY)
+    ctx.lineTo(cx, topY - 8)
+    ctx.stroke()
+
+    if (isBurning) {
+      this._drawFuseSparks(ctx, cx, topY - 8, time)
+    }
+  }
+
+  _drawChrysanthemumProp(ctx, cx, cy, time, isBurning, isReady = false) {
+    const r = 11
+    ctx.fillStyle = '#D97706'
+    ctx.beginPath()
+    ctx.arc(cx, cy - r - 2, r, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.fillStyle = '#78350F'
+    ctx.fillRect(cx - 6, cy - 2, 12, 4)
+
+    if (isReady) {
+      ctx.save()
+      ctx.strokeStyle = '#FFE082'
+      ctx.lineWidth = 1.5
+      ctx.beginPath()
+      ctx.arc(cx, cy - r - 2, r, 0, Math.PI * 2)
+      ctx.stroke()
+      ctx.restore()
+    }
+
+    ctx.strokeStyle = '#E5E7EB'
+    ctx.lineWidth = 1.5
+    ctx.beginPath()
+    ctx.moveTo(cx, cy - r * 2 - 2)
+    ctx.lineTo(cx, cy - r * 2 - 9)
+    ctx.stroke()
+
+    if (isBurning) {
+      this._drawFuseSparks(ctx, cx, cy - r * 2 - 9, time)
+    }
+  }
+
+  _drawDoubleBlossomProp(ctx, cx, cy, time, isBurning, isReady = false) {
+    const tubeW = 8
+    const tubeH = 24
+    const topY = cy - tubeH
+    ctx.fillStyle = '#BE185D'
+    ctx.fillRect(cx - tubeW - 1, topY, tubeW, tubeH)
+    ctx.fillStyle = '#D97706'
+    ctx.fillRect(cx + 1, topY, tubeW, tubeH)
+    ctx.fillStyle = '#FDE047'
+    ctx.fillRect(cx - tubeW - 2, topY + 10, tubeW * 2 + 4, 3)
+
+    if (isReady) {
+      ctx.save()
+      ctx.strokeStyle = '#FFE082'
+      ctx.lineWidth = 1.5
+      ctx.strokeRect(cx - tubeW - 2, topY, tubeW * 2 + 4, tubeH)
+      ctx.restore()
+    }
+
+    ctx.strokeStyle = '#E5E7EB'
+    ctx.lineWidth = 1.5
+    ctx.beginPath()
+    ctx.moveTo(cx, topY)
+    ctx.lineTo(cx, topY - 8)
+    ctx.stroke()
+
+    if (isBurning) {
+      this._drawFuseSparks(ctx, cx, topY - 8, time)
+    }
+  }
+
+  _drawConstellationProp(ctx, cx, cy, time, isBurning, isReady = false) {
+    const sz = 18
+    const topY = cy - sz
+    ctx.fillStyle = '#312E81'
+    ctx.fillRect(cx - sz / 2, topY, sz, sz)
+    ctx.fillStyle = '#FDE047'
+    ctx.beginPath()
+    ctx.arc(cx, topY + sz / 2, 3, 0, Math.PI * 2)
+    ctx.fill()
+
+    if (isReady) {
+      ctx.save()
+      ctx.strokeStyle = '#FFE082'
+      ctx.lineWidth = 1.5
+      ctx.strokeRect(cx - sz / 2, topY, sz, sz)
+      ctx.restore()
+    }
+
+    ctx.strokeStyle = '#E5E7EB'
+    ctx.lineWidth = 1.5
+    ctx.beginPath()
+    ctx.moveTo(cx, topY)
+    ctx.lineTo(cx, topY - 8)
+    ctx.stroke()
+
+    if (isBurning) {
+      this._drawFuseSparks(ctx, cx, topY - 8, time)
+    }
   }
 }

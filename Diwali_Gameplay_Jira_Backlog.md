@@ -131,10 +131,10 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-016 | Make the cracker catalog extensible by stable ID | EP-04 | P1 | 5 | R1 | Done |
 | DIW-017 | Migrate saves for expanded content and customization | EP-04 | P1 | 5 | R1 | Done |
 | DIW-018 | Add reusable authored effect timelines and emission primitives | EP-04 | P1 | 8 | R1 | Done |
-| DIW-019 | Add Golden Waterfall | EP-04 | P1 | 5 | R1 | To Do |
-| DIW-020 | Add Comet Fan | EP-04 | P1 | 5 | R1 | To Do |
-| DIW-021 | Add Ring Burst | EP-04 | P1 | 5 | R1 | To Do |
-| DIW-022 | Add Peacock Fan | EP-04 | P1 | 5 | R1 | To Do |
+| DIW-019 | Add Golden Waterfall | EP-04 | P1 | 5 | R1 | Done |
+| DIW-020 | Add Comet Fan | EP-04 | P1 | 5 | R1 | Done |
+| DIW-021 | Add Ring Burst | EP-04 | P1 | 5 | R1 | Done |
+| DIW-022 | Add Peacock Fan | EP-04 | P1 | 5 | R1 | Done |
 | DIW-023 | Add Spiral Sky | EP-04 | P2 | 5 | R2 | To Do |
 | DIW-024 | Add Chrysanthemum Bloom | EP-04 | P2 | 5 | R2 | To Do |
 | DIW-025 | Add Double Blossom | EP-04 | P2 | 5 | R2 | To Do |
@@ -605,7 +605,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-019 — Add Golden Waterfall
 
 **Epic:** EP-04 | **Type:** Story | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-008, DIW-016, DIW-017, DIW-018  
 **Code / design pointers:** src/crackers/crackerDefs.js; src/crackers/crackerControllers.js; src/audio/FireworkSound.js; cracker artwork registry
 
@@ -613,22 +613,24 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Register stable ID 6, category Ground, catalog group Festival additions, art, sticker, inspector copy, and sound metadata.
-- [ ] Use a bounded horizontal emitter with staggered downward filaments, a soft rise, and tapering embers; keep the center readable.
-- [ ] Author an initial 4–6 second show excluding preparation; refine timing through visual review. Soft descending shimmer with a clean fade.
-- [ ] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
+- [x] Register stable ID 6, category Ground, catalog group Festival additions, art, sticker, inspector copy, and sound metadata.
+- [x] Use a bounded horizontal emitter with staggered downward filaments, a soft rise, and tapering embers; keep the center readable.
+- [x] Author an initial 4–6 second show excluding preparation; refine timing through visual review. Soft descending shimmer with a clean fade.
+- [x] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
 
 **Acceptance criteria**
 
-- [ ] A continuous curtain silhouette remains distinct from Anar’s upward fountain.
-- [ ] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
-- [ ] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
-- [ ] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+- [x] A continuous curtain silhouette remains distinct from Anar’s upward fountain.
+- [x] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
+- [x] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
+- [x] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+
+**Completion:** 24 October 2026 — Registered stable ID 6 (Ground cascade, 4.5s show, 210 particle budget) in `src/crackers/crackerDefs.js` and `src/ui/CrackerArt.jsx`. Implemented authentic downward golden curtain emission in `src/crackers/crackerControllers.js` anchored at courtyard ground with cobblestone bounce embers, rendered 3D stand prop in `src/render/layers/Background.js`, synthesized descending harmonic rush `'cascade'` in `src/audio/FireworkSound.js`, and verified cancellation, motion reduction, and duration with 5 unit tests in `test/golden-waterfall.test.js`.
 
 ### DIW-020 — Add Comet Fan
 
 **Epic:** EP-04 | **Type:** Story | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-008, DIW-016, DIW-017, DIW-018  
 **Code / design pointers:** src/crackers/crackerDefs.js; src/crackers/crackerControllers.js; src/audio/FireworkSound.js; cracker artwork registry
 
@@ -636,22 +638,24 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Register stable ID 7, category Sky, catalog group Festival additions, art, sticker, inspector copy, and sound metadata.
-- [ ] Launch a small authored fan of arcs with distinct start offsets, bright heads, and fading tails; do not implement random all-direction spray.
-- [ ] Author an initial 4–6 second show excluding preparation; refine timing through visual review. Short restrained whooshes aligned to each arc.
-- [ ] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
+- [x] Register stable ID 7, category Sky, catalog group Festival additions, art, sticker, inspector copy, and sound metadata.
+- [x] Launch a small authored fan of arcs with distinct start offsets, bright heads, and fading tails; do not implement random all-direction spray.
+- [x] Author an initial 4–6 second show excluding preparation; refine timing through visual review. Short restrained whooshes aligned to each arc.
+- [x] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
 
 **Acceptance criteria**
 
-- [ ] The fan pattern stays inside the sky region and is recognizable with sound off.
-- [ ] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
-- [ ] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
-- [ ] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+- [x] The fan pattern stays inside the sky region and is recognizable with sound off.
+- [x] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
+- [x] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
+- [x] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+
+**Completion:** 24 October 2026 — Registered stable ID 7 (Sky fan, 4.5s show, 220 particle budget) in `src/crackers/crackerDefs.js` and `src/ui/CrackerArt.jsx`. Authored 5 sweeping celestial arcing comets across the sky with apex bursts in `src/crackers/crackerControllers.js`, rendered 5-barrel angled rack prop in `src/render/layers/Background.js`, synthesized five-tone celestial arcing whooshes `'fan'` in `src/audio/FireworkSound.js`, and verified with 5 unit tests in `test/comet-fan.test.js`.
 
 ### DIW-021 — Add Ring Burst
 
 **Epic:** EP-04 | **Type:** Story | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-008, DIW-016, DIW-017, DIW-018  
 **Code / design pointers:** src/crackers/crackerDefs.js; src/crackers/crackerControllers.js; src/audio/FireworkSound.js; cracker artwork registry
 
@@ -659,22 +663,24 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Register stable ID 8, category Sky, catalog group Festival additions, art, sticker, inspector copy, and sound metadata.
-- [ ] Build an ascent followed by one or two concentric rings, even angular distribution, and slow settling points.
-- [ ] Author an initial 4–6 second show excluding preparation; refine timing through visual review. A rounded burst and subtle tail, without increased peak gain.
-- [ ] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
+- [x] Register stable ID 8, category Sky, catalog group Festival additions, art, sticker, inspector copy, and sound metadata.
+- [x] Build an ascent followed by one or two concentric rings, even angular distribution, and slow settling points.
+- [x] Author an initial 4–6 second show excluding preparation; refine timing through visual review. A rounded burst and subtle tail, without increased peak gain.
+- [x] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
 
 **Acceptance criteria**
 
-- [ ] The ring remains circular in world geometry and is fitted to the current viewport without clipping.
-- [ ] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
-- [ ] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
-- [ ] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+- [x] The ring remains circular in world geometry and is fitted to the current viewport without clipping.
+- [x] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
+- [x] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
+- [x] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+
+**Completion:** 24 October 2026 — Registered stable ID 8 (Concentric halos, 4.0s show, 240 particle budget) in `src/crackers/crackerDefs.js` and `src/ui/CrackerArt.jsx`. Authored ascent and expanding two concentric circular halos (rose and gold) with even angular distribution in `src/crackers/crackerControllers.js`, rendered aerial mortar prop in `src/render/layers/Background.js`, synthesized resonant crystal chime `'ring'` in `src/audio/FireworkSound.js`, and verified with 5 unit tests in `test/ring-burst.test.js`.
 
 ### DIW-022 — Add Peacock Fan
 
 **Epic:** EP-04 | **Type:** Story | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-008, DIW-016, DIW-017, DIW-018  
 **Code / design pointers:** src/crackers/crackerDefs.js; src/crackers/crackerControllers.js; src/audio/FireworkSound.js; cracker artwork registry
 
@@ -682,17 +688,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Register stable ID 9, category Ground, catalog group Festival additions, art, sticker, inspector copy, and sound metadata.
-- [ ] Create layered teal, blue, and gold arcs with eye-like accent points and a clear opening/settling phase.
-- [ ] Author an initial 4–6 second show excluding preparation; refine timing through visual review. A gentle rising texture synchronized with the opening.
-- [ ] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
+- [x] Register stable ID 9, category Ground, catalog group Festival additions, art, sticker, inspector copy, and sound metadata.
+- [x] Create layered teal, blue, and gold arcs with eye-like accent points and a clear opening/settling phase.
+- [x] Author an initial 4–6 second show excluding preparation; refine timing through visual review. A gentle rising texture synchronized with the opening.
+- [x] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
 
 **Acceptance criteria**
 
-- [ ] Its broad, symmetric low fan is visually distinct from both the vertical Anar and sky Comet Fan.
-- [ ] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
-- [ ] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
-- [ ] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+- [x] Its broad, symmetric low fan is visually distinct from both the vertical Anar and sky Comet Fan.
+- [x] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
+- [x] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
+- [x] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+
+**Completion:** 24 October 2026 — Registered stable ID 9 (Feather fan, 4.5s show, 210 particle budget) in `src/crackers/crackerDefs.js` and `src/ui/CrackerArt.jsx`. Authored rising jewel-toned feather plumes in turquoise, emerald, and gold with soft courtyard settling in `src/crackers/crackerControllers.js`, rendered peacock fan prop in `src/render/layers/Background.js`, synthesized lush fluttering chords `'peacock'` in `src/audio/FireworkSound.js`, and verified with 5 unit tests in `test/peacock-fan.test.js`.
 
 ### DIW-023 — Add Spiral Sky
 

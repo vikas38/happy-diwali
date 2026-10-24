@@ -57,6 +57,11 @@ export class Pip {
   }
 
   jump(duration = 0.5) {
+    if (this.reducedMotion) {
+      this._jumpActive = false
+      this._jumpY = 0
+      return
+    }
     this._jumpActive = true
     this._jumpDuration = duration
     this._jumpElapsed = 0
@@ -76,8 +81,13 @@ export class Pip {
     if (!this.visible) return
 
     // Bounce
-    const bounceSpeed = this.mood === PIP_MOODS.HAPPY ? 6.5 : 2.8
-    this._bouncePhase += dt * bounceSpeed
+    if (this.reducedMotion) {
+      this._bouncePhase = 0
+      this._jumpY = 0
+    } else {
+      const bounceSpeed = this.mood === PIP_MOODS.HAPPY ? 6.5 : 2.8
+      this._bouncePhase += dt * bounceSpeed
+    }
 
     // Hide lerp
     this._hideAmount += (this._hideTarget - this._hideAmount) * Math.min(1, dt * 5)
@@ -121,7 +131,7 @@ export class Pip {
     }
 
     // Hearts during HAPPY mood
-    if (this.mood === PIP_MOODS.HAPPY) {
+    if (this.mood === PIP_MOODS.HAPPY && !this.reducedMotion) {
       this._heartTimer -= dt
       if (this._heartTimer <= 0) {
         this._heartTimer = 0.38

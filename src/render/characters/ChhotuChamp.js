@@ -89,6 +89,7 @@ export class ChhotuChamp {
     this._jumpDuration = 0.6
     this._jumpElapsed = 0
     this.visible = true
+    this.reducedMotion = false
     this._eyeCrinkle = 0
     this._eyeCrinkleTarget = 0
 
@@ -129,6 +130,11 @@ export class ChhotuChamp {
   }
 
   jump(duration = 0.6) {
+    if (this.reducedMotion) {
+      this.jumpActive = false
+      this._jumpY = 0
+      return
+    }
     this.jumpActive = true
     this._jumpDuration = duration
     this._jumpElapsed = 0
@@ -147,7 +153,12 @@ export class ChhotuChamp {
     if (!this.visible) return
 
     // Breathing
-    this.breathPhase += dt * 2.2
+    if (this.reducedMotion) {
+      this.breathPhase = 0
+      this._jumpY = 0
+    } else {
+      this.breathPhase += dt * 2.2
+    }
 
     // Blink logic
     this._blinkTimer -= dt
@@ -233,11 +244,12 @@ export class ChhotuChamp {
     ctx.translate(this.x, this.y + this._jumpY)
     ctx.scale(this.facing * responsiveScale, responsiveScale)
 
-    const breath = Math.sin(this.breathPhase)
-    const bodyScaleY = 1 + breath * 0.018
-    const bodyScaleX = 1 - breath * 0.012
-    const walkBob = this.walkActive ? Math.abs(Math.sin(this._walkPhase)) * 3.5 : 0
-    const walkTilt = this.walkActive ? Math.sin(this._walkPhase) * 0.045 : 0
+    const breath = this.reducedMotion ? 0 : Math.sin(this.breathPhase)
+    const bodyScaleY = this.reducedMotion ? 1 : 1 + breath * 0.018
+    const bodyScaleX = this.reducedMotion ? 1 : 1 - breath * 0.012
+    const walkBob =
+      this.walkActive && !this.reducedMotion ? Math.abs(Math.sin(this._walkPhase)) * 3.5 : 0
+    const walkTilt = this.walkActive && !this.reducedMotion ? Math.sin(this._walkPhase) * 0.045 : 0
 
     // Soft character contact shadow on pavement
     ctx.save()

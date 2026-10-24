@@ -3,6 +3,27 @@
 // WCAG 2.3.1 (Three Flashes or Below Threshold) compliance
 // ===================================================================
 
+export const MOTION_POLICY = {
+  SYSTEM: 'SYSTEM',
+  REDUCED: 'REDUCED',
+  FULL: 'FULL',
+}
+
+/**
+ * Resolves effective reduced motion boolean given a motion policy and OS setting.
+ * @param {string} policy - 'SYSTEM' | 'REDUCED' | 'FULL'
+ * @param {boolean} [osPrefersReduced] - matches '(prefers-reduced-motion: reduce)'
+ * @returns {boolean} true if motion/animations should be reduced
+ */
+export function resolveEffectiveMotion(
+  policy = MOTION_POLICY.SYSTEM,
+  osPrefersReduced = detectsReducedMotion()
+) {
+  if (policy === MOTION_POLICY.REDUCED) return true
+  if (policy === MOTION_POLICY.FULL) return false
+  return Boolean(osPrefersReduced)
+}
+
 export const CALM_VISUALS_CONFIG = {
   particleCountMultiplier: 0.5, // particle count x0.5
   particleLifetimeMultiplier: 0.6, // particle lifetime x0.6

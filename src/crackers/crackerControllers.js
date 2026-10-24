@@ -26,7 +26,15 @@ export function playCrackerShow(index, engines, onDone) {
   p.reducedMotion = motionReduced
   p.calmVisuals = calm
   if (jellySquash) jellySquash.calmVisuals = calm
-  const density = calm ? CALM_VISUALS_CONFIG.particleCountMultiplier : motionReduced ? 0.55 : 1
+  const getDensity = () => {
+    const calm = Boolean(p.calmVisuals || r._calmVisuals)
+    const motionReduced = Boolean(r._reducedMotion || p.reducedMotion)
+    return calm ? CALM_VISUALS_CONFIG.particleCountMultiplier : motionReduced ? 0.55 : 1
+  }
+  const density = {
+    valueOf: getDensity,
+    [Symbol.toPrimitive]: getDensity,
+  }
   const later = (fn, ms) => {
     const id = setTimeout(() => {
       if (!cancelled) fn()

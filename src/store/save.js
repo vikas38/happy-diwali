@@ -7,7 +7,11 @@ export const SAVE_KEY = 'chhotu_diwali_save_v1'
 export const SAVE_VERSION = 1
 export const TOTAL_CRACKERS = 6
 
-import { detectsReducedMotion } from '../safety/calmVisuals.js'
+import {
+  detectsReducedMotion,
+  MOTION_POLICY,
+  resolveEffectiveMotion,
+} from '../safety/calmVisuals.js'
 
 export const INTENSITY = {
   SOFT: 'SOFT',
@@ -20,6 +24,7 @@ export const INTENSITY = {
  * Only the first cracker (Phuljhari) is unlocked; intensity defaults to SOFT.
  */
 export function createDefaultSave() {
+  const osReduced = detectsReducedMotion()
   return {
     version: SAVE_VERSION,
     unlocked: [0], // cracker index 0 (Phuljhari) unlocked
@@ -28,11 +33,12 @@ export function createDefaultSave() {
     masterVolume: 0.7, // 0..1
     lastNonZeroVolume: 0.7, // remembered volume for unmuting (never hardcoded to 0.35)
     muted: false, // explicit master mute state
+    motionPolicy: MOTION_POLICY.SYSTEM, // 'SYSTEM' | 'REDUCED' | 'FULL'
     intensity: INTENSITY.SOFT,
     seenIntros: [], // cracker indices whose intro card has been shown
     seenHint: false, // first-run courtyard hint
     hasCompletedFirst: false, // completed at least one firework (unlocks skip walk)
-    calmVisuals: detectsReducedMotion(), // calm visual effects & reduced flashing
+    calmVisuals: osReduced, // backward-compatible boolean
   }
 }
 
@@ -102,6 +108,14 @@ export function validateSave(raw) {
 
   const finalMasterVol = isMuted ? 0 : parsedVol
 
+  let motionPolicy = defaults.motionPolicy
+  if (raw.motionPolicy && Object.values(MOTION_POLICY).includes(raw.motionPolicy)) {
+    motionPolicy = raw.motionPolicy
+  } else if (typeof raw.calmVisuals === 'boolean') {
+    motionPolicy = raw.calmVisuals ? MOTION_POLICY.REDUCED : MOTION_POLICY.FULL
+  }
+  const effectiveCalmVisuals = resolveEffectiveMotion(motionPolicy, detectsReducedMotion())
+
   const result = {
     version: SAVE_VERSION,
     unlocked: Array.isArray(raw.unlocked) ? raw.unlocked : defaults.unlocked,
@@ -110,6 +124,7 @@ export function validateSave(raw) {
     masterVolume: finalMasterVol,
     lastNonZeroVolume: lastNonZero,
     muted: isMuted || finalMasterVol === 0,
+    motionPolicy,
     intensity: raw.intensity,
     seenIntros: Array.isArray(raw.seenIntros) ? raw.seenIntros : defaults.seenIntros,
     seenHint: typeof raw.seenHint === 'boolean' ? raw.seenHint : defaults.seenHint,
@@ -117,7 +132,10 @@ export function validateSave(raw) {
       typeof raw.hasCompletedFirst === 'boolean'
         ? raw.hasCompletedFirst
         : Array.isArray(raw.stickers) && raw.stickers.length > 0,
-    calmVisuals: typeof raw.calmVisuals === 'boolean' ? raw.calmVisuals : defaults.calmVisuals,
+    calmVisuals:
+      typeof raw.calmVisuals === 'boolean' && !raw.motionPolicy
+        ? raw.calmVisuals
+        : effectiveCalmVisuals,
   }
 
   // unlocked: array of cracker indices 0..5, always include 0
@@ -212,3 +230,5 @@ export function clearSave(storage) {
     // ignore
   }
 }
+
+export { MOTION_POLICY, resolveEffectiveMotion }

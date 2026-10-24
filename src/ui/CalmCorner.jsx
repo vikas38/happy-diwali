@@ -9,20 +9,44 @@ import { t } from '../i18n/index.js'
 // Pauses the courtyard and guides the child through a peaceful 4-second
 // inhale/exhale breathing rhythm with Pip the Diya.
 
-function BreathingCircle() {
+function BreathingCircle({ reducedMotion = false }) {
   const circleRef = useRef(null)
   const textRef = useRef(null)
   const timerRef = useRef(null)
 
   useEffect(() => {
+    const el = circleRef.current
+    const txt = textRef.current
+    if (!el || !txt) return
+
+    if (reducedMotion) {
+      // In reduced motion mode: zero scaling transforms, static peaceful position,
+      // and calm rhythmic text cadence without any snapping transforms
+      el.style.transition = 'none'
+      el.style.transform = 'none'
+
+      let running = true
+      let inhale = true
+      txt.textContent = t('breathe_in')
+
+      function cycleText() {
+        if (!running) return
+        inhale = !inhale
+        txt.textContent = inhale ? t('breathe_in') : t('breathe_out')
+        timerRef.current = setTimeout(cycleText, 4200)
+      }
+
+      timerRef.current = setTimeout(cycleText, 4200)
+      return () => {
+        running = false
+        clearTimeout(timerRef.current)
+      }
+    }
+
     let running = true
 
     function runCycle() {
       if (!running) return
-      const el = circleRef.current
-      const txt = textRef.current
-      if (!el || !txt) return
-
       // Inhale — 4s expand
       el.style.transition = 'transform 4s cubic-bezier(0.4, 0, 0.2, 1)'
       el.style.transform = 'scale(1.32)'
@@ -47,12 +71,16 @@ function BreathingCircle() {
       running = false
       clearTimeout(timerRef.current)
     }
-  }, [])
+  }, [reducedMotion])
 
   return (
     <div className="breathing-guide" aria-live="polite">
       <div className="breathing-circle-wrap">
-        <div className="breathing-circle" ref={circleRef} aria-hidden="true">
+        <div
+          className={`breathing-circle ${reducedMotion ? 'breathing-circle--static' : ''}`}
+          ref={circleRef}
+          aria-hidden="true"
+        >
           <Diya className="breathing-diya" />
         </div>
       </div>
@@ -63,7 +91,12 @@ function BreathingCircle() {
   )
 }
 
-export default function CalmCorner({ onResume, isMuted = false, onToggleMute }) {
+export default function CalmCorner({
+  onResume,
+  isMuted = false,
+  onToggleMute,
+  reducedMotion = false,
+}) {
   useEffect(() => {
     const handleKey = (e) => {
       if (e.key === 'Escape') onResume()
@@ -95,7 +128,7 @@ export default function CalmCorner({ onResume, isMuted = false, onToggleMute }) 
           <span className="title-accent">{t('calm_corner_title_accent')}</span>
         </h2>
         <p className="calm-corner__subtitle">{t('calm_corner_subtitle')}</p>
-        <BreathingCircle />
+        <BreathingCircle reducedMotion={reducedMotion} />
         <div className="calm-corner__controls">
           {onToggleMute && (
             <button

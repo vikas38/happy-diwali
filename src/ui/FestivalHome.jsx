@@ -296,7 +296,7 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
   }, [modal])
 
   const explore = () =>
-    document.getElementById('activities')?.scrollIntoView({ behavior: 'smooth' })
+    document.getElementById('activities')?.scrollIntoView({ behavior: motion ? 'smooth' : 'auto' })
 
   const swatches = [
     [t('swatch_rose'), '#dd796d'],
@@ -322,7 +322,7 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
         <nav aria-label={t('main_nav_aria')}>
           <button
             className="nav-item active"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => window.scrollTo({ top: 0, behavior: motion ? 'smooth' : 'auto' })}
           >
             <Icon name="home" /> {t('nav_my_diwali')} <span className="nav-dot" />
           </button>

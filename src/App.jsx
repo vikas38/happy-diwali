@@ -2,6 +2,7 @@ import { useDialogFocus } from './accessibility/useDialogFocus.js'
 import { shouldPauseOnResize } from './safety/limits.js'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { GameStoreProvider, useGameStore } from './store/gameStore.jsx'
+import { resolveEffectiveMotion, MOTION_POLICY } from './store/save.js'
 import CanvasStage from './ui/CanvasStage.jsx'
 import HUD from './ui/HUD.jsx'
 import CrackerCarousel from './ui/CrackerCarousel.jsx'
@@ -280,16 +281,19 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
       </main>
     )
   const calmVisuals = Boolean(saveState.calmVisuals)
-  const isMotionPaused = calmVisuals || Boolean(reducedMotion)
+  const effectiveReducedMotion = resolveEffectiveMotion(saveState.motionPolicy, reducedMotion)
+  const isMotionPaused = calmVisuals || effectiveReducedMotion
 
   return (
-    <div className={`play-shell ${isMotionPaused ? 'motion-paused' : ''}`}>
+    <div className={`play-shell ${isMotionPaused ? 'motion-paused motion-reduced' : ''}`}>
       {/* Top Navigation Bar with Back button & settings */}
       <HUD
         onBack={onBack}
+        motionPolicy={saveState.motionPolicy || 'SYSTEM'}
+        onMotionPolicyChange={(policy) => store.setMotionPolicy(policy)}
         calmVisuals={calmVisuals}
         onToggleCalmVisuals={() => store.setCalmVisuals((v) => !v)}
-        reducedMotion={isMotionPaused}
+        reducedMotion={effectiveReducedMotion}
         onToggleMotion={() => store.setCalmVisuals((v) => !v)}
         showSettings={showHUD}
         masterVolume={saveState.masterVolume}
@@ -365,8 +369,8 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
         <CanvasStage
           onReady={handleEnginesReady}
           onClick={handleTapCracker}
-          reducedMotion={isMotionPaused}
-          calmVisuals={calmVisuals}
+          reducedMotion={effectiveReducedMotion}
+          calmVisuals={isMotionPaused}
           paused={
             fsmState === STATES.CALM_CORNER_OVERLAY ||
             fsmState === STATES.STICKER_BOOK_OVERLAY ||
@@ -449,6 +453,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             onResume={handleResumeFromCalm}
             isMuted={isMuted}
             onToggleMute={handleToggleMute}
+            reducedMotion={effectiveReducedMotion}
           />
         )}
 
@@ -473,10 +478,10 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
 // ===================================================================
 // Festival Home Wrapper — unlocks audio on gesture and wires settings
 // ===================================================================
-function FestivalHomeWrapper({ onPlay, reducedMotion }) {
+function FestivalHomeWrapper({ onPlay, reducedMotion: osReducedMotion }) {
   const store = useGameStore()
-  const calmVisuals = Boolean(store.state.calmVisuals)
-  const isMotionPaused = calmVisuals || Boolean(reducedMotion)
+  const effectiveReducedMotion = resolveEffectiveMotion(store.state.motionPolicy, osReducedMotion)
+  const isMotionActive = !effectiveReducedMotion
 
   const handlePlay = useCallback(() => {
     const sound = getSoundEngine()
@@ -501,10 +506,10 @@ function FestivalHomeWrapper({ onPlay, reducedMotion }) {
   return (
     <FestivalHome
       onPlay={handlePlay}
-      motion={!isMotionPaused}
+      motion={isMotionActive}
       setMotion={(v) => {
-        const nextMotion = typeof v === 'function' ? v(!isMotionPaused) : v
-        store.setCalmVisuals(!nextMotion)
+        const nextMotion = typeof v === 'function' ? v(isMotionActive) : v
+        store.setMotionPolicy(nextMotion ? MOTION_POLICY.FULL : MOTION_POLICY.REDUCED)
       }}
     />
   )

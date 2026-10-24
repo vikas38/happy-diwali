@@ -84,7 +84,7 @@ function lamp(c, x, y, s, t) {
   c.restore()
 }
 export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {
-  const effectiveT = reducedMotion ? t * 0.15 : t
+  const effectiveT = reducedMotion ? 0 : t
   const isPortrait = isPortraitLayout(w, h)
   const ground = getGroundY(w, h)
   // Backdrop: slightly desaturated nocturnal gradient so foreground pops

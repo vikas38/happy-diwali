@@ -29,7 +29,7 @@ export default function CanvasStage({
   const [failed, setFailed] = useState(false)
   useEffect(() => {
     if (!engines.current) return
-    const { renderer, particles, jellySquash, background, pip } = engines.current
+    const { renderer, particles, jellySquash, background, pip, chhotu } = engines.current
     const motionPaused = Boolean(reducedMotion || calmVisuals)
     background.reducedMotion = reducedMotion
     background.calmVisuals = calmVisuals
@@ -38,6 +38,7 @@ export default function CanvasStage({
     particles.reducedMotion = reducedMotion
     particles.calmVisuals = calmVisuals
     if (pip) pip.reducedMotion = motionPaused
+    if (chhotu) chhotu.reducedMotion = motionPaused
     if (reducedMotion || calmVisuals) particles.flashes = []
     jellySquash.reducedMotion = reducedMotion
     jellySquash.calmVisuals = calmVisuals
@@ -159,8 +160,9 @@ export default function CanvasStage({
     jellySquash.calmVisuals = calmVisuals
     background.reducedMotion = reducedMotion
     background.calmVisuals = calmVisuals
+    chhotu.reducedMotion = Boolean(reducedMotion || calmVisuals)
     pip.reducedMotion = Boolean(reducedMotion || calmVisuals)
-    engines.current = { renderer, particles, jellySquash, background, pip }
+    engines.current = { renderer, particles, jellySquash, background, pip, chhotu }
     renderer.start()
 
     if (onReady) {

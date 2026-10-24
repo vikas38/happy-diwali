@@ -7,6 +7,8 @@ export default function HUD({
   onToggleCalmVisuals,
   reducedMotion,
   onToggleMotion,
+  motionPolicy = 'SYSTEM',
+  onMotionPolicyChange,
   showSettings = true,
   settingsOpen: controlledSettingsOpen,
   onOpenSettings,
@@ -201,20 +203,43 @@ export default function HUD({
               </div>
 
               <div className="sheet-row">
-                <span className="sheet-label">{t('visual_comfort')}</span>
-                <button
-                  type="button"
-                  className="motion-control sheet-motion-btn"
-                  aria-pressed={Boolean(calmVisuals ?? reducedMotion)}
-                  onClick={onToggleCalmVisuals || onToggleMotion}
-                  aria-label={t('calm_visuals_toggle', {
-                    state: Boolean(calmVisuals ?? reducedMotion) ? 'on' : 'off',
-                  })}
-                >
-                  <span aria-hidden="true">🍃</span> {t('calm_visuals')}{' '}
-                  {Boolean(calmVisuals ?? reducedMotion) ? 'ON' : 'OFF'}
-                </button>
-                <small className="sheet-row-hint">{t('calm_visuals_hint')}</small>
+                <span className="sheet-label">{t('motion_policy')}</span>
+                <div className="game-sound-modes" role="group" aria-label={t('motion_policy')}>
+                  <button
+                    type="button"
+                    className={motionPolicy === 'SYSTEM' ? 'active' : ''}
+                    aria-pressed={motionPolicy === 'SYSTEM'}
+                    onClick={() => {
+                      if (onMotionPolicyChange) onMotionPolicyChange('SYSTEM')
+                      else if (onToggleCalmVisuals) onToggleCalmVisuals()
+                    }}
+                  >
+                    <span aria-hidden="true">✦</span> {t('motion_system')}
+                  </button>
+                  <button
+                    type="button"
+                    className={motionPolicy === 'REDUCED' ? 'active' : ''}
+                    aria-pressed={motionPolicy === 'REDUCED'}
+                    onClick={() => {
+                      if (onMotionPolicyChange) onMotionPolicyChange('REDUCED')
+                      else if (onToggleCalmVisuals) onToggleCalmVisuals()
+                    }}
+                  >
+                    <span aria-hidden="true">🍃</span> {t('motion_reduced')}
+                  </button>
+                  <button
+                    type="button"
+                    className={motionPolicy === 'FULL' ? 'active' : ''}
+                    aria-pressed={motionPolicy === 'FULL'}
+                    onClick={() => {
+                      if (onMotionPolicyChange) onMotionPolicyChange('FULL')
+                      else if (onToggleCalmVisuals) onToggleCalmVisuals()
+                    }}
+                  >
+                    <span aria-hidden="true">✨</span> {t('motion_full')}
+                  </button>
+                </div>
+                <small className="sheet-row-hint">{t('motion_policy_hint')}</small>
               </div>
             </div>
 

@@ -6,6 +6,8 @@ import {
   validateSave,
   INTENSITY,
   TOTAL_CRACKERS,
+  MOTION_POLICY,
+  resolveEffectiveMotion,
 } from './save.js'
 
 // ===================================================================
@@ -198,8 +200,20 @@ export function GameStoreProvider({ children }) {
     (val) => {
       updateStore((s) => {
         const next = typeof val === 'function' ? val(s.calmVisuals) : val
-        return { ...s, calmVisuals: Boolean(next) }
+        const policy = next ? MOTION_POLICY.REDUCED : MOTION_POLICY.FULL
+        return { ...s, motionPolicy: policy, calmVisuals: Boolean(next) }
       })
+    },
+    [updateStore]
+  )
+
+  const setMotionPolicy = useCallback(
+    (policy) => {
+      if (!Object.values(MOTION_POLICY).includes(policy)) return
+      updateStore((s) => ({
+        ...s,
+        motionPolicy: policy,
+      }))
     },
     [updateStore]
   )
@@ -235,6 +249,7 @@ export function GameStoreProvider({ children }) {
     setMasterVolume,
     toggleMute,
     setCalmVisuals,
+    setMotionPolicy,
     unlockCracker,
     unlockAllCrackers,
     markIntroSeen,
@@ -256,4 +271,4 @@ export function useGameStore() {
   return ctx
 }
 
-export { INTENSITY, TOTAL_CRACKERS }
+export { INTENSITY, TOTAL_CRACKERS, MOTION_POLICY, resolveEffectiveMotion }

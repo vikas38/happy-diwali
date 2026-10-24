@@ -38,6 +38,12 @@ export const STRINGS_EN = {
   calm_visuals: 'Calm visuals',
   calm_visuals_toggle: 'Calm visuals {state}',
   calm_visuals_hint: 'Halves particle bursts, softens motion, and suppresses all flashing.',
+  motion_policy: 'Motion & Visuals',
+  motion_system: 'System',
+  motion_reduced: 'Reduced',
+  motion_full: 'Full',
+  motion_policy_hint:
+    'System follows device settings. Reduced suppresses flashing, jumps, and screen shake.',
   mute_audio: 'Mute audio',
   unmute_audio: 'Unmute audio',
   mute: 'Mute',

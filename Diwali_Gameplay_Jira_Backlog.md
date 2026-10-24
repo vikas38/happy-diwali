@@ -120,7 +120,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-005 | Create a layered cinematic Diwali courtyard | EP-02 | P1 | 8 | R1 | Done |
 | DIW-006 | Add responsive scene lighting and tactile interaction polish | EP-02 | P2 | 5 | R1 | Done |
 | DIW-007 | Redesign cracker cards and the quick-access tray | EP-02 | P1 | 5 | R1 | To Do |
-| DIW-008 | Build a consistent illustrated cracker asset set | EP-02 | P1 | 8 | R1 | To Do |
+| DIW-008 | Build a consistent illustrated cracker asset set | EP-02 | P1 | 8 | R1 | Done |
 | DIW-009 | Simplify the HUD with permanent mute and pause | EP-03 | P1 | 3 | R1 | To Do |
 | DIW-010 | Create a browsable cracker library with filters and favourites | EP-03 | P1 | 5 | R1 | To Do |
 | DIW-011 | Add a clear selected-cracker inspector | EP-03 | P1 | 5 | R1 | To Do |
@@ -330,7 +330,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-008 — Build a consistent illustrated cracker asset set
 
 **Epic:** EP-02 | **Type:** Design | **Priority:** P1 | **Estimate:** 8 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-002  
 **Code / design pointers:** src/ui/CrackerArt.jsx; cracker artwork registry (new)
 
@@ -338,17 +338,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Give the original six and the first four new effects distinct silhouettes, shared light direction, consistent scale, and a ground shadow.
-- [ ] Use the existing SVG art approach where suitable; create art keys instead of numeric-index branching.
-- [ ] Prepare full-color, locked-muted, sticker, and selected treatments from shared artwork, with thumbnail and large-detail use.
-- [ ] Define extension slots for the four R2 effects; finish their art inside their content tickets.
+- [x] Give the original six and the first four new effects distinct silhouettes, shared light direction, consistent scale, and a ground shadow.
+- [x] Use the existing SVG art approach where suitable; create art keys instead of numeric-index branching.
+- [x] Prepare full-color, locked-muted, sticker, and selected treatments from shared artwork, with thumbnail and large-detail use.
+- [x] Define extension slots for the four R2 effects; finish their art inside their content tickets.
 
 **Acceptance criteria**
 
-- [ ] Every shipped effect has finished art in library, inspector, reward, and collection surfaces.
-- [ ] Small cards remain distinguishable in grayscale by silhouette/name, not color alone.
-- [ ] No missing artwork or duplicate SVG IDs occurs when the same item renders in multiple places.
-- [ ] Record asset provenance/licensing where external assets are introduced.
+- [x] Every shipped effect has finished art in library, inspector, reward, and collection surfaces.
+- [x] Small cards remain distinguishable in grayscale by silhouette/name, not color alone.
+- [x] No missing artwork or duplicate SVG IDs occurs when the same item renders in multiple places.
+- [x] Record asset provenance/licensing where external assets are introduced.
+
+**Completion:** 24 October 2026 — Built authentic SVG illustrated set in `src/ui/CrackerArt.jsx` for all 10 R1 crackers (Phuljhari, Anar, Chakri, Rocket, Ladi, Sutli Bomb, Golden Waterfall, Comet Fan, Ring Burst, Peacock Fan) and 4 R2 extension slots (Spiral Sky, Chrysanthemum, Double Blossom, Constellation Sparkles) with distinct silhouettes, art keys, unique scoped SVG IDs via `useId()`, and support for default/locked/selected/sticker variants. Verified with unit tests in `test/cracker-art.test.jsx`.
 
 ### DIW-009 — Simplify the HUD with permanent mute and pause
 

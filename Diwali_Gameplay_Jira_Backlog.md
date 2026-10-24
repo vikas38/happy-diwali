@@ -117,7 +117,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-002 | Define the gameplay art direction and state storyboard | EP-01 | P1 | 5 | R1 | Done |
 | DIW-003 | Implement reusable gameplay design tokens and controls | EP-01 | P1 | 3 | R1 | Done |
 | DIW-004 | Rebuild the responsive stage and control layout | EP-02 | P1 | 8 | R1 | Done |
-| DIW-005 | Create a layered cinematic Diwali courtyard | EP-02 | P1 | 8 | R1 | To Do |
+| DIW-005 | Create a layered cinematic Diwali courtyard | EP-02 | P1 | 8 | R1 | Done |
 | DIW-006 | Add responsive scene lighting and tactile interaction polish | EP-02 | P2 | 5 | R1 | To Do |
 | DIW-007 | Redesign cracker cards and the quick-access tray | EP-02 | P1 | 5 | R1 | To Do |
 | DIW-008 | Build a consistent illustrated cracker asset set | EP-02 | P1 | 8 | R1 | To Do |
@@ -258,7 +258,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-005 — Create a layered cinematic Diwali courtyard
 
 **Epic:** EP-02 | **Type:** Story | **Priority:** P1 | **Estimate:** 8 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-002, DIW-004  
 **Code / design pointers:** src/render/layers/Background.js; src/render/layers/Courtyard.js; src/render/Renderer.js
 
@@ -266,17 +266,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Compose an indigo/plum sky, quiet distant rooftops, warm arch/terrace edges, marigold accents, clay diyas, and a restrained rangoli foreground.
-- [ ] Create depth through silhouette, local light, and warm/cool contrast. Reserve central/upper negative space for the effect.
-- [ ] Cache static scenery; separate lamps and subtle ambient accents from expensive geometry redraws.
-- [ ] Provide reduced-motion and lower-quality variants without changing the recognizable setting.
+- [x] Compose an indigo/plum sky, quiet distant rooftops, warm arch/terrace edges, marigold accents, clay diyas, and a restrained rangoli foreground.
+- [x] Create depth through silhouette, local light, and warm/cool contrast. Reserve central/upper negative space for the effect.
+- [x] Cache static scenery; separate lamps and subtle ambient accents from expensive geometry redraws.
+- [x] Provide reduced-motion and lower-quality variants without changing the recognizable setting.
 
 **Acceptance criteria**
 
-- [ ] A neutral idle frame looks intentionally composed on desktop and mobile, without relying on animation.
-- [ ] Ground effects remain visible against the floor; sky effects remain clear against the skyline.
-- [ ] Characters, ignition area, effect envelope, and UI do not visually collide.
-- [ ] No full-screen bloom wash, constant screen shake, or busy ambient particles compete with the active effect.
+- [x] A neutral idle frame looks intentionally composed on desktop and mobile, without relying on animation.
+- [x] Ground effects remain visible against the floor; sky effects remain clear against the skyline.
+- [x] Characters, ignition area, effect envelope, and UI do not visually collide.
+- [x] No full-screen bloom wash, constant screen shake, or busy ambient particles compete with the active effect.
+
+**Completion:** 24 October 2026 — Composed indigo/plum sky gradient (`#11122b` to `#30203d`), restrained doorstep rangoli, cached static scenery, and suppression of ambient sky bursts during active cracker show (`CRACKER_SHOW_ACTIVE`) in `src/render/layers/Courtyard.js` and `src/render/layers/Background.js`. Verified with 3 automated unit tests in `test/courtyard-scenery.test.js`.
 
 ### DIW-006 — Add responsive scene lighting and tactile interaction polish
 

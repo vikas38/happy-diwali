@@ -91,11 +91,11 @@ function renderStaticScenery(c, w, h) {
   const isPortrait = isPortraitLayout(w, h)
   const ground = getGroundY(w, h)
 
-  // Backdrop: nocturnal sky gradient
-  const sky = c.createLinearGradient(0, 0, 0, h)
-  sky.addColorStop(0, '#080f20')
-  sky.addColorStop(0.55, '#1e2433')
-  sky.addColorStop(1, '#4e433d')
+  // Backdrop: nocturnal sky gradient (DIW-002/005 visual spec)
+  const sky = c.createLinearGradient(0, 0, 0, ground)
+  sky.addColorStop(0, '#11122b')
+  sky.addColorStop(0.65, '#221936')
+  sky.addColorStop(1, '#30203d')
   c.fillStyle = sky
   c.fillRect(0, 0, w, h)
   halo(c, w * 0.55, ground, w * 0.65, '#9a633824')
@@ -180,6 +180,46 @@ function renderStaticScenery(c, w, h) {
   }
   halo(c, w * 0.15, ground + 20, 160, '#e7a34216')
   halo(c, w * 0.9, ground + 20, 160, '#e7a34212')
+
+  // Traditional doorstep rangoli at the house entrance (right haveli threshold)
+  const doorBw = Math.min(w * 0.21, 270)
+  const rangoliX = w - doorBw * 0.48
+  const rangoliY = ground + 16
+  const rangoliR = Math.min(20, doorBw * 0.15)
+
+  c.save()
+  c.fillStyle = '#e981a030'
+  c.beginPath()
+  c.arc(rangoliX, rangoliY, rangoliR * 1.25, 0, TAU)
+  c.fill()
+
+  c.strokeStyle = '#61c9be'
+  c.lineWidth = 1.4
+  c.beginPath()
+  c.arc(rangoliX, rangoliY, rangoliR, 0, TAU)
+  c.stroke()
+
+  c.strokeStyle = '#e981a0'
+  c.lineWidth = 1.2
+  c.beginPath()
+  c.arc(rangoliX, rangoliY, rangoliR * 0.65, 0, TAU)
+  c.stroke()
+
+  c.fillStyle = '#f3bb56'
+  c.beginPath()
+  c.arc(rangoliX, rangoliY, rangoliR * 0.28, 0, TAU)
+  c.fill()
+
+  for (let p = 0; p < 6; p++) {
+    const angle = (p * Math.PI) / 3
+    const px = rangoliX + Math.cos(angle) * rangoliR * 0.82
+    const py = rangoliY + Math.sin(angle) * rangoliR * 0.82
+    c.fillStyle = '#fff4df'
+    c.beginPath()
+    c.arc(px, py, 1.8, 0, TAU)
+    c.fill()
+  }
+  c.restore()
 }
 
 export function drawCourtyard(c, w, h, t, state, reducedMotion = false) {

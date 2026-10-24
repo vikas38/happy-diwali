@@ -478,6 +478,12 @@ export class Background {
   update(dt, time) {
     this.light = Math.max(0, (this.light || 0) - dt * 0.8)
 
+    // DIW-005: Suspend ambient bursts while player cracker is firing so sky stays clear
+    if (this.gameState === 'CRACKER_SHOW_ACTIVE') {
+      this.ambientBursts = []
+      return
+    }
+
     // Schedule and trigger ambient sky bursts every 1.5 - 3.2 seconds
     if (!this.ambientBursts) this.ambientBursts = []
     if (this._nextBurstTime === undefined) {
@@ -495,7 +501,9 @@ export class Background {
   draw(ctx, w, h, time) {
     const motionPaused = Boolean(this.reducedMotion || this.calmVisuals)
     drawCourtyard(ctx, w, h, time, this.gameState, motionPaused)
-    if (!motionPaused) this._drawAmbientBursts(ctx, w, h, time)
+    if (!motionPaused && this.gameState !== 'CRACKER_SHOW_ACTIVE') {
+      this._drawAmbientBursts(ctx, w, h, time)
+    }
     if (!this.hasInteractiveLayer) {
       this._drawCrackerOnLaunchpad(ctx, w, h, time)
     }

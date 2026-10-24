@@ -119,7 +119,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-004 | Rebuild the responsive stage and control layout | EP-02 | P1 | 8 | R1 | Done |
 | DIW-005 | Create a layered cinematic Diwali courtyard | EP-02 | P1 | 8 | R1 | Done |
 | DIW-006 | Add responsive scene lighting and tactile interaction polish | EP-02 | P2 | 5 | R1 | Done |
-| DIW-007 | Redesign cracker cards and the quick-access tray | EP-02 | P1 | 5 | R1 | To Do |
+| DIW-007 | Redesign cracker cards and the quick-access tray | EP-02 | P1 | 5 | R1 | Done |
 | DIW-008 | Build a consistent illustrated cracker asset set | EP-02 | P1 | 8 | R1 | Done |
 | DIW-009 | Simplify the HUD with permanent mute and pause | EP-03 | P1 | 3 | R1 | To Do |
 | DIW-010 | Create a browsable cracker library with filters and favourites | EP-03 | P1 | 5 | R1 | To Do |
@@ -307,7 +307,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-007 — Redesign cracker cards and the quick-access tray
 
 **Epic:** EP-02 | **Type:** Story | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-003, DIW-004, DIW-008  
 **Code / design pointers:** src/ui/CrackerCarousel.jsx; src/gameplay.css
 
@@ -315,17 +315,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Build generous art-led cards with name, short descriptor, selected check, and explicit New/Locked/Favourite states.
-- [ ] Show a compact recent/favourite subset in the tray with a visible Browse all entry; the full library handles expansion.
-- [ ] Use scroll snapping only where helpful, continuation cues, and programmatic focus visibility.
-- [ ] Do not rely on disabled controls to explain locked items; allow an inspectable explanation without allowing play.
+- [x] Build generous art-led cards with name, short descriptor, selected check, and explicit New/Locked/Favourite states.
+- [x] Show a compact recent/favourite subset in the tray with a visible Browse all entry; the full library handles expansion.
+- [x] Use scroll snapping only where helpful, continuation cues, and programmatic focus visibility.
+- [x] Do not rely on disabled controls to explain locked items; allow an inspectable explanation without allowing play.
 
 **Acceptance criteria**
 
-- [ ] The selected item is always obvious; name and thumbnail never depend on array position.
-- [ ] Touch, keyboard, and pointer can inspect and select; no required drag-only behavior.
-- [ ] Adding the expanded catalog does not shrink meaningful text or render every card as a tiny icon.
-- [ ] Selecting an item updates details without starting audio or ignition.
+- [x] The selected item is always obvious; name and thumbnail never depend on array position.
+- [x] Touch, keyboard, and pointer can inspect and select; no required drag-only behavior.
+- [x] Adding the expanded catalog does not shrink meaningful text or render every card as a tiny icon.
+- [x] Selecting an item updates details without starting audio or ignition.
+
+**Completion:** 24 October 2026 — Redesigned `CrackerCarousel.jsx` and `.firework-dock` with generous art-led cards, visible selection checkmark (`✓`) for color independence, favorite and new badges, and a visible "Browse all" library entry. Verified with 4 unit tests in `test/cracker-cards-tray.test.jsx`.
 
 ### DIW-008 — Build a consistent illustrated cracker asset set
 

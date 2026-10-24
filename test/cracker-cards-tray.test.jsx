@@ -2,6 +2,7 @@ import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import CrackerCarousel from '../src/ui/CrackerCarousel.jsx'
+import { CRACKERS } from '../src/crackers/crackerDefs.js'
 
 describe('DIW-007 — Redesigned cracker cards and quick-access tray', () => {
   it('renders generous art-led cards with name, descriptor, and accessible attributes', () => {
@@ -15,7 +16,7 @@ describe('DIW-007 — Redesigned cracker cards and quick-access tray', () => {
     )
 
     const options = screen.getAllByRole('option')
-    expect(options.length).toBe(6)
+    expect(options.length).toBe(CRACKERS.length)
 
     // First card: Phuljhari, unlocked & selected
     const first = options[0]

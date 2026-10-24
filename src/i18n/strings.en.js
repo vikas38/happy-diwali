@@ -108,6 +108,14 @@ export const STRINGS_EN = {
   tagline_rocket: 'A skyward burst',
   tagline_ladi: 'A rhythm of sparks',
   tagline_sutli: 'A glowing finale',
+  tagline_golden_waterfall: 'A downward cascade',
+  tagline_comet_fan: 'An arcing sky fan',
+  tagline_ring_burst: 'Concentric halos',
+  tagline_peacock_fan: 'A feather fan plume',
+  tagline_spiral_sky: 'A corkscrew ascent',
+  tagline_chrysanthemum: 'A soft golden sphere',
+  tagline_double_blossom: 'A two-stage blossom',
+  tagline_constellation: 'A sky full of embers',
 
   // Countdown
   countdown_aria: 'Countdown: {number}',

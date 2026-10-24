@@ -748,7 +748,7 @@ export default function FestivalHome({
                 <h3>{t('journey_card_title')}</h3>
                 <p>{t('journey_card_desc')}</p>
                 <div className="collection-progress">
-                  <span style={{ width: `${(state.stickers.length / 6) * 100}%` }} />
+                  <span style={{ width: `${Math.min(100, (state.stickers.length / (CRACKERS.length || 6)) * 100)}%` }} />
                 </div>
                 <small>{t('journey_card_count', { count: state.stickers.length })}</small>
               </div>
@@ -1096,7 +1096,7 @@ export default function FestivalHome({
                   aria-label={t('grownups_unlock_all_aria')}
                 >
                   <span aria-hidden="true">🔓</span>{' '}
-                  {state.unlocked.length >= 6
+                  {state.unlocked.length >= (CRACKERS.length || 6)
                     ? t('grownups_unlocked_done')
                     : t('grownups_unlock_all_btn')}
                 </button>

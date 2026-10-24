@@ -272,7 +272,7 @@ describe('T02 — Contextual Action Button, Step Dots, Tap Targets & Breath Paus
       render(<CrackerCarousel unlocked={[0]} selectedCracker={0} onSelect={vi.fn()} />)
 
       const choices = screen.getAllByRole('option')
-      expect(choices.length).toBe(6)
+      expect(choices.length).toBeGreaterThanOrEqual(6)
 
       // First is unlocked & selected
       expect(choices[0].disabled).toBe(false)

@@ -129,7 +129,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-014 | Create a readable sound, motion, and quality settings sheet | EP-03 | P1 | 5 | R1 | To Do |
 | DIW-015 | Unify drawers, dialogs, and focus restoration | EP-03 | P1 | 5 | R1 | To Do |
 | DIW-016 | Make the cracker catalog extensible by stable ID | EP-04 | P1 | 5 | R1 | Done |
-| DIW-017 | Migrate saves for expanded content and customization | EP-04 | P1 | 5 | R1 | To Do |
+| DIW-017 | Migrate saves for expanded content and customization | EP-04 | P1 | 5 | R1 | Done |
 | DIW-018 | Add reusable authored effect timelines and emission primitives | EP-04 | P1 | 8 | R1 | To Do |
 | DIW-019 | Add Golden Waterfall | EP-04 | P1 | 5 | R1 | To Do |
 | DIW-020 | Add Comet Fan | EP-04 | P1 | 5 | R1 | To Do |
@@ -542,7 +542,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-017 — Migrate saves for expanded content and customization
 
 **Epic:** EP-04 | **Type:** Task | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-016  
 **Code / design pointers:** src/store/save.js; src/store/gameStore.jsx; existing persistence tests
 
@@ -550,18 +550,20 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Version and validate favourites, palettes, motion override, last nonzero volume, quality, discovered IDs, decorations, and later show drafts.
-- [ ] Replace TOTAL_CRACKERS=6 validation with explicit valid-ID membership; preserve original IDs, stars, unlocks, and introduction history.
-- [ ] After the first original completion, make the installed expansion items selectable; old saves with any earned sticker qualify immediately. Keep original progression intact.
-- [ ] Give expansion content separate catalog groups so an earned original-six completion badge is never revoked.
-- [ ] Keep save failure nonfatal and expose a truthful session-only notice when persistence fails.
+- [x] Version and validate favourites, palettes, motion override, last nonzero volume, quality, discovered IDs, decorations, and later show drafts.
+- [x] Replace TOTAL_CRACKERS=6 validation with explicit valid-ID membership; preserve original IDs, stars, unlocks, and introduction history.
+- [x] After the first original completion, make the installed expansion items selectable; old saves with any earned sticker qualify immediately. Keep original progression intact.
+- [x] Give expansion content separate catalog groups so an earned original-six completion badge is never revoked.
+- [x] Keep save failure nonfatal and expose a truthful session-only notice when persistence fails.
 
 **Acceptance criteria**
 
-- [ ] Fresh, partial original, completed original, malformed, and storage-blocked fixtures behave correctly.
-- [ ] Migration is idempotent; reload does not grant free stickers or repeat first-time awards.
-- [ ] R1 has 10 installed items and R2 has 14 without invalid counters or false locked state.
-- [ ] Unknown fields/IDs follow a documented compatibility policy; existing progress is not reset by a missing new field.
+- [x] Fresh, partial original, completed original, malformed, and storage-blocked fixtures behave correctly.
+- [x] Migration is idempotent; reload does not grant free stickers or repeat first-time awards.
+- [x] R1 has 10 installed items and R2 has 14 without invalid counters or false locked state.
+- [x] Unknown fields/IDs follow a documented compatibility policy; existing progress is not reset by a missing new field.
+
+**Completion:** 24 October 2026 — Upgraded save schema to v2 in `src/store/save.js` and `src/store/gameStore.jsx`. Validated all collections by registry membership via `isValidCrackerId`, supported favorites and quality preferences, added nonfatal storage notice tracking, preserved original-six completion badge independently of expansion items via `hasCompletedOriginalSix`, and unlocked R1 expansion items upon first completion while guaranteeing idempotence. Verified with 15 unit tests in `test/save-migration.test.js`.
 
 ### DIW-018 — Add reusable authored effect timelines and emission primitives
 

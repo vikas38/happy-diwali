@@ -2,7 +2,7 @@ import { useDialogFocus } from './accessibility/useDialogFocus.js'
 import { shouldPauseOnResize } from './safety/limits.js'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { GameStoreProvider, useGameStore } from './store/gameStore.jsx'
-import { resolveEffectiveMotion, MOTION_POLICY } from './store/save.js'
+import { resolveEffectiveMotion, MOTION_POLICY, hasCompletedOriginalSix } from './store/save.js'
 import CanvasStage from './ui/CanvasStage.jsx'
 import HUD from './ui/HUD.jsx'
 import CrackerCarousel from './ui/CrackerCarousel.jsx'
@@ -466,7 +466,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
           <RewardOverlay
             cracker={uiData.cracker}
             isNewSticker={uiData.isNewSticker}
-            allStickersCollected={(saveState.stickers || []).length >= 6}
+            allStickersCollected={hasCompletedOriginalSix(saveState.stickers)}
             onLightAgain={handleLightAgain}
             onNextCracker={handleNextCracker}
             onSkip={handleNextCracker}

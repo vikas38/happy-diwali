@@ -96,7 +96,7 @@ describe('save.js', () => {
     })
 
     it('filters out-of-range cracker indices', () => {
-      const s = validateSave({ unlocked: [0, 99, -1], stickers: [7] })
+      const s = validateSave({ unlocked: [0, 99, -1], stickers: [99] })
       expect(s.unlocked).toEqual([0])
       expect(s.stickers).toEqual([])
     })
@@ -226,32 +226,33 @@ describe('save.js', () => {
         expect(() => writeSave({ unlocked: [0, 1, 2] }, fullStorage)).not.toThrow()
       })
 
-      it('migrates unversioned legacy save (v0) to v1', () => {
+      it('migrates unversioned legacy save (v0) to v2', () => {
         const legacyV0 = {
           unlocked: [0, 1],
           stickers: [0],
           stars: 3,
         }
         const migrated = migrateSave(legacyV0)
-        expect(migrated.version).toBe(1)
-        expect(migrated.unlocked).toEqual([0, 1])
+        expect(migrated.version).toBe(SAVE_VERSION)
+        // stickers contains 0, so expansion items [6, 7, 8, 9] are unlocked
+        expect(migrated.unlocked).toEqual([0, 1, 6, 7, 8, 9])
         expect(migrated.stickers).toEqual([0])
 
         const validated = validateSave(migrated)
-        expect(validated.version).toBe(1)
-        expect(validated.unlocked).toEqual([0, 1])
+        expect(validated.version).toBe(SAVE_VERSION)
+        expect(validated.unlocked).toEqual([0, 1, 6, 7, 8, 9])
       })
 
-      it('is ready for future v2 schema migration', () => {
+      it('migrates v1 schema to v2 schema with expansion items for qualified saves', () => {
         const v1Fixture = {
           version: 1,
           unlocked: [0, 1, 2],
           stickers: [0, 1],
         }
-        // In current SAVE_VERSION=1, v1 to v1 is a clean no-op
         const migrated = migrateSave(v1Fixture)
-        expect(migrated.version).toBe(1)
-        expect(migrated.unlocked).toEqual([0, 1, 2])
+        expect(migrated.version).toBe(2)
+        expect(migrated.unlocked).toEqual([0, 1, 2, 6, 7, 8, 9])
+        expect(migrated.stickers).toEqual([0, 1])
       })
 
       it('migrates and loads an old-shape save from storage', () => {
@@ -262,7 +263,7 @@ describe('save.js', () => {
         storage.setItem(SAVE_KEY, oldShape)
 
         const loaded = loadSave(storage)
-        expect(loaded.version).toBe(1)
+        expect(loaded.version).toBe(SAVE_VERSION)
         expect(loaded.unlocked).toContain(0) // restored 0
         expect(loaded.unlocked).toContain(1)
         expect(loaded.extraLegacyKey).toBeUndefined()

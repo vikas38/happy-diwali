@@ -19,6 +19,8 @@ beforeAll(() => {
   })
 })
 
+import { R1_CRACKER_IDS } from '../src/crackers/crackerDefs.js'
+
 function makeMockEngines(store) {
   return {
     store,
@@ -68,7 +70,7 @@ describe('T21 — Rewards and Progress Polish (U11)', () => {
   })
 
   describe('Grown-up unlock-all and persistence', () => {
-    it('unlocks all 6 crackers and persists to localStorage via store.unlockAllCrackers', async () => {
+    it('unlocks all crackers and persists to localStorage via store.unlockAllCrackers', async () => {
       let storeHook
       function TestComponent() {
         storeHook = useGameStore()
@@ -87,13 +89,13 @@ describe('T21 — Rewards and Progress Polish (U11)', () => {
         storeHook.unlockAllCrackers()
       })
 
-      expect(storeHook.state.unlocked).toEqual([0, 1, 2, 3, 4, 5])
-      expect(storeHook.state.stickers).toEqual([0, 1, 2, 3, 4, 5])
+      expect(storeHook.state.unlocked).toEqual(R1_CRACKER_IDS)
+      expect(storeHook.state.stickers).toEqual(R1_CRACKER_IDS)
 
       // Verify persistence in localStorage
       const saved = JSON.parse(localStorage.getItem(SAVE_KEY))
-      expect(saved.unlocked).toEqual([0, 1, 2, 3, 4, 5])
-      expect(saved.stickers).toEqual([0, 1, 2, 3, 4, 5])
+      expect(saved.unlocked).toEqual(R1_CRACKER_IDS)
+      expect(saved.stickers).toEqual(R1_CRACKER_IDS)
     })
 
     it('For Grown-ups panel contains the unlock-all button and triggers unlock-all', async () => {
@@ -117,10 +119,10 @@ describe('T21 — Rewards and Progress Polish (U11)', () => {
         fireEvent.click(unlockBtn)
       })
 
-      // Saved state now has all 6 unlocked
+      // Saved state now has all R1 crackers unlocked
       const saved = JSON.parse(localStorage.getItem(SAVE_KEY))
-      expect(saved.unlocked).toEqual([0, 1, 2, 3, 4, 5])
-      expect(saved.stickers).toEqual([0, 1, 2, 3, 4, 5])
+      expect(saved.unlocked).toEqual(R1_CRACKER_IDS)
+      expect(saved.stickers).toEqual(R1_CRACKER_IDS)
     })
   })
 

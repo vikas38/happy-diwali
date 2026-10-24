@@ -18,14 +18,11 @@ export default function CrackerCarousel({
 }) {
   const selectedRef = useRef(null)
 
-  const labels = [
-    t('tagline_phuljhari'),
-    t('tagline_anar'),
-    t('tagline_chakri'),
-    t('tagline_rocket'),
-    t('tagline_ladi'),
-    t('tagline_sutli'),
-  ]
+  const getTagline = (cracker) => {
+    const key = `tagline_${cracker.stableKey}`
+    const localized = t(key)
+    return localized && localized !== key ? localized : cracker.descriptor || ''
+  }
 
   useEffect(() => {
     if (selectedRef.current && typeof selectedRef.current.scrollIntoView === 'function') {
@@ -61,7 +58,7 @@ export default function CrackerCarousel({
           <span className="dock-title">{t('dock_heading')}</span>
           <small className="dock-descriptor">
             {selectedItem
-              ? `${selectedItem.name} · ${selectedItem.descriptor} — ${labels[selectedCracker] || selectedItem.descriptor}`
+              ? `${selectedItem.name} · ${selectedItem.descriptor} — ${getTagline(selectedItem)}`
               : t('dock_subheading')}
           </small>
         </div>
@@ -85,7 +82,7 @@ export default function CrackerCarousel({
           const isFav = favorites.includes(c.id)
           const isNew = newItems.includes(c.id)
 
-          const tagline = labels[i] || c.descriptor || ''
+          const tagline = getTagline(c)
 
           return (
             <button

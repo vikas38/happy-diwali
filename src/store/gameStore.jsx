@@ -5,6 +5,7 @@ import {
   writeSave,
   validateSave,
   INTENSITY,
+  QUALITY_SETTINGS,
   SPARKLE_PALETTES,
   DIYA_ARRANGEMENTS,
   RANGOLI_PATTERNS,
@@ -12,7 +13,15 @@ import {
   TOTAL_CRACKERS,
   MOTION_POLICY,
   resolveEffectiveMotion,
+  hasCompletedOriginalSix,
+  getStorageNotice,
+  clearStorageNotice,
 } from './save.js'
+import {
+  isValidCrackerId,
+  ORIGINAL_SIX_IDS,
+  R1_CRACKER_IDS,
+} from '../crackers/crackerDefs.js'
 
 // ===================================================================
 // Game Store — React context for the entire app's persistent state
@@ -22,12 +31,18 @@ export const GameStoreContext = createContext(null)
 
 export function GameStoreProvider({ children }) {
   const [state, setState] = useState(() => loadSave())
+  const [storageNotice, setStorageNotice] = useState(() => getStorageNotice())
   const stateRef = useRef(state)
   stateRef.current = state
 
   // Write-through to localStorage whenever state changes
   useEffect(() => {
-    writeSave(state)
+    const res = writeSave(state)
+    if (res && res.success === false) {
+      setStorageNotice(getStorageNotice())
+    } else {
+      setStorageNotice((prev) => (prev ? null : prev))
+    }
   }, [state])
 
   // Synchronous store state updater ensuring stateRef.current is immediately
@@ -46,6 +61,31 @@ export function GameStoreProvider({ children }) {
   const setIntensity = useCallback(
     (intensity) => {
       updateStore((s) => ({ ...s, intensity }))
+    },
+    [updateStore]
+  )
+
+  const setQuality = useCallback(
+    (quality) => {
+      if (!Object.values(QUALITY_SETTINGS).includes(quality)) return
+      updateStore((s) => ({ ...s, quality }))
+    },
+    [updateStore]
+  )
+
+  const toggleFavorite = useCallback(
+    (crackerId) => {
+      if (!isValidCrackerId(crackerId)) return
+      updateStore((s) => {
+        const favs = s.favorites || []
+        const next = favs.includes(crackerId)
+          ? favs.filter((id) => id !== crackerId)
+          : [...favs, crackerId]
+        return {
+          ...s,
+          favorites: [...new Set(next)].sort((a, b) => a - b),
+        }
+      })
     },
     [updateStore]
   )
@@ -116,8 +156,8 @@ export function GameStoreProvider({ children }) {
   const unlockAllCrackers = useCallback(() => {
     updateStore((s) => ({
       ...s,
-      unlocked: Array.from({ length: TOTAL_CRACKERS }, (_, i) => i),
-      stickers: Array.from({ length: TOTAL_CRACKERS }, (_, i) => i),
+      unlocked: [...R1_CRACKER_IDS],
+      stickers: [...R1_CRACKER_IDS],
       hasCompletedFirst: true,
     }))
   }, [updateStore])
@@ -169,9 +209,28 @@ export function GameStoreProvider({ children }) {
         const starsEarned = isNewSticker ? 3 : 1
         const stickers = isNewSticker ? [...s.stickers, crackerIndex] : s.stickers
         const stars = s.stars + starsEarned
-        const nextIndex = crackerIndex + 1
-        const unlockNext = nextIndex < TOTAL_CRACKERS && !s.unlocked.includes(nextIndex)
-        const unlocked = unlockNext ? [...s.unlocked, nextIndex] : s.unlocked
+
+        let unlocked = [...s.unlocked]
+        let nextIndex = null
+        let unlockNext = false
+
+        // Original-six sequential unlock
+        if (ORIGINAL_SIX_IDS.includes(crackerIndex)) {
+          const candNext = crackerIndex + 1
+          if (ORIGINAL_SIX_IDS.includes(candNext) && !unlocked.includes(candNext)) {
+            nextIndex = candNext
+            unlockNext = true
+            unlocked.push(candNext)
+          }
+        }
+
+        // Completing any cracker makes installed expansion items (6..9) unlocked/selectable
+        for (const expId of [6, 7, 8, 9]) {
+          if (!unlocked.includes(expId)) {
+            unlocked.push(expId)
+          }
+        }
+        unlocked = [...new Set(unlocked)].sort((a, b) => a - b)
 
         result = {
           isNewSticker,
@@ -351,21 +410,39 @@ export function GameStoreProvider({ children }) {
     setState(fresh)
   }, [])
 
+  const dismissStorageNotice = useCallback(() => {
+    clearStorageNotice()
+    setStorageNotice(null)
+  }, [])
+
   // Derived query helpers — always evaluate against stateRef.current
   // so external references (GameController, callbacks) never capture stale progress.
   const getState = useCallback(() => stateRef.current, [])
   const isUnlocked = useCallback((index) => stateRef.current.unlocked.includes(index), [])
   const hasSticker = useCallback((index) => stateRef.current.stickers.includes(index), [])
   const hasSeenIntro = useCallback((index) => stateRef.current.seenIntros.includes(index), [])
+  const isFavorite = useCallback(
+    (index) => Boolean((stateRef.current.favorites || []).includes(index)),
+    []
+  )
+  const isOriginalSixComplete = useCallback(
+    () => hasCompletedOriginalSix(stateRef.current.stickers),
+    []
+  )
 
   const value = {
     state,
+    storageNotice,
     // derived helpers
     isUnlocked,
     hasSticker,
     hasSeenIntro,
+    isFavorite,
+    isOriginalSixComplete,
     // actions
     setIntensity,
+    setQuality,
+    toggleFavorite,
     setMasterVolume,
     toggleMute,
     setCalmVisuals,
@@ -387,6 +464,7 @@ export function GameStoreProvider({ children }) {
     awardShowCompletion,
     markFirstCompleted,
     dismissHint,
+    dismissStorageNotice,
     resetProgress,
     getState,
   }
@@ -402,6 +480,7 @@ export function useGameStore() {
 
 export {
   INTENSITY,
+  QUALITY_SETTINGS,
   TOTAL_CRACKERS,
   MOTION_POLICY,
   SPARKLE_PALETTES,
@@ -409,4 +488,6 @@ export {
   RANGOLI_PATTERNS,
   DEFAULT_RANGOLI_COLORS,
   resolveEffectiveMotion,
+  hasCompletedOriginalSix,
+  getStorageNotice,
 }

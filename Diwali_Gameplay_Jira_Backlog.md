@@ -135,10 +135,10 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-020 | Add Comet Fan | EP-04 | P1 | 5 | R1 | Done |
 | DIW-021 | Add Ring Burst | EP-04 | P1 | 5 | R1 | Done |
 | DIW-022 | Add Peacock Fan | EP-04 | P1 | 5 | R1 | Done |
-| DIW-023 | Add Spiral Sky | EP-04 | P2 | 5 | R2 | To Do |
-| DIW-024 | Add Chrysanthemum Bloom | EP-04 | P2 | 5 | R2 | To Do |
-| DIW-025 | Add Double Blossom | EP-04 | P2 | 5 | R2 | To Do |
-| DIW-026 | Add Constellation Sparkles | EP-04 | P2 | 5 | R2 | To Do |
+| DIW-023 | Add Spiral Sky | EP-04 | P2 | 5 | R2 | Done |
+| DIW-024 | Add Chrysanthemum Bloom | EP-04 | P2 | 5 | R2 | Done |
+| DIW-025 | Add Double Blossom | EP-04 | P2 | 5 | R2 | Done |
+| DIW-026 | Add Constellation Sparkles | EP-04 | P2 | 5 | R2 | Done |
 | DIW-027 | Let players choose curated effect palettes | EP-05 | P2 | 3 | R2 | To Do |
 | DIW-028 | Add controlled left, center, and right launch placement | EP-05 | P2 | 5 | R2 | To Do |
 | DIW-029 | Build a three-slot celebration sequence editor | EP-05 | P2 | 8 | R2 | To Do |
@@ -705,7 +705,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-023 — Add Spiral Sky
 
 **Epic:** EP-04 | **Type:** Story | **Priority:** P2 | **Estimate:** 5 points  
-**Release:** R2 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R2 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-008, DIW-016, DIW-017, DIW-018  
 **Code / design pointers:** src/crackers/crackerDefs.js; src/crackers/crackerControllers.js; src/audio/FireworkSound.js; cracker artwork registry
 
@@ -713,22 +713,24 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Register stable ID 10, category Sky, catalog group Sky collection, art, sticker, inspector copy, and sound metadata.
-- [ ] Author a bounded spiral path with decreasing velocity and a settling tail; use static separated points for reduced motion.
-- [ ] Author an initial 4–6 second show excluding preparation; refine timing through visual review. A light rising sweep ending in a restrained sparkle.
-- [ ] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
+- [x] Register stable ID 10, category Sky, catalog group Sky collection, art, sticker, inspector copy, and sound metadata.
+- [x] Author a bounded spiral path with decreasing velocity and a settling tail; use static separated points for reduced motion.
+- [x] Author an initial 4–6 second show excluding preparation; refine timing through visual review. A light rising sweep ending in a restrained sparkle.
+- [x] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
 
 **Acceptance criteria**
 
-- [ ] The spiral silhouette is distinct from the ground Chakri and never becomes a spinning camera effect.
-- [ ] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
-- [ ] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
-- [ ] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+- [x] The spiral silhouette is distinct from the ground Chakri and never becomes a spinning camera effect.
+- [x] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
+- [x] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
+- [x] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+
+**Completion:** 24 October 2026 — Registered stable ID 10 (Curling trail, 4.0s show, 200 particle budget) in `src/crackers/crackerDefs.js` and `src/ui/CrackerArt.jsx`. Authored curling aerial ascent opening into a 3-arm spiral bloom with gentle settling in `src/crackers/crackerControllers.js`, rendered swirling launcher tube in `src/render/layers/Background.js`, synthesized ascending curling whistle and sparkle `'spiral'` in `src/audio/FireworkSound.js`, and verified with 5 unit tests in `test/spiral-sky.test.js`.
 
 ### DIW-024 — Add Chrysanthemum Bloom
 
 **Epic:** EP-04 | **Type:** Story | **Priority:** P2 | **Estimate:** 5 points  
-**Release:** R2 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R2 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-008, DIW-016, DIW-017, DIW-018  
 **Code / design pointers:** src/crackers/crackerDefs.js; src/crackers/crackerControllers.js; src/audio/FireworkSound.js; cracker artwork registry
 
@@ -736,22 +738,24 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Register stable ID 11, category Sky, catalog group Sky collection, art, sticker, inspector copy, and sound metadata.
-- [ ] Build a spherical-looking radial petal bloom with layered lengths and warm inner/cool outer color, using budgeted trails.
-- [ ] Author an initial 4–6 second show excluding preparation; refine timing through visual review. One soft rounded bloom followed by fine crackle.
-- [ ] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
+- [x] Register stable ID 11, category Sky, catalog group Sky collection, art, sticker, inspector copy, and sound metadata.
+- [x] Build a spherical-looking radial petal bloom with layered lengths and warm inner/cool outer color, using budgeted trails.
+- [x] Author an initial 4–6 second show excluding preparation; refine timing through visual review. One soft rounded bloom followed by fine crackle.
+- [x] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
 
 **Acceptance criteria**
 
-- [ ] Petal density conveys a flower, while the lower-quality variant retains the same shape and timing.
-- [ ] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
-- [ ] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
-- [ ] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+- [x] Petal density conveys a flower, while the lower-quality variant retains the same shape and timing.
+- [x] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
+- [x] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
+- [x] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+
+**Completion:** 24 October 2026 — Registered stable ID 11 (Flower burst, 4.0s show, 230 particle budget) in `src/crackers/crackerDefs.js` and `src/ui/CrackerArt.jsx`. Authored multi-layer radial spherical petal bloom with warm inner gold core and outer fine rose/amber petals in `src/crackers/crackerControllers.js`, rendered floral mortar prop in `src/render/layers/Background.js`, synthesized soft bloom and whisper crackle `'chrysanthemum'` in `src/audio/FireworkSound.js`, and verified with 5 unit tests in `test/chrysanthemum-bloom.test.js`.
 
 ### DIW-025 — Add Double Blossom
 
 **Epic:** EP-04 | **Type:** Story | **Priority:** P2 | **Estimate:** 5 points  
-**Release:** R2 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R2 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-008, DIW-016, DIW-017, DIW-018  
 **Code / design pointers:** src/crackers/crackerDefs.js; src/crackers/crackerControllers.js; src/audio/FireworkSound.js; cracker artwork registry
 
@@ -759,22 +763,24 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Register stable ID 12, category Sky, catalog group Sky collection, art, sticker, inspector copy, and sound metadata.
-- [ ] Author two distinct sequential blooms from one show timeline; add no uncontrolled recursive particle spawning.
-- [ ] Author an initial 4–6 second show excluding preparation; refine timing through visual review. Two controlled accents separated by the visual beat.
-- [ ] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
+- [x] Register stable ID 12, category Sky, catalog group Sky collection, art, sticker, inspector copy, and sound metadata.
+- [x] Author two distinct sequential blooms from one show timeline; add no uncontrolled recursive particle spawning.
+- [x] Author an initial 4–6 second show excluding preparation; refine timing through visual review. Two controlled accents separated by the visual beat.
+- [x] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
 
 **Acceptance criteria**
 
-- [ ] The second bloom is visible and deliberate; only the final settling triggers completion and one reward.
-- [ ] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
-- [ ] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
-- [ ] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+- [x] The second bloom is visible and deliberate; only the final settling triggers completion and one reward.
+- [x] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
+- [x] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
+- [x] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+
+**Completion:** 24 October 2026 — Registered stable ID 12 (Twin flowers, 4.5s show, 260 particle budget) in `src/crackers/crackerDefs.js` and `src/ui/CrackerArt.jsx`. Authored two distinct sequential blooms (first at 900ms in Rose, second at 2000ms in Gold/Turquoise) in `src/crackers/crackerControllers.js`, rendered twin mortar prop in `src/render/layers/Background.js`, synthesized two-accent harmonic burst `'blossom'` in `src/audio/FireworkSound.js`, and verified with 5 unit tests in `test/double-blossom.test.js`.
 
 ### DIW-026 — Add Constellation Sparkles
 
 **Epic:** EP-04 | **Type:** Story | **Priority:** P2 | **Estimate:** 5 points  
-**Release:** R2 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R2 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-008, DIW-016, DIW-017, DIW-018  
 **Code / design pointers:** src/crackers/crackerDefs.js; src/crackers/crackerControllers.js; src/audio/FireworkSound.js; cracker artwork registry
 
@@ -782,17 +788,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Register stable ID 13, category Sky, catalog group Sky collection, art, sticker, inspector copy, and sound metadata.
-- [ ] Reveal one of two curated point patterns in sequence with faint connecting traces and a still final pose; label it as a fantasy light effect.
-- [ ] Author an initial 4–6 second show excluding preparation; refine timing through visual review. Optional sparse chimes with a fully silent equivalent.
-- [ ] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
+- [x] Register stable ID 13, category Sky, catalog group Sky collection, art, sticker, inspector copy, and sound metadata.
+- [x] Reveal one of two curated point patterns in sequence with faint connecting traces and a still final pose; label it as a fantasy light effect.
+- [x] Author an initial 4–6 second show excluding preparation; refine timing through visual review. Optional sparse chimes with a fully silent equivalent.
+- [x] Implement palette/anchor parameters with a curated default palette and centered placement in R1; expose player controls only with DIW-027/028 in R2. Include silent/reduced/low-quality variants, cancellation, and reward integration.
 
 **Acceptance criteria**
 
-- [ ] It reads as a designed constellation rather than random glitter; reduced mode uses a static reveal without flashing points.
-- [ ] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
-- [ ] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
-- [ ] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+- [x] It reads as a designed constellation rather than random glitter; reduced mode uses a static reveal without flashing points.
+- [x] Library thumbnail, preview, show, and sticker match the same identity; do not ship a recolor of an existing effect as this new type.
+- [x] Run the shared cracker acceptance matrix in section 8, including first award, replay, interruption, and device checks.
+- [x] No effect changes the global sound setting, exceeds the shared output/particle limits, or plays while paused.
+
+**Completion:** 24 October 2026 — Registered stable ID 13 (Starlit pose, 5.0s show, 190 particle budget) in `src/crackers/crackerDefs.js` and `src/ui/CrackerArt.jsx`. Authored sequential revelation of starlit points with high drag/low gravity holding a still constellation pose in `src/crackers/crackerControllers.js`, rendered hexagonal star-box prop in `src/render/layers/Background.js`, synthesized glassy starlight chimes `'constellation'` in `src/audio/FireworkSound.js`, and verified with 5 unit tests in `test/constellation-sparkles.test.js`.
 
 ### DIW-027 — Let players choose curated effect palettes
 

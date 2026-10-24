@@ -1,10 +1,420 @@
+/* ===================================================================
+   DIW-003: Reusable Gameplay Design Tokens and Controls
+   Visual brief: twilight courtyard, marigold light, plum surfaces,
+   cream/ivory lettering, jewel-colored fireworks.
+   =================================================================== */
+
+:root,
+.play-shell {
+  /* Night backdrop & surfaces */
+  --gp-bg-night-indigo: #11122b;
+  --gp-bg-night-plum: #30203d;
+  --gp-surface-plum: #271b35;
+  --gp-surface-raised: #382543;
+  --gp-surface-overlay: rgba(39, 27, 53, 0.95);
+
+  /* Text hierarchy (WCAG AAA compliant on plum) */
+  --gp-text-ivory: #fff4df;
+  --gp-text-secondary: #d6c6b2;
+  --gp-text-muted: #a39587;
+
+  /* Primary action: Marigold */
+  --gp-action-marigold: #f3bb56;
+  --gp-action-marigold-hover: #ffc96b;
+  --gp-action-marigold-active: #e2a842;
+  --gp-action-text: #281a15;
+
+  /* Accents */
+  --gp-accent-teal: #61c9be;
+  --gp-accent-teal-dark: #1b4b45;
+  --gp-accent-rose: #e981a0;
+  --gp-accent-rose-dark: #4d1d2c;
+  --gp-accent-gold: #f5c358;
+
+  /* Borders & Focus */
+  --gp-border-plum: rgba(214, 198, 178, 0.18);
+  --gp-border-plum-light: rgba(214, 198, 178, 0.32);
+  --gp-border-focus: #f3bb56;
+  --gp-border-focus-offset: #271b35;
+
+  /* Status and Notices */
+  --gp-status-selected-bg: rgba(97, 201, 190, 0.16);
+  --gp-status-selected-border: #61c9be;
+  --gp-status-locked-bg: rgba(39, 27, 53, 0.85);
+  --gp-status-locked-text: #a39587;
+  --gp-status-error-bg: #4a1924;
+  --gp-status-error-border: #e981a0;
+  --gp-status-error-text: #ffd5dc;
+  --gp-status-info-bg: #1c2b3d;
+  --gp-status-info-border: #61c9be;
+  --gp-status-info-text: #def3f1;
+
+  /* Spacing Rhythm */
+  --gp-space-xs: 4px;
+  --gp-space-sm: 8px;
+  --gp-space-md: 12px;
+  --gp-space-lg: 16px;
+  --gp-space-xl: 24px;
+  --gp-space-2xl: 32px;
+
+  /* Radii & Targets */
+  --gp-radius-sm: 8px;
+  --gp-radius-control: 12px;
+  --gp-radius-card: 16px;
+  --gp-radius-panel: 22px;
+  --gp-radius-pill: 9999px;
+  --gp-target-min: 44px;
+
+  /* Typography */
+  --gp-font-instruction: 16px;
+  --gp-line-instruction: 24px;
+  --gp-font-secondary: 14px;
+  --gp-line-secondary: 21px;
+  --gp-font-heading: 24px;
+  --gp-line-heading: 32px;
+
+  /* Transitions */
+  --gp-transition-fast: 140ms ease;
+  --gp-transition-normal: 200ms ease;
+}
+
+/* ===================================================================
+   DIW-003 Reusable Gameplay Controls Styles
+   =================================================================== */
+
+/* Gameplay Buttons */
+.gp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gp-space-sm);
+  font-family: inherit;
+  font-size: var(--gp-font-instruction);
+  line-height: 1.25;
+  font-weight: 600;
+  min-height: var(--gp-target-min);
+  min-width: var(--gp-target-min);
+  padding: 10px 20px;
+  border-radius: var(--gp-radius-control);
+  cursor: pointer;
+  transition: all var(--gp-transition-fast);
+  box-sizing: border-box;
+  text-decoration: none;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.gp-btn:focus-visible {
+  outline: 3px solid var(--gp-border-focus);
+  outline-offset: 3px;
+}
+
+.gp-btn--primary {
+  background: var(--gp-action-marigold);
+  color: var(--gp-action-text);
+  border-color: #ffd782;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+}
+
+.gp-btn--primary:hover:not(:disabled) {
+  background: var(--gp-action-marigold-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(243, 187, 86, 0.3);
+}
+
+.gp-btn--primary:active:not(:disabled) {
+  background: var(--gp-action-marigold-active);
+  transform: translateY(0);
+}
+
+.gp-btn--primary:focus-visible {
+  outline: 3px solid var(--gp-border-focus);
+  outline-offset: 3px;
+  box-shadow: inset 0 0 0 2px var(--gp-action-text);
+}
+
+.gp-btn--secondary {
+  background: var(--gp-surface-raised);
+  color: var(--gp-text-ivory);
+  border: 1px solid var(--gp-border-plum-light);
+}
+
+.gp-btn--secondary:hover:not(:disabled) {
+  background: #463054;
+  border-color: rgba(255, 244, 223, 0.45);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.gp-btn--secondary:active:not(:disabled) {
+  background: #32213d;
+  transform: translateY(0);
+}
+
+.gp-btn--icon {
+  background: var(--gp-surface-raised);
+  color: var(--gp-text-ivory);
+  border: 1px solid var(--gp-border-plum);
+  border-radius: 50%;
+  padding: 10px;
+  width: var(--gp-target-min);
+  height: var(--gp-target-min);
+  min-width: var(--gp-target-min);
+  min-height: var(--gp-target-min);
+}
+
+.gp-btn--icon:hover:not(:disabled) {
+  background: #463054;
+  border-color: var(--gp-border-plum-light);
+  transform: translateY(-1px);
+}
+
+.gp-btn.is-disabled,
+.gp-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.gp-btn.is-loading {
+  cursor: wait;
+}
+
+/* Gameplay Chips */
+.gp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gp-space-xs);
+  font-family: inherit;
+  font-size: var(--gp-font-secondary);
+  line-height: var(--gp-line-secondary);
+  font-weight: 500;
+  min-height: var(--gp-target-min);
+  padding: 8px 16px;
+  border-radius: var(--gp-radius-pill);
+  background: var(--gp-surface-raised);
+  color: var(--gp-text-secondary);
+  border: 1px solid var(--gp-border-plum);
+  cursor: pointer;
+  transition: all var(--gp-transition-fast);
+  box-sizing: border-box;
+}
+
+.gp-chip:hover:not(:disabled) {
+  background: #463054;
+  color: var(--gp-text-ivory);
+  border-color: var(--gp-border-plum-light);
+}
+
+.gp-chip.is-selected,
+.gp-chip[aria-pressed='true'] {
+  background: var(--gp-status-selected-bg);
+  color: var(--gp-text-ivory);
+  border-color: var(--gp-status-selected-border);
+  font-weight: 600;
+  box-shadow: 0 0 0 1px var(--gp-status-selected-border);
+}
+
+.gp-chip:focus-visible {
+  outline: 3px solid var(--gp-border-focus);
+  outline-offset: 2px;
+}
+
+.gp-chip.is-disabled,
+.gp-chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.gp-chip__check {
+  color: var(--gp-accent-teal);
+  font-weight: bold;
+}
+
+.gp-chip__count {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--gp-text-secondary);
+}
+
+/* Selectable Cards */
+.gp-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--gp-space-lg);
+  border-radius: var(--gp-radius-card);
+  background: var(--gp-surface-raised);
+  border: 2px solid var(--gp-border-plum);
+  min-height: var(--gp-target-min);
+  cursor: pointer;
+  transition: all var(--gp-transition-fast);
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.gp-card:hover:not(.is-locked) {
+  border-color: var(--gp-border-plum-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.gp-card:focus-visible {
+  outline: 3px solid var(--gp-border-focus);
+  outline-offset: 3px;
+}
+
+.gp-card.is-selected {
+  border-color: var(--gp-status-selected-border);
+  background: rgba(56, 37, 67, 0.98);
+  box-shadow: 0 0 0 1px var(--gp-status-selected-border), 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.gp-card.is-locked {
+  opacity: 0.72;
+  cursor: not-allowed;
+  background: var(--gp-status-locked-bg);
+  border-color: var(--gp-border-plum);
+}
+
+.gp-card__status-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 24px;
+  margin-bottom: var(--gp-space-sm);
+}
+
+.gp-card__selected-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gp-accent-teal);
+  background: var(--gp-status-selected-bg);
+  padding: 2px 8px;
+  border-radius: var(--gp-radius-sm);
+  border: 1px solid var(--gp-accent-teal);
+}
+
+.gp-card__locked-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--gp-text-muted);
+}
+
+.gp-card__custom-badge {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: var(--gp-radius-sm);
+  background: rgba(255, 244, 223, 0.1);
+  color: var(--gp-text-secondary);
+}
+
+.gp-card__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  margin-bottom: var(--gp-space-md);
+}
+
+.gp-card__title {
+  font-size: var(--gp-font-instruction);
+  line-height: var(--gp-line-instruction);
+  font-weight: 600;
+  color: var(--gp-text-ivory);
+  margin: 0 0 var(--gp-space-xs) 0;
+}
+
+.gp-card__subtitle {
+  font-size: var(--gp-font-secondary);
+  line-height: var(--gp-line-secondary);
+  color: var(--gp-text-secondary);
+  margin: 0;
+}
+
+/* Inline Notices */
+.gp-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gp-space-md);
+  padding: 12px 16px;
+  border-radius: var(--gp-radius-control);
+  font-size: var(--gp-font-secondary);
+  line-height: var(--gp-line-secondary);
+  margin: var(--gp-space-sm) 0;
+  border: 1px solid;
+  box-sizing: border-box;
+}
+
+.gp-notice__icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.gp-notice__content {
+  flex: 1;
+}
+
+.gp-notice__title {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+
+.gp-notice--info {
+  background: var(--gp-status-info-bg);
+  border-color: var(--gp-status-info-border);
+  color: var(--gp-status-info-text);
+}
+
+.gp-notice--warning {
+  background: #382718;
+  border-color: var(--gp-action-marigold);
+  color: var(--gp-text-ivory);
+}
+
+.gp-notice--error {
+  background: var(--gp-status-error-bg);
+  border-color: var(--gp-status-error-border);
+  color: var(--gp-status-error-text);
+}
+
+.gp-notice--success {
+  background: #142e27;
+  border-color: var(--gp-accent-teal);
+  color: #ddf8f4;
+}
+
+/* Progress Label */
+.gp-progress-label {
+  display: flex;
+  align-items: center;
+  gap: var(--gp-space-sm);
+  font-size: var(--gp-font-secondary);
+  line-height: var(--gp-line-secondary);
+  color: var(--gp-text-secondary);
+  font-weight: 500;
+}
+
 /* An unobtrusive, warm instrument panel around the moonlit stage. */
 .play-shell {
   display: flex;
   flex-direction: column;
   height: 100vh;
   height: 100dvh;
-  background: #090f1b;
+  background: var(--gp-bg-night-indigo, #090f1b);
   overflow: hidden;
 }
 .play-shell .game-stage {

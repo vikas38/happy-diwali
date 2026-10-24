@@ -55,7 +55,11 @@ export default function IntroCard({ cracker, onPutOnStreet, onCancel }) {
           <CrackerArt index={cracker.id} />
         </div>
         <h2 id="intro-card-title" className="intro-card__title">
-          {t('intro_meet_prefix')} <span className="neon">{cracker.name}</span>!
+          {t('intro_meet_prefix')} <span className="neon">{cracker.name}</span>
+          {cracker.descriptor && (
+            <span className="intro-card__subname"> · {cracker.descriptor}</span>
+          )}
+          !
         </h2>
         <p className="intro-card__desc">{cracker.description}</p>
         <div className="intro-card__meta">

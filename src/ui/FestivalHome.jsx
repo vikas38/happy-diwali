@@ -282,9 +282,24 @@ function GrownUpsNavButton({ onOpen }) {
   )
 }
 
-export default function FestivalHome({ onPlay, motion, setMotion }) {
+export default function FestivalHome({
+  onPlay,
+  motion,
+  setMotion,
+  initialModal = null,
+  onModalClose,
+}) {
   const { state, setMasterVolume, toggleMute, unlockAllCrackers } = useGameStore()
-  const [modal, setModal] = useState(null)
+  const [modal, setModal] = useState(initialModal)
+
+  useEffect(() => {
+    if (initialModal) setModal(initialModal)
+  }, [initialModal])
+
+  const closeModal = React.useCallback(() => {
+    setModal(null)
+    onModalClose?.()
+  }, [onModalClose])
 
   const [lit, setLit] = useState([])
   const [color, setColor] = useState('#dd796d')
@@ -558,7 +573,7 @@ export default function FestivalHome({ onPlay, motion, setMotion }) {
               parents: t('modal_parents_title'),
             }[modal]
           }
-          onClose={() => setModal(null)}
+          onClose={closeModal}
         >
           {modal === 'diyas' && (
             <>

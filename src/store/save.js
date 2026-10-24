@@ -19,6 +19,13 @@ export const INTENSITY = {
   LOUD: 'LOUD',
 }
 
+export const SPARKLE_PALETTES = {
+  GOLD: 'GOLD',
+  RAINBOW: 'RAINBOW',
+  ROSE: 'ROSE',
+  EMERALD: 'EMERALD',
+}
+
 /**
  * The default save state for a brand-new player.
  * Only the first cracker (Phuljhari) is unlocked; intensity defaults to SOFT.
@@ -35,6 +42,8 @@ export function createDefaultSave() {
     muted: false, // explicit master mute state
     motionPolicy: MOTION_POLICY.SYSTEM, // 'SYSTEM' | 'REDUCED' | 'FULL'
     intensity: INTENSITY.SOFT,
+    selectedPalette: SPARKLE_PALETTES.GOLD,
+    seenSplash: false,
     seenIntros: [], // cracker indices whose intro card has been shown
     seenHint: false, // first-run courtyard hint
     hasCompletedFirst: false, // completed at least one firework (unlocks skip walk)
@@ -116,6 +125,16 @@ export function validateSave(raw) {
   }
   const effectiveCalmVisuals = resolveEffectiveMotion(motionPolicy, detectsReducedMotion())
 
+  let selectedPalette = defaults.selectedPalette
+  if (raw.selectedPalette && Object.values(SPARKLE_PALETTES).includes(raw.selectedPalette)) {
+    selectedPalette = raw.selectedPalette
+  }
+
+  const seenSplash =
+    typeof raw.seenSplash === 'boolean'
+      ? raw.seenSplash
+      : Boolean(raw.hasCompletedFirst || (Array.isArray(raw.stickers) && raw.stickers.length > 0))
+
   const result = {
     version: SAVE_VERSION,
     unlocked: Array.isArray(raw.unlocked) ? raw.unlocked : defaults.unlocked,
@@ -126,6 +145,8 @@ export function validateSave(raw) {
     muted: isMuted || finalMasterVol === 0,
     motionPolicy,
     intensity: raw.intensity,
+    selectedPalette,
+    seenSplash,
     seenIntros: Array.isArray(raw.seenIntros) ? raw.seenIntros : defaults.seenIntros,
     seenHint: typeof raw.seenHint === 'boolean' ? raw.seenHint : defaults.seenHint,
     hasCompletedFirst:

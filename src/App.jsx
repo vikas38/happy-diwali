@@ -157,13 +157,23 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
 
   // ---- Action handlers ----
 
-  const handleStart = useCallback(() => {
-    gc.startGame()
-    setTimeout(
-      () => setAudioState(getSoundEngine().ctx?.state === 'running' ? '' : t('audio_paused_hint')),
-      250
-    )
-  }, [gc])
+  const handleStart = useCallback(
+    ({ silent, gentleVisuals } = {}) => {
+      store.markSplashSeen()
+      if (silent) store.setMasterVolume(0)
+      if (gentleVisuals) {
+        store.setMotionPolicy(MOTION_POLICY.REDUCED)
+        store.setCalmVisuals(true)
+      }
+      gc.startGame()
+      setTimeout(
+        () =>
+          setAudioState(getSoundEngine().ctx?.state === 'running' ? '' : t('audio_paused_hint')),
+        250
+      )
+    },
+    [gc, store]
+  )
 
   const handleSelectCracker = useCallback(
     (index) => {
@@ -303,6 +313,8 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
         masterVolume={saveState.masterVolume}
         intensity={saveState.intensity}
         stars={saveState.stars}
+        selectedPalette={saveState.selectedPalette || 'GOLD'}
+        onPaletteChange={(pal) => store.setSparklePalette(pal)}
         settingsOpen={fsmState === STATES.SETTINGS_OVERLAY}
         onOpenSettings={() => gc.openSettings()}
         onCloseSettings={() => gc.closeSettings()}
@@ -429,7 +441,13 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
 
         {/* ---- FSM overlays ---- */}
 
-        {fsmState === STATES.SAFETY_SPLASH && <SafetySplash onStart={handleStart} />}
+        {fsmState === STATES.SAFETY_SPLASH && (
+          <SafetySplash
+            onStart={handleStart}
+            isMuted={isMuted}
+            reducedMotion={effectiveReducedMotion}
+          />
+        )}
 
         {fsmState === STATES.CRACKER_INTRO_CARD && uiData.cracker && (
           <IntroCard
@@ -447,12 +465,16 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
           <RewardOverlay
             cracker={uiData.cracker}
             isNewSticker={uiData.isNewSticker}
+            allStickersCollected={(saveState.stickers || []).length >= 6}
             onLightAgain={handleLightAgain}
             onNextCracker={handleNextCracker}
             onSkip={handleNextCracker}
             isLastCracker={isLastCracker}
             isMuted={isMuted}
             onToggleMute={handleToggleMute}
+            onReplayFavourites={() => gc.goToIdle()}
+            onMakeRangoli={() => onBack({ openActivity: 'rangoli' })}
+            onFinishForNow={() => onBack()}
           />
         )}
 
@@ -486,7 +508,12 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
 // ===================================================================
 // Festival Home Wrapper — unlocks audio on gesture and wires settings
 // ===================================================================
-function FestivalHomeWrapper({ onPlay, reducedMotion: osReducedMotion }) {
+function FestivalHomeWrapper({
+  onPlay,
+  reducedMotion: osReducedMotion,
+  initialActivity,
+  onClearInitialActivity,
+}) {
   const store = useGameStore()
   const effectiveReducedMotion = resolveEffectiveMotion(store.state.motionPolicy, osReducedMotion)
   const isMotionActive = !effectiveReducedMotion
@@ -515,6 +542,8 @@ function FestivalHomeWrapper({ onPlay, reducedMotion: osReducedMotion }) {
     <FestivalHome
       onPlay={handlePlay}
       motion={isMotionActive}
+      initialModal={initialActivity}
+      onModalClose={onClearInitialActivity}
       setMotion={(v) => {
         const nextMotion = typeof v === 'function' ? v(isMotionActive) : v
         store.setMotionPolicy(nextMotion ? MOTION_POLICY.FULL : MOTION_POLICY.REDUCED)
@@ -528,6 +557,7 @@ function FestivalHomeWrapper({ onPlay, reducedMotion: osReducedMotion }) {
 // ===================================================================
 export default function App() {
   const [playing, setPlaying] = useState(false)
+  const [initialActivity, setInitialActivity] = useState(null)
   const [reducedMotion, setReducedMotion] = useState(
     () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || false
   )
@@ -538,13 +568,18 @@ export default function App() {
     return () => mq?.removeEventListener('change', sync)
   }, [])
 
-  const handleBackToFestival = useCallback(() => {
+  const handleBackToFestival = useCallback((options) => {
     const sound = getSoundEngine()
     sound.stopMusic()
     sound.stopCalmPad()
     sound.stopCrackerAudio()
     sound.stopCalmAudio()
     setPlaying(false)
+    if (options?.openActivity) {
+      setInitialActivity(options.openActivity)
+    } else {
+      setInitialActivity(null)
+    }
   }, [])
 
   return (
@@ -552,7 +587,12 @@ export default function App() {
       {playing ? (
         <GameApp onBack={handleBackToFestival} reducedMotion={reducedMotion} />
       ) : (
-        <FestivalHomeWrapper onPlay={() => setPlaying(true)} reducedMotion={reducedMotion} />
+        <FestivalHomeWrapper
+          onPlay={() => setPlaying(true)}
+          reducedMotion={reducedMotion}
+          initialActivity={initialActivity}
+          onClearInitialActivity={() => setInitialActivity(null)}
+        />
       )}
     </GameStoreProvider>
   )

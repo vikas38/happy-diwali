@@ -315,7 +315,9 @@ describe('Task A2 — Sound buses, cancellation, and identities', () => {
       const handle = playFireworkSound(engine, 'sparkler', 2.2, 0)
       expect(engine._crackerHandles.size).toBe(1)
       // All nodes route to effectsBus
-      expect(mock.nodes.some((n) => n.connect.mock.calls.some(([t]) => t === engine.effectsBus))).toBe(true)
+      expect(
+        mock.nodes.some((n) => n.connect.mock.calls.some(([t]) => t === engine.effectsBus))
+      ).toBe(true)
       handle.stop()
     })
 

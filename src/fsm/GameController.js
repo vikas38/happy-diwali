@@ -518,9 +518,7 @@ export class GameController {
     const notes = [523.25, 659.25, 783.99, 1046.5] // C5 E5 G5 C6
     notes.forEach((freq, i) => {
       this._addTimer(() => {
-        const h = sound.playCueTone
-          ? sound.playCueTone(freq, 0.4)
-          : sound.playTestTone?.(freq, 0.4)
+        const h = sound.playCueTone ? sound.playCueTone(freq, 0.4) : sound.playTestTone?.(freq, 0.4)
         if (h) this._fanfareCueHandles.push(h)
       }, i * 120)
     })

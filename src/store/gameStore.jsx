@@ -5,6 +5,7 @@ import {
   writeSave,
   validateSave,
   INTENSITY,
+  SPARKLE_PALETTES,
   TOTAL_CRACKERS,
   MOTION_POLICY,
   resolveEffectiveMotion,
@@ -14,7 +15,7 @@ import {
 // Game Store — React context for the entire app's persistent state
 // ===================================================================
 
-const GameStoreContext = createContext(null)
+export const GameStoreContext = createContext(null)
 
 export function GameStoreProvider({ children }) {
   const [state, setState] = useState(() => loadSave())
@@ -218,6 +219,24 @@ export function GameStoreProvider({ children }) {
     [updateStore]
   )
 
+  const setSparklePalette = useCallback(
+    (palette) => {
+      if (!Object.values(SPARKLE_PALETTES).includes(palette)) return
+      updateStore((s) => ({
+        ...s,
+        selectedPalette: palette,
+      }))
+    },
+    [updateStore]
+  )
+
+  const markSplashSeen = useCallback(() => {
+    updateStore((s) => {
+      if (s.seenSplash) return s
+      return { ...s, seenSplash: true }
+    })
+  }, [updateStore])
+
   const dismissHint = useCallback(() => {
     updateStore((s) => {
       if (s.seenHint) return s
@@ -250,6 +269,8 @@ export function GameStoreProvider({ children }) {
     toggleMute,
     setCalmVisuals,
     setMotionPolicy,
+    setSparklePalette,
+    markSplashSeen,
     unlockCracker,
     unlockAllCrackers,
     markIntroSeen,
@@ -271,4 +292,4 @@ export function useGameStore() {
   return ctx
 }
 
-export { INTENSITY, TOTAL_CRACKERS, MOTION_POLICY, resolveEffectiveMotion }
+export { INTENSITY, TOTAL_CRACKERS, MOTION_POLICY, SPARKLE_PALETTES, resolveEffectiveMotion }

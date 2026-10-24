@@ -123,7 +123,7 @@ Expansion access default: keep original progression; make installed new groups s
 | DIW-008 | Build a consistent illustrated cracker asset set | EP-02 | P1 | 8 | R1 | Done |
 | DIW-009 | Simplify the HUD with permanent mute and pause | EP-03 | P1 | 3 | R1 | Done |
 | DIW-010 | Create a browsable cracker library with filters and favourites | EP-03 | P1 | 5 | R1 | Done |
-| DIW-011 | Add a clear selected-cracker inspector | EP-03 | P1 | 5 | R1 | To Do |
+| DIW-011 | Add a clear selected-cracker inspector | EP-03 | P1 | 5 | R1 | Done |
 | DIW-012 | Make ignition and show states feel clear and satisfying | EP-03 | P1 | 5 | R1 | To Do |
 | DIW-013 | Add brief, skippable gameplay onboarding | EP-03 | P2 | 3 | R1 | To Do |
 | DIW-014 | Create a readable sound, motion, and quality settings sheet | EP-03 | P1 | 5 | R1 | To Do |
@@ -405,7 +405,7 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 ### DIW-011 — Add a clear selected-cracker inspector
 
 **Epic:** EP-03 | **Type:** Story | **Priority:** P1 | **Estimate:** 5 points  
-**Release:** R1 | **Status:** To Do | **Assignee:** Unassigned  
+**Release:** R1 | **Status:** Done | **Assignee:** Unassigned  
 **Blocked by:** DIW-007, DIW-016  
 **Code / design pointers:** src/ui/IntroCard.jsx; selected-cracker panel (new); src/crackers/crackerDefs.js
 
@@ -413,17 +413,19 @@ All acceptance boxes start unchecked. Code pointers identify current entry point
 
 **Implementation subtasks**
 
-- [ ] Show art, name, plain-language effect description, approximate show duration, ground/sky category, palette, and sound character.
-- [ ] Separate natural sound character from the user-selected playback intensity; avoid ambiguous intensity dots alone.
-- [ ] Provide one primary Ask grown-up to light action, plus Favourite and Customize as secondary actions.
-- [ ] Use an explicit silent short visual preview on request; previews do not grant rewards, unlock items, or auto-play on hover.
+- [x] Show art, name, plain-language effect description, approximate show duration, ground/sky category, palette, and sound character.
+- [x] Separate natural sound character from the user-selected playback intensity; avoid ambiguous intensity dots alone.
+- [x] Provide one primary Ask grown-up to light action, plus Favourite and Customize as secondary actions.
+- [x] Use an explicit silent short visual preview on request; previews do not grant rewards, unlock items, or auto-play on hover.
 
 **Acceptance criteria**
 
-- [ ] Selecting and inspecting never starts a real show or sound automatically.
-- [ ] Duration is metadata-driven and matches the authored effect, excluding the separately labeled preparation.
-- [ ] Locked details have a reason and a valid next step; unsupported customizations are absent.
-- [ ] Preview cancellation/closing leaves no particles, timers, sounds, or completion events behind.
+- [x] Selecting and inspecting never starts a real show or sound automatically.
+- [x] Duration is metadata-driven and matches the authored effect, excluding the separately labeled preparation.
+- [x] Locked details have a reason and a valid next step; unsupported customizations are absent.
+- [x] Preview cancellation/closing leaves no particles, timers, sounds, or completion events behind.
+
+**Completion:** 24 October 2026 — Created `CrackerInspector` in `src/ui/CrackerInspector.jsx` with metadata-driven art, plain-language descriptions, authored show durations, ground/sky category badges, palette dots, separate natural sound profile, silent visual preview without audio or rewards, and primary "Ask grown-up to light" / secondary favourite actions. Updated `src/ui/IntroCard.jsx` to wrap inspector cleanly, wired `CRACKER_INSPECTOR_OVERLAY` in `src/App.jsx`, added responsive styles in `src/gameplay.css`, and verified with 6 unit tests in `test/cracker-inspector.test.jsx`.
 
 ### DIW-012 — Make ignition and show states feel clear and satisfying
 

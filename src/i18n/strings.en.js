@@ -386,6 +386,25 @@ export const STRINGS_EN = {
   fav_remove_aria: 'Remove {name} from favourites',
   card_select_aria: 'Select {name}, {descriptor}',
 
+  // Selected-Cracker Inspector (DIW-011)
+  inspector_title: '{name}',
+  inspector_ask_grownup_btn: 'Ask grown-up to light →',
+  inspector_ask_grownup_aria: 'Ask grown-up to light {name}',
+  inspector_duration_label: 'Show duration',
+  inspector_duration_value: '~{seconds} seconds (excludes adult preparation)',
+  inspector_category_label: 'Category',
+  inspector_sound_label: 'Natural sound',
+  inspector_playback_label: 'Playback intensity',
+  inspector_playback_value: '{mode} ({style})',
+  inspector_palettes_label: 'Curated palettes',
+  specs_region_aria: 'Sparkle specifications',
+  inspector_preview_btn: 'Silent preview ✨',
+  inspector_preview_aria: 'Play silent short visual preview of {name}',
+  inspector_preview_active: 'Previewing...',
+  inspector_fav_btn: 'Favourite',
+  inspector_customize_btn: 'Customize',
+  inspector_locked_reason: 'Discover this sparkle by lighting earlier sparkles in the festival.',
+
   // Swatches
   swatch_rose: 'Rose',
   swatch_purple: 'Purple',

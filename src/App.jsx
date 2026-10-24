@@ -13,6 +13,7 @@ import RewardOverlay from './ui/RewardOverlay.jsx'
 import StickerBook from './ui/StickerBook.jsx'
 import CalmCorner from './ui/CalmCorner.jsx'
 import CrackerLibrary from './ui/CrackerLibrary.jsx'
+import CrackerInspector from './ui/CrackerInspector.jsx'
 import { GameController, STATES } from './fsm/GameController.js'
 import { getSoundEngine } from './audio/SoundEngine.js'
 import { playCrackerShow, fireRewardConfetti } from './crackers/crackerControllers.js'
@@ -458,6 +459,19 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             cracker={uiData.cracker}
             onPutOnStreet={handlePutOnStreet}
             onCancel={handleCancelIntro}
+          />
+        )}
+
+        {fsmState === STATES.CRACKER_INSPECTOR_OVERLAY && uiData.cracker && (
+          <CrackerInspector
+            cracker={uiData.cracker}
+            isOpen={true}
+            onClose={() => gc.closeInspector()}
+            onPutOnStreet={handlePutOnStreet}
+            isUnlocked={saveState.unlocked.includes(uiData.cracker.id)}
+            isFavorite={saveState.favorites.includes(uiData.cracker.id)}
+            onToggleFavorite={(id) => store.toggleFavorite(id)}
+            playbackIntensity={saveState.intensity}
           />
         )}
 

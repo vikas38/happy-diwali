@@ -69,9 +69,9 @@ export function useDialogFocus(key, options = {}) {
       }
     }
 
-    document.addEventListener('keydown', trap)
+    window.addEventListener('keydown', trap)
     return () => {
-      document.removeEventListener('keydown', trap)
+      window.removeEventListener('keydown', trap)
 
       // Restore background accessibility
       backgroundElements.forEach(({ el, wasAriaHidden }) => {

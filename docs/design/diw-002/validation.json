@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-24",
+  "scope": "Static design compositions; no production accessibility certification",
+  "dimensions": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "name": "portrait",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "name": "landscape",
+      "width": 844,
+      "height": 390
+    },
+    {
+      "name": "narrow",
+      "width": 320,
+      "height": 712
+    },
+    {
+      "name": "state-preparation",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "name": "state-reward",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "name": "state-library",
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "storyboard": {
+    "imageCount": 12,
+    "loaded": true
+  },
+  "contrast": [
+    {
+      "name": "ivory / panel",
+      "ratio": 14.88
+    },
+    {
+      "name": "secondary / raised",
+      "ratio": 8.31
+    },
+    {
+      "name": "primary text / marigold",
+      "ratio": 9.65
+    },
+    {
+      "name": "teal / panel",
+      "ratio": 8.19
+    },
+    {
+      "name": "marigold / raised",
+      "ratio": 7.96
+    }
+  ]
+}

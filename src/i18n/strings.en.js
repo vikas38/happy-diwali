@@ -72,8 +72,8 @@ export const STRINGS_EN = {
   next_action_region: 'Next action',
   place_cracker_on_street: 'Place {name} on street',
   place_on_street: 'Place on street',
-  ask_grownup_light_fuse: 'Ask a grown-up to light fuse',
-  ask_grownup_light_fuse_aria: 'Ask a grown-up to light the fuse',
+  ask_grownup_light_fuse: 'Light fuse!',
+  ask_grownup_light_fuse_aria: 'Light fuse! (Ask a grown-up to light the fuse)',
   moving_to_safe_spot: 'Walking to safe spot…',
   stepping_back_aria: 'Stepping back safely to watching spot',
   skip_walk_btn: 'Skip walk →',
@@ -88,7 +88,7 @@ export const STRINGS_EN = {
   next_sparkle: 'Next Sparkle →',
   celebrate_again: 'Celebrate Again ✦',
 
-  // Cracker Carousel Dock
+  // Cracker Carousel Dock & Minimalist Diya Pill
   dock_aria: 'Cracker selection',
   dock_heading: 'YOUR BOX OF WONDER',
   dock_subheading: 'Discover one. Unlock the next.',
@@ -105,6 +105,11 @@ export const STRINGS_EN = {
   fav_heart: '♥',
   search_icon: '🔍',
   lock_icon: '🔒',
+  down_chevron: '▾',
+  up_chevron: '▴',
+  change_cracker_aria: 'Change sparkle, currently {name}',
+  dismiss_thali_aria: 'Dismiss sparkle thali',
+  thali_drawer_title: 'Celebration Thali',
   approx_duration: '~{seconds}s',
   filter_sparkles_aria: 'Filter sparkles by category',
   sparkle_cards_aria: 'Sparkle cards',
@@ -188,11 +193,11 @@ export const STRINGS_EN = {
   collection_complete_title: 'All 6 sparkles discovered!',
   collection_complete_sub:
     'Your box of wonder is complete! Celebrate your Diwali however you like:',
-  action_replay_favourites: 'Replay favourites ↻',
+  action_replay_favourites: 'Replay ↻',
   action_replay_favourites_aria: 'Replay your favourite fireworks',
-  action_make_rangoli: 'Make a rangoli gift 🎨',
-  action_make_rangoli_aria: 'Create and keep a rangoli gift',
-  action_finish_for_now: 'Finish for now 🏠',
+  action_make_rangoli: 'Next →',
+  action_make_rangoli_aria: 'Next firework (Create and keep a rangoli gift)',
+  action_finish_for_now: 'Home',
   action_finish_for_now_aria: 'Return to festival home',
 
   // Sticker Book
@@ -262,13 +267,13 @@ export const STRINGS_EN = {
   scene_default_title: 'Your Diwali, your pace.',
   scene_idle_desc: 'Choose a firework from your box below.',
   scene_ready_desc: 'Your spark is ready. Let’s bring it to life.',
-  scene_stepping_desc: 'Chhotu and Pip step back safely while the grown-up prepares the fuse.',
+  scene_stepping_desc: 'Chhotu and Pip get ready to watch the sparkle celebration.',
   scene_active_desc: 'Stay a little. Watch the last embers fall.',
   scene_reward_desc: 'One more bright memory for your collection.',
   scene_anticipation_desc: 'A moment of anticipation.',
-  ready_street_banner_aria: 'Adult supervision reminder',
+  ready_street_banner_aria: 'Ready to celebrate',
   ready_street_hint:
-    'Chhotu and Pip watch from a safe distance. A grown-up handles the pretend fuse.',
+    'Chhotu and Pip are ready! Tap to light the fuse.',
 
   // Festival Home
   skip_to_activities: 'Skip to activities',
@@ -412,8 +417,8 @@ export const STRINGS_EN = {
 
   // Selected-Cracker Inspector (DIW-011)
   inspector_title: '{name}',
-  inspector_ask_grownup_btn: 'Ask grown-up to light →',
-  inspector_ask_grownup_aria: 'Ask grown-up to light {name}',
+  inspector_ask_grownup_btn: 'Light cracker →',
+  inspector_ask_grownup_aria: 'Light {name} (Ask grown-up to light {name})',
   inspector_duration_label: 'Show duration',
   inspector_duration_value: '~{seconds} seconds (excludes adult preparation)',
   inspector_category_label: 'Category',

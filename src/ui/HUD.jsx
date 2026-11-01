@@ -197,8 +197,11 @@ export default function HUD({
       )}
 
       {isSettingsOpen && (
-        <>
-          <div className="hud-settings-backdrop" onClick={handleCloseSettings} aria-hidden="true" />
+        <div
+          className="hud-settings-backdrop"
+          onClick={handleCloseSettings}
+          role="presentation"
+        >
           <dialog
             ref={dialogRef}
             open
@@ -206,6 +209,7 @@ export default function HUD({
             role="dialog"
             aria-modal="true"
             aria-labelledby="hud-settings-title"
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="sheet-header">
               <h3 id="hud-settings-title">{t('courtyard_settings')}</h3>
@@ -444,7 +448,7 @@ export default function HUD({
               </button>
             </div>
           </dialog>
-        </>
+        </div>
       )}
     </header>
   )

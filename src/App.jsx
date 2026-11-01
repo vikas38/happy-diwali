@@ -118,38 +118,19 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
     getSoundEngine().setMusicEnabled(saveState.musicEnabled !== false)
   }, [saveState.musicEnabled])
 
-  // Returning from a hidden tab should never skip the visible safety routine.
+  // Handle visibility changes: stop background audio when tab is hidden so it never drones in the background
   useEffect(() => {
-    const pauseWhenHidden = () => {
-      if (document.hidden && gc.state !== STATES.SAFETY_SPLASH) gc.enterCalmCorner()
+    const handleVisibility = () => {
+      if (document.hidden) {
+        getSoundEngine().stopMusic()
+        getSoundEngine().stopCalmPad()
+      }
     }
-    let size = { width: window.innerWidth, height: window.innerHeight }
-    let resizeTimer
-    const pauseOnResize = () => {
-      clearTimeout(resizeTimer)
-      resizeTimer = setTimeout(() => {
-        const next = { width: window.innerWidth, height: window.innerHeight }
-        if (shouldPauseOnResize(size, next)) {
-          if (
-            [
-              STATES.STEPPING_BACK_SAFE_ROUTINE,
-              STATES.COUNTDOWN_3_2_1,
-              STATES.CRACKER_SHOW_ACTIVE,
-            ].includes(gc.state)
-          )
-            gc.enterCalmCorner()
-          size = next
-        }
-      }, 250)
-    }
-    document.addEventListener('visibilitychange', pauseWhenHidden)
-    window.addEventListener('resize', pauseOnResize)
+    document.addEventListener('visibilitychange', handleVisibility)
     return () => {
-      clearTimeout(resizeTimer)
-      document.removeEventListener('visibilitychange', pauseWhenHidden)
-      window.removeEventListener('resize', pauseOnResize)
+      document.removeEventListener('visibilitychange', handleVisibility)
     }
-  }, [gc])
+  }, [])
 
   // Trigger reward confetti when entering REWARD_CELEBRATION
   useEffect(() => {
@@ -189,6 +170,9 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
     (index) => {
       store.dismissHint('choose')
       gc.selectCracker(index)
+      if (gc.state === STATES.CRACKER_INTRO_CARD) {
+        gc.putOnStreet()
+      }
     },
     [gc, store]
   )
@@ -202,54 +186,96 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
     gc.cancelIntro()
   }, [gc])
 
-  const handleTapCracker = useCallback(
-    (e) => {
-      store.dismissHint('grownup')
-      if (fsmSnapshot.state !== STATES.READY_ON_STREET || gc.state !== STATES.READY_ON_STREET) return
-      // Cooldown guard: prevent accidental click from "Put on Street" modal
-      if (e?.target?.tagName?.toLowerCase() === 'canvas' && Date.now() < readyCooldownRef.current)
-        return
-      if (e && e.target) {
-        const tag = e.target.tagName.toLowerCase()
-        if (tag === 'input' || tag === 'label') return
-        if (tag === 'canvas') {
-          const rect = e.target.getBoundingClientRect()
-          const point = getLaunchPoint(rect.width, rect.height)
-          if (Math.hypot(e.clientX - rect.left - point.x, e.clientY - rect.top - point.y) > 90)
-            return
-        }
-      }
-      gc.tapCracker()
-    },
-    [gc, fsmSnapshot.state, store]
-  )
-
   const handleLightAgain = useCallback(() => {
     gc.lightAgain()
   }, [gc])
 
   const handleNextCracker = useCallback(() => {
-    gc.nextCracker()
-  }, [gc])
+    const current =
+      selectedCracker !== null && selectedCracker !== undefined
+        ? selectedCracker
+        : (gc.selectedCracker ?? 0)
+    const nextIdx = (current + 1) % 6
+    gc.selectCracker(nextIdx)
+    if (gc.state === STATES.CRACKER_INTRO_CARD) {
+      gc.putOnStreet()
+    }
+  }, [gc, selectedCracker])
 
   const handleSkipWalk = useCallback(() => {
     gc.skipWalk()
   }, [gc])
 
+  const handleTapCracker = useCallback(
+    (e) => {
+      store.dismissHint('grownup')
+      store.dismissHint('choose')
+
+      // Direct, joyful interactions across all states:
+      // 1. If in IDLE: direct tap puts cracker on the street and immediately lights the fuse!
+      if (fsmSnapshot.state === STATES.IDLE || gc.state === STATES.IDLE) {
+        const target = selectedCracker !== null ? selectedCracker : 0
+        gc.selectCracker(target)
+        if (gc.state === STATES.CRACKER_INTRO_CARD) {
+          gc.putOnStreet()
+        }
+        gc.tapCracker()
+        return
+      }
+
+      // 2. If in READY_ON_STREET: tap on street or cracker immediately lights the fuse!
+      if (fsmSnapshot.state === STATES.READY_ON_STREET || gc.state === STATES.READY_ON_STREET) {
+        if (e && e.target) {
+          const tag = e.target.tagName?.toLowerCase()
+          if (tag === 'input' || tag === 'label') return
+        }
+        if (e?.target?.tagName?.toLowerCase() === 'canvas' && Date.now() < readyCooldownRef.current)
+          return
+        readyCooldownRef.current = 0
+        gc.tapCracker()
+        return
+      }
+
+      // 3. If in STEPPING_BACK_SAFE_ROUTINE: tap skips the walk right to countdown!
+      if (
+        fsmSnapshot.state === STATES.STEPPING_BACK_SAFE_ROUTINE ||
+        gc.state === STATES.STEPPING_BACK_SAFE_ROUTINE
+      ) {
+        gc.skipWalk()
+        return
+      }
+
+      // 4. If in REWARD_CELEBRATION: tap canvas immediately advances to next sparkle!
+      if (
+        fsmSnapshot.state === STATES.REWARD_CELEBRATION ||
+        gc.state === STATES.REWARD_CELEBRATION
+      ) {
+        handleNextCracker()
+        return
+      }
+    },
+    [gc, fsmSnapshot.state, selectedCracker, store, handleNextCracker]
+  )
+
   const handleContextualPlace = useCallback(() => {
     store.dismissHint('choose')
     const target = selectedCracker !== null ? selectedCracker : 0
-    if (fsmSnapshot.state === STATES.IDLE) {
-      if (!store.hasSeenIntro(target)) {
-        gc.selectCracker(target)
-      } else {
-        gc.selectCracker(target)
-        gc.putOnStreet()
-      }
-    } else if (fsmSnapshot.state === STATES.CRACKER_INTRO_CARD) {
+    gc.selectCracker(target)
+    if (gc.state === STATES.CRACKER_INTRO_CARD) {
       gc.putOnStreet()
     }
-  }, [gc, selectedCracker, fsmSnapshot.state, store])
+  }, [gc, selectedCracker, store])
+
+  // Automatically place selected cracker on street as soon as cracker is selected or in IDLE
+  useEffect(() => {
+    if (fsmSnapshot.state === STATES.IDLE && gc && gc.state === STATES.IDLE) {
+      const target = selectedCracker !== null && selectedCracker !== undefined ? selectedCracker : 0
+      gc.selectCracker(target)
+      if (gc.state === STATES.CRACKER_INTRO_CARD) {
+        gc.putOnStreet()
+      }
+    }
+  }, [fsmSnapshot.state, selectedCracker, gc])
 
   const handleCalmCorner = useCallback(() => {
     store.dismissHint('controls')
@@ -306,7 +332,10 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
   let activeHintText = null
 
   if (showHUD) {
-    if (!dismissedHints.includes('choose') && fsmState === STATES.IDLE) {
+    if (
+      !dismissedHints.includes('choose') &&
+      (fsmState === STATES.IDLE || fsmState === STATES.READY_ON_STREET)
+    ) {
       activeHintKey = 'choose'
       activeHintText = t('hint_choose_sparkle')
     } else if (!dismissedHints.includes('grownup') && fsmState === STATES.READY_ON_STREET) {
@@ -447,42 +476,42 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             fsmState === STATES.SETTINGS_OVERLAY
           }
           onFailure={() => {
-            if (enginesRef.current) gc.enterCalmCorner()
             getSoundEngine().stopMusic()
             getSoundEngine().stopCalmPad()
             setCanvasFailed(true)
           }}
         />
 
-        {/* Cracker carousel — shown in idle / ready / reward */}
-        {showCarousel && (
-          <CrackerCarousel
-            unlocked={saveState.unlocked}
-            selectedCracker={selectedCracker}
-            onSelect={handleSelectCracker}
-            onOpenLibrary={() => gc.openLibrary()}
-            favorites={saveState.favorites}
-          />
-        )}
+        {/* Minimalist Diya Stage Console: Quick Cracker Pill + Action Flow */}
+        <div className={`diya-stage-console ${showCarousel ? 'has-dock' : 'no-dock'}`}>
+          {showCarousel && (
+            <CrackerCarousel
+              unlocked={saveState.unlocked}
+              selectedCracker={selectedCracker}
+              onSelect={handleSelectCracker}
+              onOpenLibrary={() => gc.openLibrary()}
+              favorites={saveState.favorites}
+            />
+          )}
 
-        {/* Contextual Action Bar — single primary action + 5-step indicator in lower half */}
-        {showHUD && (
-          <ContextualAction
-            fsmState={fsmState}
-            selectedCracker={selectedCracker ?? 0}
-            countdownNumber={uiData.countdownNumber}
-            canSkipWalk={Boolean(saveState.hasCompletedFirst || saveState.stickers.length > 0)}
-            hasDock={showCarousel}
-            onPlaceOnStreet={
-              fsmState === STATES.CRACKER_INTRO_CARD ? handlePutOnStreet : handleContextualPlace
-            }
-            onLightFuse={handleTapCracker}
-            onSkipWalk={handleSkipWalk}
-            onNextCracker={handleNextCracker}
-            onLightAgain={handleLightAgain}
-            isLastCracker={isLastCracker}
-          />
-        )}
+          {showHUD && (
+            <ContextualAction
+              fsmState={fsmState === STATES.IDLE ? STATES.READY_ON_STREET : fsmState}
+              selectedCracker={selectedCracker ?? 0}
+              countdownNumber={uiData.countdownNumber}
+              canSkipWalk={Boolean(saveState.hasCompletedFirst || saveState.stickers.length > 0)}
+              hasDock={showCarousel}
+              onPlaceOnStreet={
+                fsmState === STATES.CRACKER_INTRO_CARD ? handlePutOnStreet : handleContextualPlace
+              }
+              onLightFuse={handleTapCracker}
+              onSkipWalk={handleSkipWalk}
+              onNextCracker={handleNextCracker}
+              onLightAgain={handleLightAgain}
+              isLastCracker={isLastCracker}
+            />
+          )}
+        </div>
 
         {/* Safety notice when ready to light */}
         {fsmState === STATES.READY_ON_STREET && (
@@ -554,7 +583,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             isMuted={isMuted}
             onToggleMute={handleToggleMute}
             onReplayFavourites={() => gc.goToIdle()}
-            onMakeRangoli={() => onBack({ openActivity: 'rangoli' })}
+            onMakeRangoli={handleNextCracker}
             onFinishForNow={() => onBack()}
             gentleGoals={saveState.gentleGoals}
             isSequence={Boolean(gc?.isSequenceActive)}
@@ -601,6 +630,7 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
             favorites={saveState.favorites}
             onToggleFavorite={(id) => store.toggleFavorite(id)}
             onSelect={(id) => {
+              gc.closeLibrary()
               handleSelectCracker(id)
             }}
           />

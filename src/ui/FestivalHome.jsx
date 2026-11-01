@@ -544,9 +544,9 @@ export default function FestivalHome({
       </a>
       <aside className="sidebar">
         <a className="brand" href="#">
-          <span className="brand-mark">✳</span>
-          <span>
-            {t('brand_name_lower')}
+          <span className="brand-mark" aria-hidden="true">✳</span>
+          <span className="brand-text">
+            <span className="brand-title">{t('brand_name_lower')}</span>
             <small>{t('brand_sidebar_sub')}</small>
           </span>
         </a>

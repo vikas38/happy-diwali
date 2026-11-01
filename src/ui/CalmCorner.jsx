@@ -1,5 +1,6 @@
 import Diya from './Diya.jsx'
 import React, { useEffect, useRef } from 'react'
+import { getSoundEngine } from '../audio/SoundEngine.js'
 import { t } from '../i18n/index.js'
 
 // ===================================================================
@@ -102,7 +103,10 @@ export default function CalmCorner({
       if (e.key === 'Escape') onResume()
     }
     window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
+    return () => {
+      window.removeEventListener('keydown', handleKey)
+      getSoundEngine().stopCalmPad()
+    }
   }, [onResume])
 
   return (

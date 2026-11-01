@@ -81,6 +81,8 @@ describe('T20 — String Externalisation (i18n)', () => {
       '▶',
       '⏱',
       '📸',
+      '▾',
+      '▴',
       'V', // Avatar initial glyph
     ])
 
@@ -90,7 +92,7 @@ describe('T20 — String Externalisation (i18n)', () => {
       if (ALLOWED_NON_TEXT.has(clean)) return true
       // Check if it consists only of allowed symbols, punctuation, or digits
       const stripped = clean.replace(
-        /[✦×✕→←↗↓↙✧✳●Ⅱ·:—–\-\+\d🔒🔓🔇🔊🔔🍃⭐🪔👂✨🌸🌀🚀🎉💥☾▶⏱%!\.]/g,
+        /[✦×✕→←↗↓↙✧✳●Ⅱ·:—–\-\+\d🔒🔓🔇🔊🔔🍃⭐🪔👂✨🌸🌀🚀🎉💥☾▶⏱%!\.▾▴]/g,
         ''
       )
       return stripped.length === 0

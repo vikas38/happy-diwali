@@ -89,9 +89,9 @@ export default function RewardOverlay({
       aria-modal="true"
       aria-labelledby="reward-card-title"
     >
-      <div className="reward-card">
+      <div className={`reward-card ${allStickersCollected ? 'reward-card--complete' : ''}`}>
         <div className="reward-card__top">
-          {onToggleMute && (
+          {onToggleMute ? (
             <button
               type="button"
               className="reward-mute-btn"
@@ -102,6 +102,8 @@ export default function RewardOverlay({
             >
               <span aria-hidden="true">{isMuted ? '🔇' : '🔊'}</span>
             </button>
+          ) : (
+            <span className="reward-card__spacer" aria-hidden="true" />
           )}
           <button
             type="button"
@@ -122,8 +124,15 @@ export default function RewardOverlay({
             </>
           )}
         </h2>
-        <StarRating count={isNewSticker ? 3 : 1} />
-        {isNewSticker && (
+        <StarRating count={allStickersCollected ? 3 : isNewSticker ? 3 : 1} />
+        {allStickersCollected && (
+          <div className="reward-celebration-badge" aria-hidden="true">
+            <span className="celebration-badge-diya">🪔</span>
+            <span className="celebration-badge-sparkle">✨</span>
+            <span className="celebration-badge-confetti">🎉</span>
+          </div>
+        )}
+        {isNewSticker && !allStickersCollected && (
           <div
             className="reward-card__sticker"
             aria-label={t('new_sticker_unlocked', { name: cracker.name })}
@@ -143,7 +152,7 @@ export default function RewardOverlay({
             {t('sequence_progress', { current: sequenceIndex + 1, total: sequenceTotal })}
           </div>
         )}
-        {suggestionText && !dismissedSuggestion && (
+        {suggestionText && !dismissedSuggestion && !allStickersCollected && (
           <div className="reward-suggestion-card" role="status">
             <div className="reward-suggestion-header">
               <span className="reward-suggestion-title">✨ {t('suggestion_title')}</span>
@@ -169,28 +178,37 @@ export default function RewardOverlay({
             <>
               <button
                 type="button"
-                className="btn btn--secondary"
+                className="btn btn--secondary reward-action-btn reward-action-btn--replay"
                 onClick={onReplayFavourites || onLightAgain}
                 aria-label={t('action_replay_favourites_aria')}
               >
-                {t('action_replay_favourites')}
+                <span className="reward-btn-icon" aria-hidden="true">
+                  ✨
+                </span>
+                <span className="reward-btn-text">{t('action_replay_favourites')}</span>
               </button>
               <button
                 type="button"
-                className="btn btn--secondary"
-                onClick={onMakeRangoli}
+                className="btn btn--primary reward-action-btn reward-action-btn--next"
+                onClick={onMakeRangoli || onNextCracker}
+                autoFocus
                 aria-label={t('action_make_rangoli_aria')}
               >
-                {t('action_make_rangoli')}
+                <span className="reward-btn-icon" aria-hidden="true">
+                  ✦
+                </span>
+                <span className="reward-btn-text">{t('action_make_rangoli')}</span>
               </button>
               <button
                 type="button"
-                className="btn btn--primary"
+                className="btn btn--secondary reward-action-btn reward-action-btn--finish"
                 onClick={onFinishForNow || handleSkip}
-                autoFocus
                 aria-label={t('action_finish_for_now_aria')}
               >
-                {t('action_finish_for_now')}
+                <span className="reward-btn-icon" aria-hidden="true">
+                  🪔
+                </span>
+                <span className="reward-btn-text">{t('action_finish_for_now')}</span>
               </button>
             </>
           ) : (

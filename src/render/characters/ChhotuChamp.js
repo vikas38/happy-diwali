@@ -322,51 +322,6 @@ export class ChhotuChamp {
 
     ctx.drawImage(img, drawX, drawY, targetW, targetH)
 
-    // Interactive sparkling wand particle aura on IDLE / LIGHTING_REACH
-    if (key === 'IDLE') {
-      this._drawSparklerGlow(ctx, drawX, drawY, targetW, targetH, time)
-    }
-
-    ctx.restore()
-  }
-
-  _drawSparklerGlow(ctx, dx, dy, tw, th, time) {
-    // Location of sparkler tip on Chhotu's idle sprite
-    const sx = dx + tw * 0.43
-    const sy = dy + th * 0.25
-
-    ctx.save()
-    ctx.globalCompositeOperation = 'lighter'
-
-    // Pulsing central incandescent spark
-    const flick = Math.sin(time * 25) * 0.8
-    ctx.fillStyle = 'rgba(255, 245, 180, 0.95)'
-    ctx.beginPath()
-    ctx.arc(sx, sy, 2.5 + flick, 0, Math.PI * 2)
-    ctx.fill()
-
-    // Warm golden ambient flare
-    const haloGrad = ctx.createRadialGradient(sx, sy, 0, sx, sy, 14 + flick * 2)
-    haloGrad.addColorStop(0, 'rgba(255, 195, 60, 0.55)')
-    haloGrad.addColorStop(0.5, 'rgba(255, 130, 20, 0.25)')
-    haloGrad.addColorStop(1, 'rgba(255, 100, 0, 0)')
-    ctx.fillStyle = haloGrad
-    ctx.beginPath()
-    ctx.arc(sx, sy, 14 + flick * 2, 0, Math.PI * 2)
-    ctx.fill()
-
-    // Dynamic micro-sparks scattering around tip
-    for (let i = 0; i < 4; i++) {
-      const angle = (i / 4) * Math.PI * 2 + time * 12
-      const dist = 5 + ((i * 3 + Math.sin(time * 30 + i)) % 7)
-      const px = sx + Math.cos(angle) * dist
-      const py = sy + Math.sin(angle) * dist
-      ctx.fillStyle = i % 2 === 0 ? '#FFE082' : '#FFF9C4'
-      ctx.beginPath()
-      ctx.arc(px, py, 0.8 + Math.sin(time * 20 + i) * 0.3, 0, Math.PI * 2)
-      ctx.fill()
-    }
-
     ctx.restore()
   }
 

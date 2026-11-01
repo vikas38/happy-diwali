@@ -1532,10 +1532,23 @@ button:focus-visible,
   gap: 14px;
 }
 
+.reward-card__top {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reward-card__top .reward-skip-btn {
+  position: static;
+  margin-left: auto;
+}
+
 .reward-skip-btn {
-  position: absolute;
-  top: 14px;
-  right: 14px;
+  position: relative;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid var(--glass-border);
   color: var(--text-secondary);
@@ -1654,13 +1667,28 @@ button:focus-visible,
   border: 2px solid var(--neon-violet);
   border-radius: var(--radius-lg);
   padding: 20px;
-  max-width: 380px;
+  max-width: 580px;
   width: 100%;
   max-height: 85dvh;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(245, 190, 108, 0.35) transparent;
+}
+
+.sticker-book::-webkit-scrollbar {
+  width: 6px;
+  height: 0px;
+}
+.sticker-book::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sticker-book::-webkit-scrollbar-thumb {
+  background: rgba(245, 190, 108, 0.35);
+  border-radius: 999px;
 }
 
 .sticker-book__header {

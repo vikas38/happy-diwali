@@ -52,11 +52,13 @@ function StickerTile({ cracker, unlocked, onSelect }) {
           <small className="sticker-tile__descriptor"> · {cracker.descriptor}</small>
         )}
       </span>
-      {Array.from({ length: cracker.intensityDots || 2 }).map((_, i) => (
-        <span key={i} className="sticker-dot" aria-hidden="true">
-          ●
-        </span>
-      ))}
+      <div className="sticker-tile__dots" aria-hidden="true">
+        {Array.from({ length: cracker.intensityDots || 2 }).map((_, i) => (
+          <span key={i} className="sticker-dot">
+            ●
+          </span>
+        ))}
+      </div>
     </div>
   )
 }

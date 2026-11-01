@@ -1,4 +1,3 @@
-import { drawAdult } from '../render/characters/Adult.js'
 import React, { useEffect, useRef, useState } from 'react'
 import { characterStart } from '../render/layers/Courtyard.js'
 import { Renderer, DEPTH } from '../render/Renderer.js'
@@ -119,15 +118,6 @@ export default function CanvasStage({
       },
       DEPTH.MIDGROUND
     )
-    renderer.addLayer(
-      {
-        draw(ctx, w, h, t) {
-          if (background.gameState === 'COUNTDOWN_3_2_1')
-            drawAdult(ctx, w, h, background.currentCracker, background.launchPlacement)
-        },
-      },
-      DEPTH.MIDGROUND
-    )
     renderer.addLayer(chhotu, DEPTH.MIDGROUND)
     renderer.addLayer(pip, DEPTH.MIDGROUND)
     renderer.addLayer(particles, DEPTH.MIDGROUND)
@@ -198,6 +188,42 @@ export default function CanvasStage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const handlePointerDown = (e) => {
+    if (engines.current?.particles && canvasRef.current) {
+      const rect = canvasRef.current.getBoundingClientRect?.()
+      if (rect && rect.width > 0 && rect.height > 0) {
+        const scaleX = (engines.current.renderer?.width || 800) / rect.width
+        const scaleY = (engines.current.renderer?.height || 600) / rect.height
+        const x = (e.clientX - rect.left) * scaleX
+        const y = (e.clientY - rect.top) * scaleY
+
+        // Gentle golden touch sparkles wherever the child taps!
+        try {
+          engines.current.particles.burst(x, y, 10, {
+            speedMin: 30,
+            speedMax: 90,
+            hueMin: 38,
+            hueMax: 50,
+            lifeMin: 0.2,
+            lifeMax: 0.5,
+            sizeMin: 2,
+            sizeMax: 4,
+          })
+        } catch {}
+
+        // Interactive character reactions on direct tap
+        const chhotu = engines.current.chhotu
+        if (chhotu && Math.abs(x - chhotu.x) < 80 && Math.abs(y - chhotu.y) < 120) {
+          chhotu.jump?.()
+        }
+        const pip = engines.current.pip
+        if (pip && Math.abs(x - pip.x) < 60 && Math.abs(y - pip.y) < 60) {
+          pip.jump?.()
+        }
+      }
+    }
+  }
+
   if (failed)
     return (
       <div className="recovery-card" role="alert">
@@ -207,7 +233,7 @@ export default function CanvasStage({
       </div>
     )
   return (
-    <div className="game-canvas-wrap" onClick={onClick}>
+    <div className="game-canvas-wrap" onClick={onClick} onPointerDown={handlePointerDown}>
       <canvas
         ref={canvasRef}
         className="game-canvas"

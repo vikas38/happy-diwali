@@ -38,7 +38,9 @@ describe('DIW-011 — Add a clear selected-cracker inspector', () => {
 
     // Authored duration (excluding adult preparation)
     expect(
-      screen.getByText(new RegExp(`~${Math.round(cracker.duration)}\\s+seconds.*excludes adult preparation`, 'i'))
+      screen.getByText(
+        new RegExp(`~${Math.round(cracker.duration)}\\s+seconds.*excludes adult preparation`, 'i')
+      )
     ).toBeTruthy()
 
     // Category
@@ -109,7 +111,9 @@ describe('DIW-011 — Add a clear selected-cracker inspector', () => {
       />
     )
 
-    const previewBtn = screen.getByRole('button', { name: /Play silent short visual preview of Rocket/i })
+    const previewBtn = screen.getByRole('button', {
+      name: /Play silent short visual preview of Rocket/i,
+    })
     expect(previewBtn).toBeTruthy()
 
     // Clicking starts silent visual preview
@@ -124,7 +128,9 @@ describe('DIW-011 — Add a clear selected-cracker inspector', () => {
     })
 
     // Preview completes cleanly and button returns to idle
-    expect(screen.getByRole('button', { name: /Play silent short visual preview of Rocket/i })).toBeTruthy()
+    expect(
+      screen.getByRole('button', { name: /Play silent short visual preview of Rocket/i })
+    ).toBeTruthy()
   })
 
   it('renders locked cracker with locked banner and disabled primary action', () => {
@@ -156,12 +162,7 @@ describe('DIW-011 — Add a clear selected-cracker inspector', () => {
     const cracker = CRACKERS[0]
 
     render(
-      <CrackerInspector
-        cracker={cracker}
-        isOpen={true}
-        onClose={handleClose}
-        isUnlocked={true}
-      />
+      <CrackerInspector cracker={cracker} isOpen={true} onClose={handleClose} isUnlocked={true} />
     )
 
     fireEvent.keyDown(document, { key: 'Escape' })

@@ -16,9 +16,9 @@ export const GAMEPLAY_TOKENS = {
     surfaceOverlay: 'rgba(39, 27, 53, 0.95)',
 
     // Text hierarchy
-    textIvory: '#fff4df',       // Primary instructions & prominent headings
-    textSecondary: '#d6c6b2',   // Secondary metadata (>=14px)
-    textMuted: '#a39587',       // Captions & disabled/locked hints
+    textIvory: '#fff4df', // Primary instructions & prominent headings
+    textSecondary: '#d6c6b2', // Secondary metadata (>=14px)
+    textMuted: '#a39587', // Captions & disabled/locked hints
 
     // Primary action
     actionMarigold: '#f3bb56',
@@ -27,9 +27,9 @@ export const GAMEPLAY_TOKENS = {
     actionText: '#281a15',
 
     // State accents
-    accentTeal: '#61c9be',      // Selected / status
+    accentTeal: '#61c9be', // Selected / status
     accentTealDark: '#1b4b45',
-    accentRose: '#e981a0',      // Decorative highlights / alerts
+    accentRose: '#e981a0', // Decorative highlights / alerts
     accentRoseDark: '#4d1d2c',
     accentGold: '#f5c358',
 

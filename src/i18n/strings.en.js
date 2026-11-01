@@ -246,7 +246,8 @@ export const STRINGS_EN = {
   audio_unavailable_hint: 'Sound is unavailable. You can still play silently.',
   enable_sound: 'Enable sound',
   hint_choose_sparkle: 'Choose a sparkle below to begin your celebration.',
-  hint_ask_grownup: 'Ask a grown-up to light the fuse — grown-ups handle the pretend spark together.',
+  hint_ask_grownup:
+    'Ask a grown-up to light the fuse — grown-ups handle the pretend spark together.',
   hint_pause_mute: 'You can pause or mute anytime with the buttons at the top.',
   hint_dismiss: 'Dismiss hint',
   help_and_hints: 'Help & hints',
@@ -272,8 +273,7 @@ export const STRINGS_EN = {
   scene_reward_desc: 'One more bright memory for your collection.',
   scene_anticipation_desc: 'A moment of anticipation.',
   ready_street_banner_aria: 'Ready to celebrate',
-  ready_street_hint:
-    'Chhotu and Pip are ready! Tap to light the fuse.',
+  ready_street_hint: 'Chhotu and Pip are ready! Tap to light the fuse.',
 
   // Festival Home
   skip_to_activities: 'Skip to activities',

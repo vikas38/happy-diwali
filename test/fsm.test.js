@@ -472,4 +472,32 @@ describe('Adult ignition regression', () => {
     expect(gc.state).toBe(STATES.COUNTDOWN_3_2_1)
     gc.dispose()
   })
+
+  it('covers sequence builder, decorations overlays, intensity, volume and mute helpers', () => {
+    const gc = new GameController(),
+      engines = makeMockEngines()
+    gc.init(engines)
+    gc.startGame()
+
+    gc.openSequenceBuilder()
+    expect(gc.state).toBe(STATES.SEQUENCE_BUILDER_OVERLAY)
+    gc.closeSequenceBuilder()
+    expect(gc.state).toBe(STATES.IDLE)
+
+    gc.openDecorations()
+    expect(gc.state).toBe(STATES.DECORATIONS_OVERLAY)
+    gc.closeDecorations()
+    expect(gc.state).toBe(STATES.IDLE)
+
+    gc.setIntensity('LOUD')
+    expect(engines.store.getState().intensity).toBe('LOUD')
+
+    gc.setMasterVolume(0.5)
+    expect(engines.store.getState().masterVolume).toBe(0.5)
+
+    const nextVol = gc.toggleMute()
+    expect(typeof nextVol).toBe('number')
+
+    gc.dispose()
+  })
 })

@@ -112,7 +112,11 @@ describe('DIW-021 — Ring Burst (Concentric halos, ID 8)', () => {
           const n = {
             connect: vi.fn(),
             disconnect: vi.fn(),
-            gain: { setValueAtTime: vi.fn(), linearRampToValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
+            gain: {
+              setValueAtTime: vi.fn(),
+              linearRampToValueAtTime: vi.fn(),
+              exponentialRampToValueAtTime: vi.fn(),
+            },
           }
           mockNodes.push(n)
           return n

@@ -104,7 +104,11 @@ describe('DIW-026 — Constellation Sparkles (Starlit pose, ID 13)', () => {
           const n = {
             connect: vi.fn(),
             disconnect: vi.fn(),
-            gain: { setValueAtTime: vi.fn(), linearRampToValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
+            gain: {
+              setValueAtTime: vi.fn(),
+              linearRampToValueAtTime: vi.fn(),
+              exponentialRampToValueAtTime: vi.fn(),
+            },
           }
           mockNodes.push(n)
           return n

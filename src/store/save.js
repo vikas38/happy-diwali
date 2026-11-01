@@ -162,7 +162,11 @@ export function migrateSave(raw) {
     if (!state.quality || !Object.values(QUALITY_SETTINGS).includes(state.quality)) {
       state.quality = QUALITY_SETTINGS.AUTO
     }
-    if (!state.showDrafts || typeof state.showDrafts !== 'object' || Array.isArray(state.showDrafts)) {
+    if (
+      !state.showDrafts ||
+      typeof state.showDrafts !== 'object' ||
+      Array.isArray(state.showDrafts)
+    ) {
       state.showDrafts = {}
     }
     if (!Array.isArray(state.discoveredIds)) {

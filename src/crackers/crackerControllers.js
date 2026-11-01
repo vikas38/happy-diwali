@@ -491,12 +491,15 @@ export function playCrackerShow(index, engines, onDone) {
           trail: motionReduced ? 5 : 12,
         })
       }, i * 140)
-      later(() => {
-        const dist = 200 * scale
-        const bx = x + Math.cos(angle) * dist
-        const by = Math.max(r.height * 0.2, y + Math.sin(angle) * dist)
-        burst(bx, by, 30, 120, getPaletteHue(i * 40))
-      }, 1000 + i * 140)
+      later(
+        () => {
+          const dist = 200 * scale
+          const bx = x + Math.cos(angle) * dist
+          const by = Math.max(r.height * 0.2, y + Math.sin(angle) * dist)
+          burst(bx, by, 30, 120, getPaletteHue(i * 40))
+        },
+        1000 + i * 140
+      )
     })
   }
 

@@ -7,13 +7,7 @@ import { CRACKERS } from '../src/crackers/crackerDefs.js'
 describe('DIW-007 — Redesigned cracker cards and quick-access tray', () => {
   it('renders generous art-led cards with name, descriptor, and accessible attributes', () => {
     const handleSelect = vi.fn()
-    render(
-      <CrackerCarousel
-        unlocked={[0, 1]}
-        selectedCracker={0}
-        onSelect={handleSelect}
-      />
-    )
+    render(<CrackerCarousel unlocked={[0, 1]} selectedCracker={0} onSelect={handleSelect} />)
 
     const options = screen.getAllByRole('option')
     expect(options.length).toBe(CRACKERS.length)
@@ -78,13 +72,7 @@ describe('DIW-007 — Redesigned cracker cards and quick-access tray', () => {
 
   it('selecting an item invokes onSelect with correct cracker ID without starting show or audio', () => {
     const handleSelect = vi.fn()
-    render(
-      <CrackerCarousel
-        unlocked={[0, 1]}
-        selectedCracker={0}
-        onSelect={handleSelect}
-      />
-    )
+    render(<CrackerCarousel unlocked={[0, 1]} selectedCracker={0} onSelect={handleSelect} />)
 
     const options = screen.getAllByRole('option')
     fireEvent.click(options[1])

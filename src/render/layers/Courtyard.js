@@ -38,19 +38,19 @@ export function effectOrigin(index, w, h, placement = 'center') {
   const px = PLACEMENT_X[placement] ?? STAGE.launchX
   const tips = [
     [-6, -36], // 0: Phuljhari
-    [0, -28],  // 1: Anar
-    [0, -4],   // 2: Chakri
-    [0, -38],  // 3: Rocket
+    [0, -28], // 1: Anar
+    [0, -4], // 2: Chakri
+    [0, -38], // 3: Rocket
     [-22, -2], // 4: Ladi
-    [0, -16],  // 5: Sutli
-    [0, -24],  // 6: Golden Waterfall
-    [0, -28],  // 7: Comet Fan
-    [0, -32],  // 8: Ring Burst
-    [0, -22],  // 9: Peacock Fan
-    [0, -30],  // 10: Spiral Sky
-    [0, -32],  // 11: Chrysanthemum Bloom
-    [0, -32],  // 12: Double Blossom
-    [0, -30],  // 13: Constellation Sparkles
+    [0, -16], // 5: Sutli
+    [0, -24], // 6: Golden Waterfall
+    [0, -28], // 7: Comet Fan
+    [0, -32], // 8: Ring Burst
+    [0, -22], // 9: Peacock Fan
+    [0, -30], // 10: Spiral Sky
+    [0, -32], // 11: Chrysanthemum Bloom
+    [0, -32], // 12: Double Blossom
+    [0, -30], // 13: Constellation Sparkles
   ]
   const [dx, dy] = tips[index] || [0, 0]
   return { x: w * px + dx * s, y: h * STAGE.launchY - 6 + dy * s }
@@ -367,7 +367,14 @@ function drawToran(c, w, ground, h, isPortrait, style) {
         if (typeof c.quadraticCurveTo === 'function') {
           c.quadraticCurveTo((sx + ex) / 2, lintelY + 9, ex, lintelY)
         } else if (typeof c.bezierCurveTo === 'function') {
-          c.bezierCurveTo(sx + swagWidth * 0.3, lintelY + 9, sx + swagWidth * 0.7, lintelY + 9, ex, lintelY)
+          c.bezierCurveTo(
+            sx + swagWidth * 0.3,
+            lintelY + 9,
+            sx + swagWidth * 0.7,
+            lintelY + 9,
+            ex,
+            lintelY
+          )
         } else if (typeof c.lineTo === 'function') {
           c.lineTo(ex, lintelY)
         }

@@ -170,9 +170,6 @@ function GameApp({ onBack, reducedMotion, onToggleMotion }) {
     (index) => {
       store.dismissHint('choose')
       gc.selectCracker(index)
-      if (gc.state === STATES.CRACKER_INTRO_CARD) {
-        gc.putOnStreet()
-      }
     },
     [gc, store]
   )

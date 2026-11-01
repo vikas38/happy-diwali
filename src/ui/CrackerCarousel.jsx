@@ -65,10 +65,7 @@ export default function CrackerCarousel({
   }
 
   return (
-    <nav
-      className="macos-dock firework-dock"
-      aria-label={t('dock_aria')}
-    >
+    <nav className="macos-dock firework-dock" aria-label={t('dock_aria')}>
       {/* Accessible Dock Heading for Screen Readers and Test Metadata */}
       <div className="dock-heading sr-only" aria-live="polite">
         <div className="dock-heading__left">
@@ -82,7 +79,11 @@ export default function CrackerCarousel({
       </div>
 
       {/* Floating Taskbar Items Container */}
-      <div className="macos-dock__items firework-tray" role="listbox" aria-label={t('dock_tray_aria')}>
+      <div
+        className="macos-dock__items firework-tray"
+        role="listbox"
+        aria-label={t('dock_tray_aria')}
+      >
         {CRACKERS.map((c, i) => {
           const isUnlocked = unlocked.includes(c.id)
           const isSelected = selectedCracker === c.id

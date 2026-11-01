@@ -29,7 +29,10 @@ test.describe('T17 — End-to-End Smoke Test', () => {
     }
 
     // 5. Select the first firework (Phuljhari / Step 1)
-    const phuljhariBtn = page.getByRole('button', { name: /Phuljhari/i }).first()
+    const phuljhariBtn = page
+      .getByRole('option', { name: /Phuljhari/i })
+      .or(page.getByRole('button', { name: /Phuljhari/i }))
+      .first()
     await expect(phuljhariBtn).toBeVisible()
     await phuljhariBtn.click()
 

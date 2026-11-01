@@ -158,9 +158,17 @@ export default function CrackerInspector({
 
         {/* Curated Palette Selector (DIW-027) */}
         {Array.isArray(cracker.palettes) && cracker.palettes.length > 0 && (
-          <div className="inspector-palette-section" role="region" aria-label={t('inspector_palettes_label')}>
+          <div
+            className="inspector-palette-section"
+            role="region"
+            aria-label={t('inspector_palettes_label')}
+          >
             <span className="inspector-spec-label">{t('inspector_palettes_label')}</span>
-            <div className="inspector-palette-chips" role="radiogroup" aria-label={t('inspector_palettes_label')}>
+            <div
+              className="inspector-palette-chips"
+              role="radiogroup"
+              aria-label={t('inspector_palettes_label')}
+            >
               {cracker.palettes.map((palKey) => {
                 const palDef = PALETTE_DEFINITIONS[palKey] || {
                   key: palKey,
@@ -180,7 +188,11 @@ export default function CrackerInspector({
                   >
                     <span className="palette-chip-swatches" aria-hidden="true">
                       {palDef.swatches.map((color, sIdx) => (
-                        <span key={sIdx} className="palette-chip-dot" style={{ backgroundColor: color }} />
+                        <span
+                          key={sIdx}
+                          className="palette-chip-dot"
+                          style={{ backgroundColor: color }}
+                        />
                       ))}
                     </span>
                     <span className="palette-chip-name">{palDef.name}</span>
@@ -192,9 +204,17 @@ export default function CrackerInspector({
         )}
 
         {/* Controlled Launch Placement Selector (DIW-028) */}
-        <div className="inspector-placement-section" role="region" aria-label={t('inspector_placement_label')}>
+        <div
+          className="inspector-placement-section"
+          role="region"
+          aria-label={t('inspector_placement_label')}
+        >
           <span className="inspector-spec-label">{t('inspector_placement_label')}</span>
-          <div className="inspector-placement-chips" role="radiogroup" aria-label={t('inspector_placement_label')}>
+          <div
+            className="inspector-placement-chips"
+            role="radiogroup"
+            aria-label={t('inspector_placement_label')}
+          >
             {[
               { key: 'left', labelKey: 'placement_left' },
               { key: 'center', labelKey: 'placement_center' },

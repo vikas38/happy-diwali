@@ -103,7 +103,11 @@ describe('DIW-023 — Spiral Sky (Curling trail, ID 10)', () => {
           const n = {
             connect: vi.fn(),
             disconnect: vi.fn(),
-            gain: { setValueAtTime: vi.fn(), linearRampToValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
+            gain: {
+              setValueAtTime: vi.fn(),
+              linearRampToValueAtTime: vi.fn(),
+              exponentialRampToValueAtTime: vi.fn(),
+            },
           }
           mockNodes.push(n)
           return n

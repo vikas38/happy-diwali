@@ -46,10 +46,16 @@ describe('DIW-015 — Unify drawers, dialogs, and focus restoration', () => {
     it('focuses first control on mount and traps Tab navigation within the modal', () => {
       render(
         <div>
-          <button type="button" id="outside-btn">Outside</button>
+          <button type="button" id="outside-btn">
+            Outside
+          </button>
           <ModalOverlay isOpen={true} onClose={vi.fn()} title="Test Dialog">
-            <button type="button" id="btn-1">First</button>
-            <button type="button" id="btn-2">Second</button>
+            <button type="button" id="btn-1">
+              First
+            </button>
+            <button type="button" id="btn-2">
+              Second
+            </button>
           </ModalOverlay>
         </div>
       )
@@ -107,7 +113,9 @@ describe('DIW-015 — Unify drawers, dialogs, and focus restoration', () => {
               Open Modal
             </button>
             <ModalOverlay isOpen={open} onClose={() => setOpen(false)} title="Restoration">
-              <button type="button" id="modal-action">Action</button>
+              <button type="button" id="modal-action">
+                Action
+              </button>
             </ModalOverlay>
           </div>
         )

@@ -197,11 +197,7 @@ export default function HUD({
       )}
 
       {isSettingsOpen && (
-        <div
-          className="hud-settings-backdrop"
-          onClick={handleCloseSettings}
-          role="presentation"
-        >
+        <div className="hud-settings-backdrop" onClick={handleCloseSettings} role="presentation">
           <dialog
             ref={dialogRef}
             open

@@ -2,10 +2,7 @@ import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import CrackerInspector from '../src/ui/CrackerInspector.jsx'
-import {
-  PALETTE_DEFINITIONS,
-  getCrackerById,
-} from '../src/crackers/crackerDefs.js'
+import { PALETTE_DEFINITIONS, getCrackerById } from '../src/crackers/crackerDefs.js'
 import { GameStoreProvider, useGameStore } from '../src/store/gameStore.jsx'
 
 describe('DIW-027 — Curated effect palettes', () => {

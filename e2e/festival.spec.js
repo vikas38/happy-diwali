@@ -31,7 +31,10 @@ test('home and courtyard accessibility; keyboard journey, pause and resume', asy
       nodes: v.nodes.map((n) => ({ target: n.target, summary: n.failureSummary })),
     }))
   ).toEqual([])
-  await page.getByRole('button', { name: /Phuljhari/i }).first().press('Enter')
+  await page
+    .getByRole('button', { name: /Phuljhari/i })
+    .first()
+    .press('Enter')
   await page.getByRole('button', { name: /Watch Phuljhari/i }).press('Enter')
   await page.getByRole('button', { name: /Ask (a|the) grown-up/i }).press('Enter')
   await page.getByRole('button', { name: /Calm Corner/i }).click()

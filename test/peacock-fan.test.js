@@ -107,7 +107,11 @@ describe('DIW-022 — Peacock Fan (Feather fan, ID 9)', () => {
           const n = {
             connect: vi.fn(),
             disconnect: vi.fn(),
-            gain: { setValueAtTime: vi.fn(), linearRampToValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
+            gain: {
+              setValueAtTime: vi.fn(),
+              linearRampToValueAtTime: vi.fn(),
+              exponentialRampToValueAtTime: vi.fn(),
+            },
           }
           mockNodes.push(n)
           return n

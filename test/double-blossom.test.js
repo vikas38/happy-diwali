@@ -106,7 +106,11 @@ describe('DIW-025 — Double Blossom (Twin flowers, ID 12)', () => {
           const n = {
             connect: vi.fn(),
             disconnect: vi.fn(),
-            gain: { setValueAtTime: vi.fn(), linearRampToValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
+            gain: {
+              setValueAtTime: vi.fn(),
+              linearRampToValueAtTime: vi.fn(),
+              exponentialRampToValueAtTime: vi.fn(),
+            },
           }
           mockNodes.push(n)
           return n

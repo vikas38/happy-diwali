@@ -64,13 +64,7 @@ describe('DIW-029 & DIW-030 — Celebration sequence editor and playback', () =>
         { crackerId: 0, palette: 'GOLD', placement: 'center' }, // 3000ms show + 4400ms prep = 7.4s
         { crackerId: 1, palette: 'GOLD', placement: 'center' }, // 3500ms show + 4400ms prep = 7.9s
       ]
-      render(
-        <CelebrationSequenceEditor
-          isOpen={true}
-          sequence={seq}
-          unlockedIds={[0, 1]}
-        />
-      )
+      render(<CelebrationSequenceEditor isOpen={true} sequence={seq} unlockedIds={[0, 1]} />)
 
       // Expected ~15 seconds total
       const estTotal = Math.round((SHOW_DURATIONS[0] + 4400 + SHOW_DURATIONS[1] + 4400) / 1000)
@@ -165,10 +159,12 @@ describe('DIW-029 & DIW-030 — Celebration sequence editor and playback', () =>
       }
       gc = new GameController(STATES.IDLE)
       gc.init(mockEngines)
-      gc.setCrackerShowFn(vi.fn((id, eng, onDone) => {
-        triggerShowDone = onDone
-        return () => {}
-      }))
+      gc.setCrackerShowFn(
+        vi.fn((id, eng, onDone) => {
+          triggerShowDone = onDone
+          return () => {}
+        })
+      )
     })
 
     afterEach(() => {

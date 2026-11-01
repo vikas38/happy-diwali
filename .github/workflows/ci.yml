@@ -17,9 +17,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: npm
       - run: npm ci
-      - run: npm audit --audit-level=moderate
+      - run: npm audit --audit-level=high
       - run: npm run lint
       - run: npm run format:check
       - run: npm run test:coverage
@@ -34,7 +33,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test e2e/smoke.spec.js

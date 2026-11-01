@@ -2,11 +2,7 @@ import React, { useState } from 'react'
 import ModalOverlay from './controls/ModalOverlay.jsx'
 import CrackerArt from './CrackerArt.jsx'
 import { t } from '../i18n/index.js'
-import {
-  CRACKERS,
-  PALETTE_DEFINITIONS,
-  getCrackerById,
-} from '../crackers/crackerDefs.js'
+import { CRACKERS, PALETTE_DEFINITIONS, getCrackerById } from '../crackers/crackerDefs.js'
 import { SHOW_DURATIONS } from '../crackers/crackerControllers.js'
 
 /**
@@ -56,11 +52,7 @@ export default function CelebrationSequenceEditor({
     >
       <div className="sequence-builder-content">
         {/* Slots Container */}
-        <div
-          className="sequence-slots-list"
-          role="region"
-          aria-label={t('sequence_builder_title')}
-        >
+        <div className="sequence-slots-list" role="region" aria-label={t('sequence_builder_title')}>
           {sequence.map((slot, idx) => {
             const cracker = getCrackerById(slot.crackerId)
             const palDef = PALETTE_DEFINITIONS[slot.palette] || PALETTE_DEFINITIONS.GOLD
@@ -72,15 +64,15 @@ export default function CelebrationSequenceEditor({
                   : t('placement_center')
 
             return (
-              <div key={idx} className="sequence-slot-card" role="group" aria-label={`Slot ${idx + 1}`}>
+              <div
+                key={idx}
+                className="sequence-slot-card"
+                role="group"
+                aria-label={`Slot ${idx + 1}`}
+              >
                 <div className="slot-badge-number">{idx + 1}</div>
                 <div className="slot-art-wrap">
-                  <CrackerArt
-                    artKey={cracker?.artKey}
-                    width={56}
-                    height={56}
-                    isSelected={false}
-                  />
+                  <CrackerArt artKey={cracker?.artKey} width={56} height={56} isSelected={false} />
                 </div>
                 <div className="slot-details">
                   <strong className="slot-cracker-name">{cracker?.name || 'Sparkle'}</strong>
@@ -174,11 +166,7 @@ export default function CelebrationSequenceEditor({
           )}
           <div className="sequence-action-buttons">
             {sequence.length > 0 && (
-              <button
-                type="button"
-                className="gp-btn gp-btn--secondary"
-                onClick={onClearSequence}
-              >
+              <button type="button" className="gp-btn gp-btn--secondary" onClick={onClearSequence}>
                 {t('sequence_clear_btn')}
               </button>
             )}

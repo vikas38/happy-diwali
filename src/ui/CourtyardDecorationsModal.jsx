@@ -117,18 +117,10 @@ export default function CourtyardDecorationsModal({
 
         {/* Footer Actions */}
         <div className="decorations-actions">
-          <button
-            type="button"
-            className="decorations-reset-btn"
-            onClick={onReset}
-          >
+          <button type="button" className="decorations-reset-btn" onClick={onReset}>
             {t('decorations_reset_btn')}
           </button>
-          <button
-            type="button"
-            className="decorations-done-btn"
-            onClick={onClose}
-          >
+          <button type="button" className="decorations-done-btn" onClick={onClose}>
             {t('decorations_done_btn')}
           </button>
         </div>

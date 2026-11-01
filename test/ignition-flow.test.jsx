@@ -189,7 +189,9 @@ describe('DIW-012 — Make ignition and show states feel clear and satisfying', 
       vi.advanceTimersByTime(3200)
     })
     expect(gcInstance.state).toBe(STATES.CRACKER_SHOW_ACTIVE)
-    expect(screen.getByRole('button', { name: /Watching the sparkle celebration/i }).disabled).toBe(true)
+    expect(screen.getByRole('button', { name: /Watching the sparkle celebration/i }).disabled).toBe(
+      true
+    )
 
     // 5. Result state (REWARD_CELEBRATION)
     act(() => {

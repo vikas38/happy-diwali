@@ -88,12 +88,7 @@ describe('DIW-003: Reusable gameplay design tokens and controls', () => {
     it('renders icon-only button with required ariaLabel', () => {
       const handleClick = vi.fn()
       render(
-        <GameplayButton
-          variant="icon"
-          ariaLabel="Mute audio"
-          icon="🔇"
-          onClick={handleClick}
-        />
+        <GameplayButton variant="icon" ariaLabel="Mute audio" icon="🔇" onClick={handleClick} />
       )
 
       const btn = screen.getByRole('button', { name: /mute audio/i })
@@ -185,14 +180,7 @@ describe('DIW-003: Reusable gameplay design tokens and controls', () => {
     })
 
     it('displays visible "Selected" badge and border when selected, satisfying color-independence', () => {
-      render(
-        <SelectableCard
-          id="anar"
-          selected={true}
-          title="Anar"
-          subtitle="Fountain · 12s"
-        />
-      )
+      render(<SelectableCard id="anar" selected={true} title="Anar" subtitle="Fountain · 12s" />)
 
       const card = screen.getByRole('button', { name: /anar/i })
       expect(card.getAttribute('aria-pressed')).toBe('true')

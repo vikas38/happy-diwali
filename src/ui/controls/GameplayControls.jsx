@@ -18,7 +18,8 @@ export function GameplayButton({
   ...rest
 }) {
   const baseClass = `gp-btn gp-btn--${variant}`
-  const stateClass = `${disabled ? 'is-disabled' : ''} ${loading ? 'is-loading' : ''} ${className}`.trim()
+  const stateClass =
+    `${disabled ? 'is-disabled' : ''} ${loading ? 'is-loading' : ''} ${className}`.trim()
 
   return (
     <button
@@ -78,13 +79,19 @@ export function GameplayChip({
       {...rest}
     >
       {selected ? (
-        <span className="gp-chip__check" aria-hidden="true">✓</span>
+        <span className="gp-chip__check" aria-hidden="true">
+          ✓
+        </span>
       ) : icon ? (
-        <span className="gp-chip__icon" aria-hidden="true">{icon}</span>
+        <span className="gp-chip__icon" aria-hidden="true">
+          {icon}
+        </span>
       ) : null}
       <span className="gp-chip__label">{children}</span>
       {count !== null && count !== undefined && (
-        <span className="gp-chip__count" aria-hidden="true">{count}</span>
+        <span className="gp-chip__count" aria-hidden="true">
+          {count}
+        </span>
       )}
       {selected && <span className="sr-only"> (Selected)</span>}
     </button>
@@ -147,9 +154,7 @@ export function SelectableCard({
             <span aria-hidden="true">🔒</span> {lockReason || 'Locked'}
           </span>
         )}
-        {!selected && !locked && badge && (
-          <span className="gp-card__custom-badge">{badge}</span>
-        )}
+        {!selected && !locked && badge && <span className="gp-card__custom-badge">{badge}</span>}
       </div>
 
       {/* Visual / Icon Area */}
@@ -176,12 +181,13 @@ export function InlineNotice({
   className = '',
 }) {
   const role = variant === 'error' ? 'alert' : 'status'
-  const icon = {
-    info: 'ℹ️',
-    warning: '⚠️',
-    error: '🚫',
-    success: '✨',
-  }[variant] || 'ℹ️'
+  const icon =
+    {
+      info: 'ℹ️',
+      warning: '⚠️',
+      error: '🚫',
+      success: '✨',
+    }[variant] || 'ℹ️'
 
   return (
     <div
@@ -203,12 +209,7 @@ export function InlineNotice({
 /**
  * ProgressLabel — High contrast, readable label for step and collection progress.
  */
-export function ProgressLabel({
-  current,
-  total,
-  label = '',
-  className = '',
-}) {
+export function ProgressLabel({ current, total, label = '', className = '' }) {
   const text = label || `${current} of ${total}`
   return (
     <div className={`gp-progress-label ${className}`.trim()}>

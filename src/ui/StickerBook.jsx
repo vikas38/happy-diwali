@@ -85,25 +85,20 @@ export default function StickerBook({
     {
       key: 'original',
       title: t('group_original_six'),
-      items: allCrackers.filter(
-        (c) => c.catalogGroup === CATALOG_GROUPS.ORIGINAL || c.id < 6
-      ),
+      items: allCrackers.filter((c) => c.catalogGroup === CATALOG_GROUPS.ORIGINAL || c.id < 6),
     },
     {
       key: 'expansion_r1',
       title: t('group_festival_additions'),
       items: allCrackers.filter(
-        (c) =>
-          c.catalogGroup === CATALOG_GROUPS.EXPANSION_R1 ||
-          (c.id >= 6 && c.id < 10)
+        (c) => c.catalogGroup === CATALOG_GROUPS.EXPANSION_R1 || (c.id >= 6 && c.id < 10)
       ),
     },
     {
       key: 'expansion_r2',
       title: t('group_sky_collection'),
       items: allCrackers.filter(
-        (c) =>
-          c.catalogGroup === CATALOG_GROUPS.EXPANSION_R2 || c.id >= 10
+        (c) => c.catalogGroup === CATALOG_GROUPS.EXPANSION_R2 || c.id >= 10
       ),
     },
   ]
@@ -264,18 +259,12 @@ export default function StickerBook({
             )}
 
             {groups.map((group) => {
-              const earnedCount = group.items.filter((c) =>
-                stickers.includes(c.id)
-              ).length
+              const earnedCount = group.items.filter((c) => stickers.includes(c.id)).length
               const totalCount = group.items.length
               const isComplete = earnedCount === totalCount
 
               return (
-                <section
-                  key={group.key}
-                  className="sticker-group"
-                  aria-label={group.title}
-                >
+                <section key={group.key} className="sticker-group" aria-label={group.title}>
                   <div className="sticker-group-header">
                     <h3 className="sticker-group-title">{group.title}</h3>
                     <div className="sticker-group-meta">
@@ -283,9 +272,7 @@ export default function StickerBook({
                         {`${earnedCount} / ${totalCount}`}
                       </span>
                       {isComplete && (
-                        <span className="sticker-group-badge">
-                          {t('group_completed_badge')}
-                        </span>
+                        <span className="sticker-group-badge">{t('group_completed_badge')}</span>
                       )}
                     </div>
                   </div>
@@ -308,10 +295,7 @@ export default function StickerBook({
         {activeTab === 'goals' && (
           <div className="gentle-goals-list" role="tabpanel">
             {discoveryGoals.map((g) => (
-              <div
-                key={g.id}
-                className={`gentle-goal-card ${g.completed ? 'is-completed' : ''}`}
-              >
+              <div key={g.id} className={`gentle-goal-card ${g.completed ? 'is-completed' : ''}`}>
                 <div className="gentle-goal-badge" aria-hidden="true">
                   {g.completed ? '⭐' : '✧'}
                 </div>
@@ -328,9 +312,7 @@ export default function StickerBook({
         )}
 
         <div className="sticker-book__parent">
-          <p className="sticker-book__parent-label">
-            {t('parent_unlock_label')}
-          </p>
+          <p className="sticker-book__parent-label">{t('parent_unlock_label')}</p>
           {showConfirm ? (
             <div
               className="parent-confirm-box"
@@ -378,11 +360,7 @@ export default function StickerBook({
                 }
               }}
               disabled={isUnlockedAll}
-              aria-label={
-                isUnlockedAll
-                  ? t('parent_unlock_done')
-                  : t('parent_unlock_aria')
-              }
+              aria-label={isUnlockedAll ? t('parent_unlock_done') : t('parent_unlock_aria')}
               style={{ position: 'relative', overflow: 'hidden' }}
             >
               {isUnlockedAll

@@ -544,7 +544,9 @@ export default function FestivalHome({
       </a>
       <aside className="sidebar">
         <a className="brand" href="#">
-          <span className="brand-mark" aria-hidden="true">✳</span>
+          <span className="brand-mark" aria-hidden="true">
+            ✳
+          </span>
           <span className="brand-text">
             <span className="brand-title">{t('brand_name_lower')}</span>
             <small>{t('brand_sidebar_sub')}</small>
@@ -692,10 +694,7 @@ export default function FestivalHome({
               </span>
             </div>
             <div className="activity-grid">
-              <button
-                className="activity-card"
-                onClick={() => setModal('diyas')}
-              >
+              <button className="activity-card" onClick={() => setModal('diyas')}>
                 <div className="activity-art diya-art">
                   <span className="activity-tag">{t('activity_diya_tag')}</span>
                   <Diya />
@@ -751,7 +750,11 @@ export default function FestivalHome({
                 <h3>{t('journey_card_title')}</h3>
                 <p>{t('journey_card_desc')}</p>
                 <div className="collection-progress">
-                  <span style={{ width: `${Math.min(100, (state.stickers.length / (CRACKERS.length || 6)) * 100)}%` }} />
+                  <span
+                    style={{
+                      width: `${Math.min(100, (state.stickers.length / (CRACKERS.length || 6)) * 100)}%`,
+                    }}
+                  />
                 </div>
                 <small>{t('journey_card_count', { count: state.stickers.length })}</small>
               </div>

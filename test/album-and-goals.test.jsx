@@ -14,13 +14,7 @@ describe('DIW-032, DIW-033, DIW-034 — Discovery Album, Gentle Goals, and Resul
   describe('DIW-033: Discovery Album', () => {
     it('groups stickers into Original Six, Festival Additions, and Sky Collection with accurate counts', () => {
       const stickers = [0, 1, 6, 10]
-      render(
-        <StickerBook
-          stickers={stickers}
-          onClose={vi.fn()}
-          onUnlockAll={vi.fn()}
-        />
-      )
+      render(<StickerBook stickers={stickers} onClose={vi.fn()} onUnlockAll={vi.fn()} />)
 
       expect(screen.getByRole('dialog')).toBeDefined()
       expect(screen.getByText(/Fireworks Album/i)).toBeDefined()
@@ -39,27 +33,15 @@ describe('DIW-032, DIW-033, DIW-034 — Discovery Album, Gentle Goals, and Resul
     })
 
     it('displays honest empty state when 0 stickers are collected', () => {
-      render(
-        <StickerBook
-          stickers={[]}
-          onClose={vi.fn()}
-          onUnlockAll={vi.fn()}
-        />
-      )
+      render(<StickerBook stickers={[]} onClose={vi.fn()} onUnlockAll={vi.fn()} />)
 
-      expect(
-        screen.getByText(/Your album is waiting for its first spark/i)
-      ).toBeDefined()
+      expect(screen.getByText(/Your album is waiting for its first spark/i)).toBeDefined()
     })
 
     it('displays completed group badge when an entire group is collected', () => {
       const originalSixCollected = [0, 1, 2, 3, 4, 5]
       render(
-        <StickerBook
-          stickers={originalSixCollected}
-          onClose={vi.fn()}
-          onUnlockAll={vi.fn()}
-        />
+        <StickerBook stickers={originalSixCollected} onClose={vi.fn()} onUnlockAll={vi.fn()} />
       )
 
       expect(screen.getAllByText(/Completed!/i).length).toBeGreaterThanOrEqual(1)

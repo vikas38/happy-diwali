@@ -156,7 +156,14 @@ export function playFireworkSound(sound, kind, duration = 1, pan = 0) {
     for (let t = 0.1; t < duration; t += 0.05 + Math.random() * 0.08) {
       const prog = t / duration
       const taper = prog > 0.7 ? Math.max(0.1, (1 - prog) / 0.3) : 1.0
-      noise(now + t, 0.025, (0.12 + Math.random() * 0.15) * taper, 3000 + Math.random() * 2500, 'bandpass', 1.1)
+      noise(
+        now + t,
+        0.025,
+        (0.12 + Math.random() * 0.15) * taper,
+        3000 + Math.random() * 2500,
+        'bandpass',
+        1.1
+      )
     }
   } else if (kind === 'fan') {
     // Comet Fan (ID 7): five-tone celestial arcing whooshes

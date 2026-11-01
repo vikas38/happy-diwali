@@ -211,11 +211,7 @@ export default function PhotoModeModal({
 
         {/* Actions */}
         <div className="photo-actions">
-          <button
-            type="button"
-            className="photo-cancel-btn"
-            onClick={onClose}
-          >
+          <button type="button" className="photo-cancel-btn" onClick={onClose}>
             {t('photo_close')}
           </button>
           <button

@@ -61,9 +61,7 @@ describe('DIW-035 — Photo mode and festival postcard export', () => {
     )
 
     expect(screen.getByRole('dialog')).toBeDefined()
-    expect(
-      screen.getByRole('heading', { name: /Festival Postcard/i })
-    ).toBeDefined()
+    expect(screen.getByRole('heading', { name: /Festival Postcard/i })).toBeDefined()
 
     // Aspect ratio buttons
     const landscapeBtn = screen.getByRole('radio', {
@@ -97,9 +95,7 @@ describe('DIW-035 — Photo mode and festival postcard export', () => {
       name: /Festival celebration postcard preview/i,
     })
     expect(preview).toBeDefined()
-    expect(preview.getAttribute('src')).toBe(
-      'data:image/png;base64,mockPostcardImageData'
-    )
+    expect(preview.getAttribute('src')).toBe('data:image/png;base64,mockPostcardImageData')
 
     // Trigger download
     const downloadBtn = screen.getByRole('button', {

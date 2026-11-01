@@ -78,9 +78,7 @@ describe('DIW-019 — Golden Waterfall (Ground cascade, ID 6)', () => {
     vi.advanceTimersByTime(500)
 
     expect(spawnedConfigs.length).toBeGreaterThan(0)
-    const downwardSparks = spawnedConfigs.filter(
-      (s) => s.cfg.shape === 'spark' && s.cfg.vy > 0
-    )
+    const downwardSparks = spawnedConfigs.filter((s) => s.cfg.shape === 'spark' && s.cfg.vy > 0)
     expect(downwardSparks.length).toBeGreaterThan(0)
     // Verify filaments bounce on courtyard cobblestones
     expect(downwardSparks.some((s) => s.cfg.bounceY !== undefined)).toBe(true)
@@ -107,7 +105,11 @@ describe('DIW-019 — Golden Waterfall (Ground cascade, ID 6)', () => {
           const n = {
             connect: vi.fn(),
             disconnect: vi.fn(),
-            gain: { setValueAtTime: vi.fn(), linearRampToValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
+            gain: {
+              setValueAtTime: vi.fn(),
+              linearRampToValueAtTime: vi.fn(),
+              exponentialRampToValueAtTime: vi.fn(),
+            },
           }
           mockNodes.push(n)
           return n

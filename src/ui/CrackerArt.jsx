@@ -23,7 +23,10 @@ export function getCrackerArtKey(key) {
     ]
     return keys[key] || 'phuljhari'
   }
-  const clean = String(key || '').toLowerCase().trim().replace(/[\s-]+/g, '_')
+  const clean = String(key || '')
+    .toLowerCase()
+    .trim()
+    .replace(/[\s-]+/g, '_')
   const aliases = {
     sparkler: 'phuljhari',
     fountain: 'anar',
@@ -308,7 +311,12 @@ export default function CrackerArt({
       {artKey === 'waterfall' && (
         <g>
           {/* Tripod Stand */}
-          <path d="M50 22 L26 86 M50 22 L74 86 M50 22 L50 87" stroke={paint('wood')} strokeWidth="3.2" strokeLinecap="round" />
+          <path
+            d="M50 22 L26 86 M50 22 L74 86 M50 22 L50 87"
+            stroke={paint('wood')}
+            strokeWidth="3.2"
+            strokeLinecap="round"
+          />
           <path d="M36 60 L64 60" stroke={paint('wood')} strokeWidth="2.2" />
           <ellipse cx="50" cy="22" rx="7" ry="4" fill={paint('gold')} />
           {/* Cascade Cylinder Tube */}
@@ -364,9 +372,34 @@ export default function CrackerArt({
           <circle cx="50" cy="48" r="13" fill={paint('gold')} />
           <circle cx="50" cy="48" r="6" fill="#fff8e1" />
           {/* Concentric Halo Rings (Ring Burst Signature) */}
-          <ellipse cx="50" cy="48" rx="38" ry="14" fill="none" stroke="#61c9be" strokeWidth="2.2" strokeDasharray="5 3" />
-          <ellipse cx="50" cy="48" rx="28" ry="9.5" fill="none" stroke="#f3bb56" strokeWidth="1.8" />
-          <ellipse cx="50" cy="48" rx="20" ry="6.5" fill="none" stroke="#e981a0" strokeWidth="1.4" />
+          <ellipse
+            cx="50"
+            cy="48"
+            rx="38"
+            ry="14"
+            fill="none"
+            stroke="#61c9be"
+            strokeWidth="2.2"
+            strokeDasharray="5 3"
+          />
+          <ellipse
+            cx="50"
+            cy="48"
+            rx="28"
+            ry="9.5"
+            fill="none"
+            stroke="#f3bb56"
+            strokeWidth="1.8"
+          />
+          <ellipse
+            cx="50"
+            cy="48"
+            rx="20"
+            ry="6.5"
+            fill="none"
+            stroke="#e981a0"
+            strokeWidth="1.4"
+          />
           {/* Celestial Points on Outer Ring */}
           <circle cx="14" cy="48" r="2" fill="#61c9be" />
           <circle cx="86" cy="48" r="2" fill="#61c9be" />
@@ -417,7 +450,15 @@ export default function CrackerArt({
           <circle cx="50" cy="46" r="14" fill={paint('paper')} />
           {[0, 45, 90, 135].map((rot) => (
             <g key={rot} transform={`rotate(${rot} 50 46)`}>
-              <ellipse cx="50" cy="46" rx="22" ry="7" fill="none" stroke="#f3bb56" strokeWidth="1.5" />
+              <ellipse
+                cx="50"
+                cy="46"
+                rx="22"
+                ry="7"
+                fill="none"
+                stroke="#f3bb56"
+                strokeWidth="1.5"
+              />
             </g>
           ))}
         </g>
@@ -434,7 +475,10 @@ export default function CrackerArt({
       {artKey === 'constellation' && (
         <g>
           {fuse('M50 75 Q40 82 50 86')}
-          <polygon points="50,22 56,38 72,40 60,52 64,68 50,58 36,68 40,52 28,40 44,38" fill={paint('gold')} />
+          <polygon
+            points="50,22 56,38 72,40 60,52 64,68 50,58 36,68 40,52 28,40 44,38"
+            fill={paint('gold')}
+          />
         </g>
       )}
     </svg>

@@ -251,7 +251,8 @@ export const ALL_CRACKER_DEFINITIONS = [
     budget: { maxParticles: 220, maxDrawCalls: 95 },
     emoji: '🌠',
     iconType: 'fan',
-    description: 'Five celestial comets rise together and trace sweeping luminous fans across the sky.',
+    description:
+      'Five celestial comets rise together and trace sweeping luminous fans across the sky.',
     comicWord: 'SWOOOOOSH 🌠',
   },
   {
@@ -276,7 +277,8 @@ export const ALL_CRACKER_DEFINITIONS = [
     budget: { maxParticles: 240, maxDrawCalls: 100 },
     emoji: '🪐',
     iconType: 'ring',
-    description: 'A brilliant burst that expands into two perfect concentric rings of rose and peacock teal.',
+    description:
+      'A brilliant burst that expands into two perfect concentric rings of rose and peacock teal.',
     comicWord: 'RING-GLOW 🪐',
   },
   {
@@ -301,7 +303,8 @@ export const ALL_CRACKER_DEFINITIONS = [
     budget: { maxParticles: 210, maxDrawCalls: 90 },
     emoji: '🦚',
     iconType: 'peacock',
-    description: 'Radiant turquoise and emerald feather plumes rise in a graceful royal peacock fan.',
+    description:
+      'Radiant turquoise and emerald feather plumes rise in a graceful royal peacock fan.',
     comicWord: 'FEATHER-SPARK 🦚',
   },
 

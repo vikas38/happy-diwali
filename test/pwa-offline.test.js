@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'
+import { execSync } from 'node:child_process'
 
 describe('T16 — PWA and offline precache', () => {
   const rootDir = path.resolve(__dirname, '..')
@@ -44,6 +45,9 @@ describe('T16 — PWA and offline precache', () => {
   it('generates service worker and registration scripts upon build', () => {
     const distSw = path.join(rootDir, 'dist', 'sw.js')
     const distRegister = path.join(rootDir, 'dist', 'registerSW.js')
+    if (!fs.existsSync(distSw) || !fs.existsSync(distRegister)) {
+      execSync('npm run build', { cwd: rootDir, stdio: 'pipe' })
+    }
     expect(fs.existsSync(distSw)).toBe(true)
     expect(fs.existsSync(distRegister)).toBe(true)
   })

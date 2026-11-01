@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npm audit --audit-level=high
       - run: npm run lint
       - run: npm run format:check
@@ -33,6 +33,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test e2e/smoke.spec.js
